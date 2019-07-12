@@ -1,0 +1,53 @@
+/* 查询条件列表公共样式 */
+.datalist-div {
+  margin-top: -60px;
+}
+
+.tabmanage-tabs {
+  padding-top: 20px;
+}
+.el-tabs__header{
+  padding:0 10px;
+}
+.user-management {
+  .input_wrap {
+    width: 478px;
+    display: inline-block;
+  }
+}
+.operation-button{
+  margin: 10px !important;
+}
+.search-content-div{
+  text-align: left;
+  display: inline-block;
+  width: 100%;
+  .el-form{
+    padding: 0 10px;
+  }
+  .el-form-item__label {
+    font-weight: normal;
+    color: #000;
+    width: 86px;
+  }
+  // 搜索条件字眼比较多点
+  .custom-label-width>.el-form-item__label{
+    width: 100px;
+  }
+  .el-form-item__content {
+    display: inline-block;
+  }
+  .search-input {
+    display: inline-block;
+    margin-right: 10px;
+    .el-input {
+      width: 200px;
+    }
+    .el-select {
+      width: 200px;
+    }
+  }
+  .search-btn {
+    float: right;
+  }
+}

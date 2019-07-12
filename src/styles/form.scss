@@ -1,0 +1,28 @@
+/* 表单公共样式 */
+.post-form {
+  height: 100%;
+  padding-bottom: 80px;
+
+  .input_wrap {
+    width: 478px;
+    display: inline-block;
+  }
+
+  .button_position {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 999;
+    min-width: calc(100% - 40px);
+    padding-top: 16px;
+    text-align: center;
+    background: #eeefe7;
+    height: 70px;
+  }
+  
+  .switch-item {
+    div.el-form-item__content {
+      text-align: left !important;
+    }
+  }
+}
