@@ -30,8 +30,6 @@ export default {
     // 根据meta中的hidden属性裁剪动态路由列表，隐藏不需要用户可见的路由项
     //    this.sidebarConfig = JSON.parse(JSON.stringify(this.permission_routers))
     //    this.filter(this.sidebarConfig)
-    console.log('this.permission_routers')
-    console.log(this.permission_routers)
   },
   //  watch: {
   //    'permission_routers': (val) => {

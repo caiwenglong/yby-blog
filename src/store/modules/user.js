@@ -98,8 +98,6 @@ const user = {
           resolve()
         } else {
           getInfo().then(response => {
-            console.log('response')
-            console.log(response)
             const data = response.data || {}
             commit('SET_NAME', data.userName)
             if (data && data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组

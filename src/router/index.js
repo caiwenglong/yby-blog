@@ -67,49 +67,38 @@ export const asyncRouterMap = [
         component: () => import('@/views/entityManagement/index.vue'),
         hidden: false,
         meta: { title: '实体管理', icon: '' }
-      },
+      }
+    ]
+  },
+  {
+    path: '/articleList',
+    component: Layout,
+    name: 'articleList',
+    redirect: '/articleList/index',
+    meta: { title: '文章列表', icon: 'article-list' },
+    children: [
       {
-        path: 'test001',
-        name: 'test001',
-        component: () => import('@/views/entityManagement/index.vue'),
+        path: 'index',
+        name: 'articleListIndex',
+        component: () => import('@/views/articleList/index.vue'),
         hidden: false,
-        meta: { title: 'test001', icon: '' },
-        children: [
-          {
-            path: 'test002',
-            name: 'test002',
-            component: () => import('@/views/entityManagement/index.vue'),
-            hidden: false,
-            meta: { title: 'test002', icon: '' },
-            children: [
-              {
-                path: 'test003',
-                name: 'test003',
-                component: () => import('@/views/entityManagement/index.vue'),
-                hidden: false,
-                meta: { title: 'test003', icon: '' },
-                children: [
-                  {
-                    path: 'test004',
-                    name: 'test004',
-                    component: () => import('@/views/entityManagement/index.vue'),
-                    hidden: false,
-                    meta: { title: 'test004', icon: '' },
-                    children: [
-                      {
-                        path: 'test005',
-                        name: 'test005',
-                        component: () => import('@/views/entityManagement/index.vue'),
-                        hidden: false,
-                        meta: { title: 'test005', icon: '' }
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
+        meta: { title: '文章列表页', icon: '' }
+      }
+    ]
+  },
+  {
+    path: '/articleWrite',
+    component: Layout,
+    name: 'articleWrite',
+    redirect: '/articleWrite/index',
+    meta: { title: '文章写作', icon: 'article-write' },
+    children: [
+      {
+        path: 'index',
+        name: 'articleWriteIndex',
+        component: () => import('@/views/articleWrite/index.vue'),
+        hidden: false,
+        meta: { title: '文章写作页', icon: '', fullScreen: true }
       }
     ]
   },

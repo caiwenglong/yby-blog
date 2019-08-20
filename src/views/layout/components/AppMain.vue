@@ -2,10 +2,16 @@
   <section class="app-main">
     <transition name="fade" mode="out-in">
       <!-- <router-view :key="key"></router-view> -->
-      <div class="input_position">
-        <div class="common_wrap">
-
-          <router-view></router-view>
+      <div>
+        <div v-if="this.$route.meta.fullScreen" class="full-screen">
+          <div class="common_wrap">
+            <router-view></router-view>
+          </div>
+        </div>
+        <div v-else class="input_position">
+          <div class="common_wrap">
+            <router-view></router-view>
+          </div>
         </div>
       </div>
     </transition>
@@ -31,16 +37,15 @@ export default {
   overflow: hidden;
   background: rgb(230, 235, 244);
 }
-.input_position {
+.input_position, .full-screen {
   margin: 20px;
 }
 .common_wrap {
   background: #f9fdfa;
   height: 100%;
   min-height: calc(100vh - 90px);
-  padding-top: 60px;
+  padding: 20px;
   text-align: center;
-  padding-bottom: 20px;
   box-shadow: 0 2px 2px rgba(158, 163, 173, 0.3);
 }
 </style>

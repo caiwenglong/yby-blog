@@ -18,6 +18,13 @@ import store from './store'
 import '@/icons' // icon
 import '@/permission' // permission control
 import axios from 'axios'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+import Bmob from 'hydrogen-js-sdk'
+Vue.prototype.Bmob = Bmob
+Bmob.initialize('e4d31451776823a5', '566210')
+
+Vue.use(mavonEditor)
 // Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 
