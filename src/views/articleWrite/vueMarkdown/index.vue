@@ -1,7 +1,25 @@
 <template>
   <div class="markdown-edit-wrapper">
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+      <div class="post-main-container">
+        <el-col :span="24">
+          <el-form-item prop="title">
+            <MdInput v-model="postForm.title" :maxlength="64" name="titleInputName" required>
+              title
+            </MdInput>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item  prop="content_short">
+            <MdInput v-model="postForm.content_short" :maxlength="64" name="contentShortInputName" required>
+              summary
+            </MdInput>
+          </el-form-item>
+        </el-col>
+      </div>
+    </el-form>
     <div class="operation-button">
-      <el-button type="primary" size="medium" @click="publishArticle()">
+      <el-button v-loading="loading" type="primary" size="medium" @click="publishArticle()">
         Publish
       </el-button>
     </div>
@@ -15,23 +33,99 @@
 <script>
   import Bmob from 'hydrogen-js-sdk'
   Bmob.initialize('e4d31451776823a5', '566210')
+  import MdInput from '../../../components/MdInput/index'
+
+  const defaultForm = {
+    status: 'draft',
+    title: '',
+    artContent: '',
+    content_short: '',
+    source_uri: '',
+    image_uri: '',
+    importance: 0
+  }
+
   export default {
     name: 'MarkdownEdit',
+    components: { MdInput },
     data() {
-      return { value: 'aaa' }
+      const validateRequire = (rule, value, callback) => {
+        let message = ''
+        if (rule.field === 'title') {
+          message = '标题为必填项'
+        } else if (rule.field === 'content_short') {
+          message = '文章概览为必填项'
+        } else {
+          message = '信息错误！'
+        }
+        if (value === '') {
+          this.$message({
+            message: message,
+            type: 'error'
+          })
+          callback(new Error(message))
+        } else {
+          callback()
+        }
+      }
+      return {
+        value: 'aaa',
+        titleInputName: 'titleInput',
+        contentShortInputName: 'contentShortInput',
+        postForm: Object.assign({}, defaultForm),
+        loading: false,
+        rules: {
+          title: [{ validator: validateRequire }],
+          content_short: [{ validator: validateRequire }]
+        }
+      }
     },
     methods: {
       publishArticle(articleObj) {
         const _this = this
-        return new Promise(function(resolve, reject) {
-          const TableArticle = Bmob.Query('Article')
-          TableArticle.set('title003', 'biaoti003')
-          TableArticle.set('artContent', _this.value)
-          TableArticle.save().then(res => {
-            console.log(res)
-          }).catch(err => {
-            console.log(err)
+        if (!this.validateForm) {
+          return
+        } else {
+          return new Promise(function(resolve, reject) {
+            _this.loading = true
+            const TableArticle = Bmob.Query('Article')
+            TableArticle.set('title', _this.postForm.title)
+            TableArticle.set('artSummary', _this.postForm.content_short)
+            TableArticle.set('artContent', _this.value)
+            TableArticle.save().then(res => {
+              _this.$notify({
+                title: '成功',
+                message: '发布文章成功',
+                type: 'success',
+                duration: 2000
+              })
+              _this.postForm.status = 'published'
+              _this.loading = false
+            }).catch(err => {
+              _this.$notify({
+                title: '错误',
+                message: '发布文章失败',
+                type: 'error',
+                duration: 2000
+              })
+              console.log(err)
+            })
           })
+        }
+      },
+      validateForm() {
+        this.$refs.postForm.validate(valid => {
+          if (valid) {
+            return true
+          } else {
+            this.$notify({
+              title: '错误',
+              message: '发布文章失败',
+              type: 'error',
+              duration: 2000
+            })
+            return false
+          }
         })
       }
 

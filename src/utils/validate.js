@@ -1,6 +1,4 @@
-/**
- * Created by jiachenpan on 16/11/18.
- */
+import Vue from 'vue'
 /* 字段不能全为空白字符 */
 export function isNotBlankInput(str) {
   return str && str.trim().length > 0
@@ -123,4 +121,8 @@ export function isvalidEmail(str) {
 export function isvalidIdCard(str) {
   const reg = /^[1-9]{1}[0-9]{5}(19|20)[0-9]{2}((0[1-9]{1})|(1[0-2]{1}))((0[1-9]{1})|([1-2]{1}[0-9]{1}|(3[0-1]{1})))[0-9]{3}[0-9xX]{1}$/
   return reg.test(str)
+}
+
+export function validateRequire(rule, value, callback) {
+
 }
