@@ -1,5 +1,5 @@
 <template>
-  <div class="datalist-div">
+  <div class="datalist-div app-main-wrapper">
     <div class="contract_wrap search-content-div tabmanage-tabs">
       <el-form ref="entityManagement" :model="entityForm" class="user-management" size="small">
         <el-form-item class="search-input" label="实体名称:">
@@ -270,5 +270,8 @@ export default {
     width: 45%;
     display: inline-block;
   }
+}
+.datalist-div {
+  margin-top: 0;
 }
 </style>

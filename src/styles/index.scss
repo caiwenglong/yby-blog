@@ -5,6 +5,7 @@
 @import './sidebar.scss';
 @import './list.scss';
 @import './form.scss';
+@import './common';
 
 body {
   height: 100%;
@@ -95,5 +96,5 @@ a:hover {
   padding: 20px;
 }
 input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -webkit-box-shadow: 0 0 0 1000px white inset;
 }

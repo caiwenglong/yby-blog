@@ -102,6 +102,23 @@ export const asyncRouterMap = [
       }
     ]
   },
+  {
+    path: '/articleDetails',
+    component: Layout,
+    name: 'articleDetails',
+    redirect: '/articleDetails/index',
+    hidden: true,
+    meta: { title: '文章详情', icon: '' },
+    children: [
+      {
+        path: 'index/:artId',
+        name: 'articleDetailsIndex',
+        component: () => import('@/views/articleDetails/index.vue'),
+        hidden: true,
+        meta: { title: '文章详细页', icon: '' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -1,5 +1,6 @@
 import {
-  getArticleSummary
+  getArticleSummary,
+  getArticleDetails
 } from '../../api/article'
 
 const entityArticle = {
@@ -12,13 +13,18 @@ const entityArticle = {
       state.entityArticleList = articleList
     },
     SET_ENTITY_ARTICLE_DETAILS: (state, articleDetails) => {
-      state.entityArticleList = articleDetails
+      state.entityArticleDetails = articleDetails
     }
   },
   actions: {
     getArticleList({ commit }) {
       getArticleSummary().then((articleList) => {
         commit('SET_ENTITY_ARTICLE_LIST', articleList)
+      })
+    },
+    getSingleArticle({ commit }, artId) {
+      getArticleDetails(artId).then(articleDetails => {
+        commit('SET_ENTITY_ARTICLE_DETAILS', articleDetails)
       })
     }
   }

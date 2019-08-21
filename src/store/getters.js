@@ -23,7 +23,8 @@ const getters = {
   entityInfo: state => state.entityManagement.entityInfo,
 
   // 文章内容
-  entityArticleList: state => state.entityArticle.entityArticleList
+  entityArticleList: state => state.entityArticle.entityArticleList,
+  entityArticleDetails: state => state.entityArticle.entityArticleDetails
 }
 
 export default getters

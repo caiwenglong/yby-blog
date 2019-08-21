@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .app-main {
   /*50 = navbar  */
   min-height: calc(100vh - 50px);
@@ -44,7 +44,6 @@ export default {
   background: #f9fdfa;
   height: 100%;
   min-height: calc(100vh - 90px);
-  padding: 20px;
   text-align: center;
   box-shadow: 0 2px 2px rgba(158, 163, 173, 0.3);
 }

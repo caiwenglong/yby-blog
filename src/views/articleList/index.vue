@@ -1,5 +1,5 @@
 <template>
-  <div class="article-list-wrapper">
+  <div class="article-list-wrapper app-main-wrapper">
       <el-row :gutter="12">
         <el-col :span="12" v-for="articleItem in entityArticleList" :key="articleItem.objectId">
           <el-card shadow="hover">
@@ -12,11 +12,11 @@
                 <span>{{ articleItem.createdAt }}</span>
               </div>
               <div class="article-content">
-                {{ articleItem.artContent }}
+                这个位置是存放内容的
               </div>
             </div>
             <div class="operation-area">
-              <el-button type="primary" size="medium">
+              <el-button @click="redirectToDetailsPage(articleItem.objectId)" type="primary" size="medium">
                 阅读全文
               </el-button>
             </div>
@@ -49,10 +49,10 @@
         this.getDataList()
       },
       getDataList() {
-        this.$store.dispatch('getArticleList').then(() => {
-          console.log('this.entityArticleList')
-          console.log(this.entityArticleList)
-        })
+        this.$store.dispatch('getArticleList').then(() => {})
+      },
+      redirectToDetailsPage(artId) {
+        this.$router.push({ name: 'articleDetailsIndex', params: { artId: artId }})
       }
     }
   }
