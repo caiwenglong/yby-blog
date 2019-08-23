@@ -1,4 +1,5 @@
 import Bmob from 'hydrogen-js-sdk'
+import * as _ from 'lodash'
 Bmob.initialize('e4d31451776823a5', '566210')
 
 const TABLE_NAME = 'Article'
@@ -14,6 +15,7 @@ export function getArticleSummary(currentPage, pageSize) {
     }
     TableArticle.skip(skipTotal)
     TableArticle.limit(pageSize)
+    TableArticle.order('-artLevel', '-updatedAt')
     TableArticle.find().then(res => {
       const articleList = []
       for (let i = 0; i < res.length; i++) {
@@ -21,6 +23,7 @@ export function getArticleSummary(currentPage, pageSize) {
           title: String,
           artSummary: String,
           artContent: String,
+          artTags: [],
           objectId: String,
           createdAt: String,
           updatedAt: String
@@ -28,11 +31,13 @@ export function getArticleSummary(currentPage, pageSize) {
         object.title = res[i].title
         object.artSummary = res[i].artSummary
         object.artContent = res[i].artContent
+        object.artTags = res[i].artTags
         object.objectId = res[i].objectId
         object.createdAt = res[i].createdAt
         object.updatedAt = res[i].updatedAt
         articleList.push(object)
       }
+      _.reverse(articleList)
       resolve(articleList.reverse())
     }).catch(err => {
       console.log(err)

@@ -79,7 +79,6 @@
         this.loading = true
         this.$store.dispatch('getArticleList', { currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
           _this.loading = false
-          console.log(this.entityArticleList)
         })
       },
       redirectToDetailsPage(artId) {

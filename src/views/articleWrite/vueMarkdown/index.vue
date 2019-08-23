@@ -16,11 +16,48 @@
             </MdInput>
           </el-form-item>
         </el-col>
+        <!--<el-col :span="24">-->
+          <!--<el-form-item  prop="tags">-->
+            <!--<vue-tags-input-->
+              <!--v-model="tag"-->
+              <!--:tags="tags"-->
+              <!--@tags-changed="newTags => tags = newTags"-->
+            <!--/>-->
+          <!--</el-form-item>-->
+        <!--</el-col>-->
+        <el-col :span="24">
+          <el-form-item  prop="tags">
+            <div class="tags-list">
+              <el-tag
+                :key="tag"
+                v-for="tag in tags"
+                closable
+                :disable-transitions="false"
+                @close="handleClose(tag)">
+                {{tag}}
+              </el-tag>
+              <el-input
+                class="input-new-tag"
+                v-if="inputVisible"
+                v-model="inputValue"
+                ref="saveTagInput"
+                size="small"
+                @keyup.enter.native="handleInputConfirm"
+                @blur="handleInputConfirm"
+              >
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+            </div>
+          </el-form-item>
+        </el-col>
       </div>
     </el-form>
     <div class="operation-button">
       <el-button v-loading="loading" type="primary" size="medium" @click="publishArticle()">
         Publish
+      </el-button>
+      <el-button v-loading="loading" type="primary" size="medium" @click="getTags()">
+        draft
       </el-button>
     </div>
     <div id="main">
@@ -34,12 +71,14 @@
   import Bmob from 'hydrogen-js-sdk'
   Bmob.initialize('e4d31451776823a5', '566210')
   import MdInput from '../../../components/MdInput/index'
+  import VueTagsInput from '@johmun/vue-tags-input'
 
   const defaultForm = {
     status: 'draft',
     title: '',
     artContent: '',
     content_short: '',
+    tags: '',
     source_uri: '',
     image_uri: '',
     importance: 0
@@ -47,7 +86,7 @@
 
   export default {
     name: 'MarkdownEdit',
-    components: { MdInput },
+    components: { MdInput, VueTagsInput },
     data() {
       const validateRequire = (rule, value, callback) => {
         let message = ''
@@ -74,6 +113,11 @@
         contentShortInputName: 'contentShortInput',
         postForm: Object.assign({}, defaultForm),
         loading: false,
+        tag: '',
+        tags: [],
+        dynamicTags: ['标签一', '标签二', '标签三'],
+        inputVisible: false,
+        inputValue: '',
         rules: {
           title: [{ validator: validateRequire }],
           content_short: [{ validator: validateRequire }]
@@ -81,6 +125,26 @@
       }
     },
     methods: {
+      handleClose(tag) {
+        this.tags.splice(this.tags.indexOf(tag), 1)
+      },
+
+      showInput() {
+        this.inputVisible = true
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus()
+        })
+      },
+
+      handleInputConfirm() {
+        const inputValue = this.inputValue
+        if (inputValue) {
+          this.tags.push(inputValue)
+          console.log(this.tags)
+        }
+        this.inputVisible = false
+        this.inputValue = ''
+      },
       publishArticle(articleObj) {
         const _this = this
         if (!this.validateForm) {
@@ -92,6 +156,7 @@
             TableArticle.set('title', _this.postForm.title)
             TableArticle.set('artSummary', _this.postForm.content_short)
             TableArticle.set('artContent', _this.value)
+            TableArticle.set('artTags', _this.tags)
             TableArticle.save().then(res => {
               _this.$notify({
                 title: '成功',
@@ -127,8 +192,10 @@
             return false
           }
         })
+      },
+      tagsChanged(val) {
+        console.log(val)
       }
-
     }
   }
 </script>
@@ -137,5 +204,12 @@
   .operation-button {
     text-align: right;
     margin: 0 0 12px 0;
+  }
+  .tags-list {
+    text-align: left;
+  }
+  .input-new-tag {
+    margin-left: 4px;
+    width: 90px;
   }
 </style>

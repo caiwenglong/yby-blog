@@ -5,6 +5,10 @@
         {{entityArticleDetails.title}}
       </h4>
 
+      <div class="article-infos">
+        <el-tag v-for="tag in entityArticleDetails.artTags" :key="tag">{{tag}}</el-tag>
+      </div>
+
       <div class="article-details-content">
         <mavon-editor
           ref="mavonEditor"
@@ -39,11 +43,26 @@
   }
 </script>
 
-<style>
+<style lang="scss">
 .article-details-content {
   width: 100%;
 }
 .v-note-wrapper .v-note-panel .v-note-show {
   width: 100%;
+}
+.article-infos {
+  padding-left: 25px;
+  text-align: left;
+}
+.article-details-content {
+  .v-note-wrapper {
+    background: none;
+  }
+.v-show-content {
+  background: none !important;
+}
+  .v-note-panel {
+    box-shadow: none !important;
+  }
 }
 </style>

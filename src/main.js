@@ -14,6 +14,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import * as _ from 'lodash'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -22,10 +23,10 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Bmob from 'hydrogen-js-sdk'
 Vue.prototype.Bmob = Bmob
+Vue.prototype._ = _
 Bmob.initialize('e4d31451776823a5', '566210')
 
 Vue.use(mavonEditor)
-// Vue.use(ElementUI, { locale })
 Vue.use(ElementUI)
 
 Vue.prototype.MaxSize = 500

@@ -3,3 +3,7 @@
     padding: 20px;
   }
 }
+
+.el-tag + .el-tag {
+  margin-left: 8px;
+}
