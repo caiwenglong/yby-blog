@@ -6,6 +6,7 @@ import user from '@/store/modules/user'
 import entityManagement from '@/store/modules/entityManagement'
 import entityArticle from '@/store/modules/article'
 import getters from '@/store/getters'
+import articleCategory from './modules/articleCategory'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     user,
     permission,
     entityManagement,
-    entityArticle
+    entityArticle,
+    articleCategory
   },
   getters
 })

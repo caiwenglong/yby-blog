@@ -1,5 +1,9 @@
 <template>
-  <div class="markdown-edit-wrapper">
+  <div v-loading="loading"
+       element-loading-text="拼命加载中"
+       element-loading-spinner="el-icon-loading"
+       element-loading-background="rgba(0, 0, 0, 0.8)"
+       class="markdown-edit-wrapper">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="post-main-container">
         <el-col :span="24">
@@ -16,37 +20,23 @@
             </MdInput>
           </el-form-item>
         </el-col>
-        <!--<el-col :span="24">-->
-          <!--<el-form-item  prop="tags">-->
-            <!--<vue-tags-input-->
-              <!--v-model="tag"-->
-              <!--:tags="tags"-->
-              <!--@tags-changed="newTags => tags = newTags"-->
-            <!--/>-->
-          <!--</el-form-item>-->
-        <!--</el-col>-->
         <el-col :span="24">
           <el-form-item  prop="tags">
             <div class="tags-list">
-              <el-tag
-                :key="tag"
-                v-for="tag in tags"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)">
-                {{tag}}
-              </el-tag>
-              <el-input
-                class="input-new-tag"
-                v-if="inputVisible"
-                v-model="inputValue"
-                ref="saveTagInput"
-                size="small"
-                @keyup.enter.native="handleInputConfirm"
-                @blur="handleInputConfirm"
-              >
-              </el-input>
-              <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+              <el-select
+                v-model="valueTag"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                placeholder="请选择文章标签">
+                <el-option
+                  v-for="item in articleCategoryList"
+                  :key="item.category"
+                  :label="item.category"
+                  :value="item.category">
+                </el-option>
+              </el-select>
             </div>
           </el-form-item>
         </el-col>
@@ -62,7 +52,7 @@
     </div>
     <div id="main">
       <!-- 配置页面 https://github.com/hinesboy/mavonEditor -->
-      <mavon-editor ref="mavonEditor" v-model="value" :codeStyle="'monokai'"/>
+      <mavon-editor ref="mavonEditor" v-model="valueMarkdown" :codeStyle="'monokai'"/>
     </div>
   </div>
 </template>
@@ -71,7 +61,7 @@
   import Bmob from 'hydrogen-js-sdk'
   Bmob.initialize('e4d31451776823a5', '566210')
   import MdInput from '../../../components/MdInput/index'
-  import VueTagsInput from '@johmun/vue-tags-input'
+  import { mapGetters } from 'vuex'
 
   const defaultForm = {
     status: 'draft',
@@ -86,7 +76,7 @@
 
   export default {
     name: 'MarkdownEdit',
-    components: { MdInput, VueTagsInput },
+    components: { MdInput },
     data() {
       const validateRequire = (rule, value, callback) => {
         let message = ''
@@ -108,14 +98,13 @@
         }
       }
       return {
-        value: 'aaa',
+        valueMarkdown: 'aaa',
+        valueTag: [],
         titleInputName: 'titleInput',
         contentShortInputName: 'contentShortInput',
         postForm: Object.assign({}, defaultForm),
         loading: false,
         tag: '',
-        tags: [],
-        dynamicTags: ['标签一', '标签二', '标签三'],
         inputVisible: false,
         inputValue: '',
         rules: {
@@ -124,26 +113,21 @@
         }
       }
     },
+    computed: {
+      ...mapGetters([
+        'articleCategoryList'
+      ])
+    },
+    created: function() {
+      this.getArticleCategoryData()
+    },
     methods: {
-      handleClose(tag) {
-        this.tags.splice(this.tags.indexOf(tag), 1)
-      },
-
-      showInput() {
-        this.inputVisible = true
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus()
+      getArticleCategoryData() {
+        const _this = this
+        _this.loading = true
+        _this.$store.dispatch('getArticleCategoryData').then((res) => {
+          _this.loading = false
         })
-      },
-
-      handleInputConfirm() {
-        const inputValue = this.inputValue
-        if (inputValue) {
-          this.tags.push(inputValue)
-          console.log(this.tags)
-        }
-        this.inputVisible = false
-        this.inputValue = ''
       },
       publishArticle(articleObj) {
         const _this = this
@@ -155,8 +139,8 @@
             const TableArticle = Bmob.Query('Article')
             TableArticle.set('title', _this.postForm.title)
             TableArticle.set('artSummary', _this.postForm.content_short)
-            TableArticle.set('artContent', _this.value)
-            TableArticle.set('artTags', _this.tags)
+            TableArticle.set('artContent', _this.valueMarkdown)
+            TableArticle.set('artTags', _this.valueTag)
             TableArticle.save().then(res => {
               _this.$notify({
                 title: '成功',
@@ -192,15 +176,12 @@
             return false
           }
         })
-      },
-      tagsChanged(val) {
-        console.log(val)
       }
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .operation-button {
     text-align: right;
     margin: 0 0 12px 0;

@@ -3,10 +3,10 @@ import * as _ from 'lodash'
 Bmob.initialize('e4d31451776823a5', '566210')
 
 const TABLE_NAME = 'Article'
+const TableArticle = Bmob.Query(TABLE_NAME)
 
 export function getArticleSummary(currentPage, pageSize) {
   return new Promise(function(resolve, reject) {
-    const TableArticle = Bmob.Query(TABLE_NAME)
     let skipTotal
     if (currentPage > 0) {
       skipTotal = (currentPage - 1) * pageSize
@@ -48,7 +48,6 @@ export function getArticleSummary(currentPage, pageSize) {
 
 export function getArticleTotal() {
   return new Promise(function(resolve, reject) {
-    const TableArticle = Bmob.Query(TABLE_NAME)
     TableArticle.count().then(res => {
       const total = res
       resolve(total)
@@ -60,7 +59,6 @@ export function getArticleTotal() {
 
 export function getArticleDetails(artId) {
   return new Promise(function(resolve, reject) {
-    const TableArticle = Bmob.Query(TABLE_NAME)
     TableArticle.get(artId).then(res => {
       const singleArticleDetails = res
       resolve(singleArticleDetails)
