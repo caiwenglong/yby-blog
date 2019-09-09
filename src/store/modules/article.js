@@ -18,7 +18,7 @@ const entityArticle = {
   },
   actions: {
     getArticleList({ commit }, params) {
-      getArticleSummary(params.currentPage, params.pageSize).then((articleList) => {
+      getArticleSummary(params.category, params.currentPage, params.pageSize).then((articleList) => {
         commit('SET_ENTITY_ARTICLE_LIST', articleList)
       })
     },

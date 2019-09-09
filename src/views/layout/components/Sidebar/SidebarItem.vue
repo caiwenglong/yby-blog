@@ -22,12 +22,10 @@
         <!-- 存在孙路由 -->
         <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children&&child.children.length>0" :item="child" :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
         <!-- 仅有子路由 -->
-        <router-link v-else :to="resolvePath(child.path)" :key="child.name">
-          <el-menu-item :index="resolvePath(child.path)">
-            <svg-icon v-if="child.meta&&child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
-            <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
-          </el-menu-item>
-        </router-link>
+        <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
+          <svg-icon v-if="child.meta&&child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
+          <span v-if="child.meta&&child.meta.title" slot="title">{{child.meta.title}}</span>
+        </el-menu-item>
       </template>
     </el-submenu>
 
@@ -72,6 +70,9 @@ export default {
     },
     resolvePath(...paths) {
       return path.resolve(this.basePath, ...paths)
+    },
+    goToView(name, category) {
+      this.$router.push({ name: name, params: { category: category }})
     }
   }
 }

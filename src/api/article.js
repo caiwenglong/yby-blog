@@ -5,13 +5,16 @@ Bmob.initialize('e4d31451776823a5', '566210')
 const TABLE_NAME = 'Article'
 const TableArticle = Bmob.Query(TABLE_NAME)
 
-export function getArticleSummary(currentPage, pageSize) {
+export function getArticleSummary(categoryName, currentPage, pageSize) {
   return new Promise(function(resolve, reject) {
     let skipTotal
     if (currentPage > 0) {
       skipTotal = (currentPage - 1) * pageSize
     } else {
       skipTotal = 0
+    }
+    if (categoryName !== 'ALL') {
+      TableArticle.equalTo('category', '==', categoryName)
     }
     TableArticle.skip(skipTotal)
     TableArticle.limit(pageSize)

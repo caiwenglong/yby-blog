@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import * as _ from 'lodash'
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
@@ -53,13 +53,14 @@ export const constantRouterMap = [
   }
 ]
 
-export const asyncRouterMap = [
+export const route001 = [
   {
     path: '/entityManagement',
     component: Layout,
     name: 'entityManagement',
     redirect: '/entityManagement/index',
     meta: { title: '实体管理', icon: 'entity', roles: ['admin'] },
+    level: 1,
     children: [
       {
         path: 'index',
@@ -71,24 +72,9 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '/articleList',
-    component: Layout,
-    name: 'articleList',
-    redirect: '/articleList/index',
-    meta: { title: '文章列表', icon: 'article-list' },
-    children: [
-      {
-        path: 'index',
-        name: 'articleListIndex',
-        component: () => import('@/views/articleList/index.vue'),
-        hidden: false,
-        meta: { title: '文章列表页', icon: '' }
-      }
-    ]
-  },
-  {
     path: '/articleWrite',
     component: Layout,
+    level: 3,
     name: 'articleWrite',
     redirect: '/articleWrite/index',
     meta: { title: '文章写作', icon: 'article-write' },
@@ -108,6 +94,7 @@ export const asyncRouterMap = [
     name: 'articleDetails',
     redirect: '/articleDetails/index',
     hidden: true,
+    level: 4,
     meta: { title: '文章详情', icon: '' },
     children: [
       {
@@ -118,12 +105,59 @@ export const asyncRouterMap = [
         meta: { title: '文章详细页', icon: '' }
       }
     ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
+  // { path: '*', redirect: '/404', hidden: true, level: 100 }
 ]
+
+export function generateAsyncRouters(menus) {
+  const generateRouters = []
+  _.forEach(menus, menu => {
+    if (menu.parentLevel === 0) {
+      const route = {
+        path: '/' + menu.url,
+        component: Layout,
+        category: menu.category,
+        name: menu.name,
+        url: menu.url,
+        meta: { title: menu.name, icon: '' },
+        hidden: false,
+        level: 2,
+        children: getChildrenRouters(menus, menu.categoryLevel)
+      }
+      generateRouters.push(route)
+    }
+  })
+  return generateRouters
+}
+
+function getChildrenRouters(menus, parentId) {
+  const childrenRoutes = []
+  const childrens = _.filter(menus, function(item) {
+    if (item.parentLevel === parentId) {
+      const route = {
+        path: '/articleList/:category',
+        name: item.name,
+        url: item.url,
+        category: item.category,
+        component: () => import('@/views/articleList/index.vue'),
+        hidden: false,
+        meta: { title: item.name, icon: '' }
+      }
+      childrenRoutes.push(route)
+    }
+    return item.parentLevel === parentId
+  })
+  if (childrens.length) {
+    _.forEach(childrens, item => {
+      getChildrenRouters(menus, item.categoryLevel)
+    })
+  }
+  return childrenRoutes
+}
 
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+

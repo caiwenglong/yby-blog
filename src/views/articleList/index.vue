@@ -44,6 +44,7 @@
   import { getArticleTotal } from '../../api/article'
   export default {
     name: 'ArticleList',
+    category: 'ALL',
     data: function() {
       return {
         articleList: [],
@@ -62,11 +63,16 @@
       ])
     },
     created: function() {
-      this.searchArtData()
+      if (this.$route.params.category) {
+        this.category = this.$route.params.category
+      } else {
+        this.category = 'ALL'
+      }
+      this.searchArtData(this.category)
     },
     methods: {
-      searchArtData() {
-        this.getDataList()
+      searchArtData(category) {
+        this.getDataList(category)
         this.getArticleTotalNum()
       },
       getArticleTotalNum() {
@@ -74,10 +80,12 @@
           this.total = res
         })
       },
-      getDataList() {
+      getDataList(category) {
         const _this = this
         this.loading = true
-        this.$store.dispatch('getArticleList', { currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
+        console.log('this.category')
+        console.log(this.category)
+        this.$store.dispatch('getArticleList', { category: category, currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
           _this.loading = false
         })
       },
@@ -91,6 +99,11 @@
       handleCurrentChange(val) {
         this.currentPage = val
         this.getDataList()
+      }
+    },
+    watch: {
+      $route(to, from) {
+        this.getDataList(to.params.category)
       }
     }
   }

@@ -1,4 +1,7 @@
-import { asyncRouterMap, constantRouterMap } from '@/router'
+import { route001, constantRouterMap } from '@/router'
+import { getArticleCategory } from '../../api/articleCategory'
+import { generateAsyncRouters } from '../../router'
+import * as _ from 'lodash'
 /**
  * 示例：通过meta.role判断是否与当前用户权限匹配
  * 提示：可以通过重写该方法完成业务自定义的权限控制逻辑
@@ -52,14 +55,27 @@ const permission = {
   actions: {
     async GenerateRoutes({ commit }, roles) {
       return new Promise(resolve => {
-        let accessedRoutes
-        if (roles.includes('admin')) {
-          accessedRoutes = asyncRouterMap || []
-        } else {
-          accessedRoutes = filterAsyncRouter(asyncRouterMap, roles)
-        }
-        commit('SET_ROUTERS', accessedRoutes)
-        resolve()
+        let routes = []
+        getArticleCategory().then(categoryList => {
+          const menus = categoryList
+          if (menus.length) {
+            routes = generateAsyncRouters(menus)
+            routes = _.concat(routes, route001)
+            routes = _.sortBy(routes, function(o) {
+              return o.level
+            })
+          }
+          let accessedRoutes
+          console.log('routes')
+          console.log(routes)
+          if (roles.includes('admin')) {
+            accessedRoutes = routes || []
+          } else {
+            accessedRoutes = filterAsyncRouter(routes, roles)
+          }
+          commit('SET_ROUTERS', accessedRoutes)
+          resolve()
+        })
       })
     }
   }
