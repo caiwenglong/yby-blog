@@ -83,8 +83,6 @@
       getDataList(category) {
         const _this = this
         this.loading = true
-        console.log('this.category')
-        console.log(this.category)
         this.$store.dispatch('getArticleList', { category: category, currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
           _this.loading = false
         })

@@ -43,10 +43,14 @@ const user = {
             if (response) {
               // 保存用户信息至sessionStorage
               const userData = JSON.stringify(response)
-              commit('SET_USER_DATA', userData)
+              // commit('SET_USER_DATA', userData)
+              if (response.token) {
+                commit('SET_TOKEN', response.token)
+                setToken(response.token)
+              }
               setUserData(userData)
-              if (response.userName) {
-                commit('SET_NAME', response.userName)
+              if (response.username) {
+                commit('SET_NAME', response.username)
               }
               if (response.roles) {
                 commit('SET_ROLES', response.roles)

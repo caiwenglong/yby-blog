@@ -66,8 +66,6 @@ const permission = {
             })
           }
           let accessedRoutes
-          console.log('routes')
-          console.log(routes)
           if (roles.includes('admin')) {
             accessedRoutes = routes || []
           } else {

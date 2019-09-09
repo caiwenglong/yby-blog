@@ -29,8 +29,8 @@
           <div class="o-tags__list">
             <ul>
               <el-tag
-                v-for="tag in entityArticleDetails.artTags"
-                :key="tag"
+                v-for="(tag,index) in entityArticleDetails.artTags"
+                :key="index"
                 :size="'mini'"
                 :color="'none'"
               >

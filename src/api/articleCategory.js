@@ -1,5 +1,5 @@
 import Bmob from 'hydrogen-js-sdk'
-Bmob.initialize('e4d31451776823a5', '566210')
+Bmob.initialize('e4d31451776823a5', '666666')
 
 const TABLE_NAME = 'Article_Category'
 const TableArticleCategory = Bmob.Query(TABLE_NAME)
