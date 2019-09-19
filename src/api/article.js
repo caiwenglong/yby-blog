@@ -27,6 +27,7 @@ export function getArticleSummary(categoryName, currentPage, pageSize) {
           artSummary: String,
           artContent: String,
           artTags: [],
+          clicks: Number,
           objectId: String,
           createdAt: String,
           updatedAt: String
@@ -35,6 +36,7 @@ export function getArticleSummary(categoryName, currentPage, pageSize) {
         object.artSummary = res[i].artSummary
         object.artContent = res[i].artContent
         object.artTags = res[i].artTags
+        object.clicks = res[i].clicks
         object.objectId = res[i].objectId
         object.createdAt = res[i].createdAt
         object.updatedAt = res[i].updatedAt
@@ -63,6 +65,8 @@ export function getArticleTotal() {
 export function getArticleDetails(artId) {
   return new Promise(function(resolve, reject) {
     TableArticle.get(artId).then(res => {
+      res.set('clicks', res.clicks + 1)
+      res.save()
       const singleArticleDetails = res
       resolve(singleArticleDetails)
     }).catch(err => {

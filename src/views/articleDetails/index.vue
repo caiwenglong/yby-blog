@@ -15,12 +15,12 @@
             <span class="article-infos__date">
               <i class="el-icon-date"></i>
               <span>日期：</span>
-              <span>2019-08-23</span>
+              <span>{{ entityArticleDetails.createdAt }}</span>
             </span>
             <span class="article-infos__hits">
               <i class="el-icon-stopwatch"></i>
               <span>点击量：</span>
-              <span>5</span>
+              <span>{{ entityArticleDetails.clicks }}</span>
             </span>
           </div>
         </div>
