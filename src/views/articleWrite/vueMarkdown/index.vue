@@ -21,6 +21,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
+          <el-form-item  prop="category">
+            <el-select v-model="postForm.category" placeholder="请选择">
+              <el-option
+                v-for="item in articleCategoryList"
+                :key="item.category"
+                :label="item.category"
+                :value="item.category">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
           <el-form-item  prop="valueTag">
             <div class="tags-list">
               <el-select
@@ -68,6 +80,7 @@
     title: '',
     artContent: '',
     content_short: '',
+    category: '',
     tags: '',
     source_uri: '',
     image_uri: '',
@@ -111,6 +124,9 @@
           content_short: [{ validator: validateRequire }],
           valueTag: [
             { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
+          category: [
+            { required: true, message: '请选择分类', trigger: 'change' }
           ]
         }
       }
@@ -140,6 +156,7 @@
               const TableArticle = Bmob.Query('Article')
               TableArticle.set('title', _this.postForm.title)
               TableArticle.set('artSummary', _this.postForm.content_short)
+              TableArticle.set('category', _this.postForm.category)
               TableArticle.set('artContent', _this.valueMarkdown)
               TableArticle.set('artTags', _this.postForm.valueTag)
               TableArticle.save().then(res => {
