@@ -119,7 +119,7 @@ export function generateAsyncRouters(menus) {
         category: menu.category,
         name: menu.name,
         url: menu.url,
-        meta: { title: menu.name, icon: '' },
+        meta: { title: menu.name, icon: 'article-list' },
         hidden: false,
         level: 2,
         children: getChildrenRouters(menus, menu.categoryLevel)
