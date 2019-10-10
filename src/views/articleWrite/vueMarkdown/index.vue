@@ -21,10 +21,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item  prop="tags">
+          <el-form-item  prop="valueTag">
             <div class="tags-list">
               <el-select
-                v-model="valueTag"
+                v-model="postForm.valueTag"
                 multiple
                 filterable
                 allow-create
@@ -99,7 +99,6 @@
       }
       return {
         valueMarkdown: 'aaa',
-        valueTag: [],
         titleInputName: 'titleInput',
         contentShortInputName: 'contentShortInput',
         postForm: Object.assign({}, defaultForm),
@@ -109,7 +108,10 @@
         inputValue: '',
         rules: {
           title: [{ validator: validateRequire }],
-          content_short: [{ validator: validateRequire }]
+          content_short: [{ validator: validateRequire }],
+          valueTag: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ]
         }
       }
     },
@@ -131,36 +133,39 @@
       },
       publishArticle(articleObj) {
         const _this = this
-        if (!this.validateForm) {
-          return
-        } else {
-          return new Promise(function(resolve, reject) {
-            _this.loading = true
-            const TableArticle = Bmob.Query('Article')
-            TableArticle.set('title', _this.postForm.title)
-            TableArticle.set('artSummary', _this.postForm.content_short)
-            TableArticle.set('artContent', _this.valueMarkdown)
-            TableArticle.set('artTags', _this.valueTag)
-            TableArticle.save().then(res => {
-              _this.$notify({
-                title: '成功',
-                message: '发布文章成功',
-                type: 'success',
-                duration: 2000
+        this.$refs.postForm.validate((valid) => {
+          if (valid) {
+            return new Promise(function(resolve, reject) {
+              _this.loading = true
+              const TableArticle = Bmob.Query('Article')
+              TableArticle.set('title', _this.postForm.title)
+              TableArticle.set('artSummary', _this.postForm.content_short)
+              TableArticle.set('artContent', _this.valueMarkdown)
+              TableArticle.set('artTags', _this.postForm.valueTag)
+              TableArticle.save().then(res => {
+                _this.$notify({
+                  title: '成功',
+                  message: '发布文章成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                _this.postForm.status = 'published'
+                _this.loading = false
+              }).catch(err => {
+                _this.$notify({
+                  title: '错误',
+                  message: '发布文章失败',
+                  type: 'error',
+                  duration: 2000
+                })
+                console.log(err)
               })
-              _this.postForm.status = 'published'
-              _this.loading = false
-            }).catch(err => {
-              _this.$notify({
-                title: '错误',
-                message: '发布文章失败',
-                type: 'error',
-                duration: 2000
-              })
-              console.log(err)
             })
-          })
-        }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
       },
       validateForm() {
         this.$refs.postForm.validate(valid => {
@@ -192,5 +197,8 @@
   .input-new-tag {
     margin-left: 4px;
     width: 90px;
+  }
+  .el-form-item {
+    margin-bottom: 42px;
   }
 </style>
