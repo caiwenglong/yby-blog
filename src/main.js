@@ -23,7 +23,7 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Bmob from 'hydrogen-js-sdk'
 Vue.prototype.Bmob = Bmob
-Vue.prototype._ = _
+Vue.prototype.lodash = _
 Bmob.initialize('e4d31451776823a5', '666666')
 
 Vue.use(mavonEditor)

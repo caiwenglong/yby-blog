@@ -36,7 +36,7 @@ export function getArticleSummary(categoryName, currentPage, pageSize) {
         object.artSummary = res[i].artSummary
         object.artContent = res[i].artContent
         object.artTags = res[i].artTags
-        object.clicks = res[i].clicks
+        object.clicks = res[i].clicks ? res[i].clicks : 0
         object.objectId = res[i].objectId
         object.createdAt = res[i].createdAt
         object.updatedAt = res[i].updatedAt

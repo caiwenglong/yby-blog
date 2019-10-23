@@ -22,9 +22,12 @@
               <span>点击量：</span>
               <span>{{ entityArticleDetails.clicks }}</span>
             </span>
+            <span class="article__edit-btn" @click="redirectToEditPage()">
+              <button type="button" class="el-button el-button--text"><!----><!----><span>编辑</span></button>
+            </span>
           </div>
         </div>
-        <div class="col--right">
+        <div class="col--right tags--wrapper">
           <i class="el-icon-paperclip"></i>
           <div class="o-tags__list">
             <ul>
@@ -70,6 +73,9 @@
     methods: {
       getArticleDetails() {
         this.$store.dispatch('getSingleArticle', this.$route.params.artId).then()
+      },
+      redirectToEditPage() {
+        this.$router.push({ name: 'articleWriteIndex', params: { artId: this.$route.params.artId, isEdit: true }})
       }
     }
   }
@@ -109,7 +115,14 @@
   font-size: 12px;
   color: #ccc;
 }
-  .article-infos__date {
-    line-height: 20px;
+.article-infos__date {
+  line-height: 20px;
+}
+  .o-tags__list {
+    display: inline-block;
+  }
+
+  .tags--wrapper {
+    line-height: 40px;
   }
 </style>

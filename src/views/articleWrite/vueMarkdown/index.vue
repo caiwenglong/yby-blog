@@ -8,21 +8,21 @@
       <div class="post-main-container">
         <el-col :span="24">
           <el-form-item prop="title">
-            <MdInput v-model="postForm.title" :maxlength="64" name="titleInputName" required>
+            <MdInput v-model="getPostForm.title" :maxlength="64" name="titleInputName" required>
               title
             </MdInput>
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item  prop="content_short">
-            <MdInput v-model="postForm.content_short" :maxlength="64" name="contentShortInputName" required>
+          <el-form-item  prop="artSummary">
+            <MdInput v-model="getPostForm.artSummary" :maxlength="64" name="contentShortInputName" required>
               summary
             </MdInput>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item  prop="category">
-            <el-select v-model="postForm.category" placeholder="请选择">
+            <el-select v-model="getPostForm.category" placeholder="请选择">
               <el-option
                 v-for="item in articleCategoryList"
                 :key="item.category"
@@ -33,10 +33,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item  prop="valueTag">
+          <el-form-item  prop="artTags">
             <div class="tags-list">
               <el-select
-                v-model="postForm.valueTag"
+                v-model="postForm.artTags"
                 multiple
                 filterable
                 allow-create
@@ -79,7 +79,7 @@
     status: 'draft',
     title: '',
     artContent: '',
-    content_short: '',
+    artSummary: '',
     category: '',
     tags: '',
     source_uri: '',
@@ -95,7 +95,7 @@
         let message = ''
         if (rule.field === 'title') {
           message = '标题为必填项'
-        } else if (rule.field === 'content_short') {
+        } else if (rule.field === 'artSummary') {
           message = '文章概览为必填项'
         } else {
           message = '信息错误！'
@@ -111,7 +111,7 @@
         }
       }
       return {
-        valueMarkdown: 'aaa',
+        valueMarkdown: '',
         titleInputName: 'titleInput',
         contentShortInputName: 'contentShortInput',
         postForm: Object.assign({}, defaultForm),
@@ -121,8 +121,8 @@
         inputValue: '',
         rules: {
           title: [{ validator: validateRequire }],
-          content_short: [{ validator: validateRequire }],
-          valueTag: [
+          artSummary: [{ validator: validateRequire }],
+          artTags: [
             { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
           ],
           category: [
@@ -133,11 +133,22 @@
     },
     computed: {
       ...mapGetters([
-        'articleCategoryList'
-      ])
+        'articleCategoryList',
+        'entityArticleDetails'
+      ]),
+      getPostForm: function() {
+        if (this.entityArticleDetails) {
+          return Object.assign(this.postForm, this.entityArticleDetails)
+        } else {
+          return this.postForm
+        }
+      }
     },
     created: function() {
       this.getArticleCategoryData()
+      if (this.$route.params.isEdit) {
+        this.getArticleDetails()
+      }
     },
     methods: {
       getArticleCategoryData() {
@@ -147,6 +158,11 @@
           _this.loading = false
         })
       },
+      getArticleDetails() {
+        this.$store.dispatch('getSingleArticle', this.$route.params.artId).then(item => {
+          this.valueMarkdown = this.entityArticleDetails.artContent
+        })
+      },
       publishArticle(articleObj) {
         const _this = this
         this.$refs.postForm.validate((valid) => {
@@ -154,11 +170,14 @@
             return new Promise(function(resolve, reject) {
               _this.loading = true
               const TableArticle = Bmob.Query('Article')
+              if (_this.$route.params.isEdit) {
+                TableArticle.set('id', _this.$route.params.artId)
+              }
               TableArticle.set('title', _this.postForm.title)
-              TableArticle.set('artSummary', _this.postForm.content_short)
+              TableArticle.set('artSummary', _this.postForm.artSummary)
               TableArticle.set('category', _this.postForm.category)
               TableArticle.set('artContent', _this.valueMarkdown)
-              TableArticle.set('artTags', _this.postForm.valueTag)
+              TableArticle.set('artTags', _this.postForm.artTags)
               TableArticle.save().then(res => {
                 _this.$notify({
                   title: '成功',
