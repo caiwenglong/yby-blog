@@ -22,12 +22,14 @@ import axios from 'axios'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Bmob from 'hydrogen-js-sdk'
+import GeminiScrollbar from 'vue-gemini-scrollbar'
 Vue.prototype.Bmob = Bmob
 Vue.prototype.lodash = _
 Bmob.initialize('e4d31451776823a5', '666666')
 
 Vue.use(mavonEditor)
 Vue.use(ElementUI)
+Vue.use(GeminiScrollbar)
 
 Vue.prototype.MaxSize = 500
 Vue.config.productionTip = false

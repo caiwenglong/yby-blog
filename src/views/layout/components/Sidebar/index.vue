@@ -59,3 +59,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .sidebar-container {
+    background: #304156;
+  }
+</style>

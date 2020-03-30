@@ -14,7 +14,7 @@
         :minlength="minlength"
         :required="required"
         type="text"
-        class="material-input"
+        class="el-input__inner"
         @focus="handleMdFocus"
         @blur="handleMdBlur"
         @input="handleModelInput"
@@ -205,6 +205,7 @@
       top: 0;
       transition: $transition;
       font-size: $font-size-small;
+      padding-left: 12px;
     }
 
     .material-input-bar {
@@ -273,6 +274,7 @@
     &.material--active {
       .material-label {
         color: $color-blue;
+        padding-left: 0;
       }
     }
 

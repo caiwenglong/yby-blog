@@ -1,4 +1,6 @@
 <template>
+  <GeminiScrollbar
+    class="my-scroll-bar">
   <div class="app-wrapper" :class="classObj">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
     <sidebar class="sidebar-container"></sidebar>
@@ -7,6 +9,7 @@
       <app-main></app-main>
     </div>
   </div>
+  </GeminiScrollbar>
 </template>
 
 <script>
@@ -83,5 +86,21 @@ export default {
 }
 .input_position {
   text-align: center;
+}
+.gm-scrollbar.-vertical {
+  background-color: #f0f0f0
+}
+
+/* horizontal scrollbar track */
+.gm-scrollbar.-horizontal {
+  background-color: transparent;
+}
+
+/* scrollbar thumb */
+.gm-scrollbar .thumb {
+  background-color: rebeccapurple;
+}
+.gm-scrollbar .thumb:hover {
+  background-color: fuchsia;
 }
 </style>

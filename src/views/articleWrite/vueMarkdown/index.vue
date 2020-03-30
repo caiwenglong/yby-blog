@@ -4,23 +4,31 @@
        element-loading-spinner="el-icon-loading"
        element-loading-background="rgba(0, 0, 0, 0.8)"
        class="markdown-edit-wrapper">
+    <div class="operation-button">
+      <el-button v-loading="loading" type="primary" size="medium" @click="publishArticle()">
+        Publish
+      </el-button>
+      <el-button v-loading="loading" type="primary" size="medium" @click="getTags()">
+        draft
+      </el-button>
+    </div>
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="post-main-container">
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item prop="title">
             <MdInput v-model="getPostForm.title" :maxlength="64" name="titleInputName" required>
               title
             </MdInput>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item  prop="artSummary">
             <MdInput v-model="getPostForm.artSummary" :maxlength="64" name="contentShortInputName" required>
               summary
             </MdInput>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item  prop="category">
             <el-select v-model="getPostForm.category" placeholder="请选择">
               <el-option
@@ -32,7 +40,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item  prop="artTags">
             <div class="tags-list">
               <el-select
@@ -54,14 +62,6 @@
         </el-col>
       </div>
     </el-form>
-    <div class="operation-button">
-      <el-button v-loading="loading" type="primary" size="medium" @click="publishArticle()">
-        Publish
-      </el-button>
-      <el-button v-loading="loading" type="primary" size="medium" @click="getTags()">
-        draft
-      </el-button>
-    </div>
     <div id="main">
       <!-- 配置页面 https://github.com/hinesboy/mavonEditor -->
       <mavon-editor ref="mavonEditor" v-model="valueMarkdown" :codeStyle="'monokai'"/>
@@ -236,5 +236,14 @@
   }
   .el-form-item {
     margin-bottom: 42px;
+  }
+  .el-col .el-form-item {
+    margin-left: 12px;
+  }
+
+  #main {
+    &::v-deep .shadow, &::v-deep.v-note-panel {
+      border: 10px solid #000;
+    }
   }
 </style>
