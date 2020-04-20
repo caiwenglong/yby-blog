@@ -7,23 +7,32 @@
       <div class="article-detail-infos clearfix">
         <div class="col--left">
           <div>
-            <span class="article-infos__auth">
+            <span class="article-infos article-infos__auth">
               <i class="el-icon-user"></i>
               <span>作者：</span>
               <span>YBY</span>
             </span>
-            <span class="article-infos__date">
+            <span class="article-infos article-infos__date">
               <i class="el-icon-date"></i>
               <span>日期：</span>
               <span>{{ entityArticleDetails.createdAt }}</span>
             </span>
-            <span class="article-infos__hits">
+            <span class="article-infos article-infos__hits">
               <i class="el-icon-stopwatch"></i>
               <span>点击量：</span>
               <span>{{ entityArticleDetails.clicks }}</span>
             </span>
-            <span class="article__edit-btn" @click="redirectToEditPage()">
-              <button type="button" class="el-button el-button--text"><!----><!----><span>编辑</span></button>
+            <span class="article-infos article__edit-btn" @click="redirectToEditPage()">
+              <button type="button" class="el-button el-button--text">
+                <i class="el-icon-edit-outline"></i>
+                <span>编辑</span>
+              </button>
+            </span>
+            <span class="article-infos article__delete-btn" @click="handleDeleteArticle()">
+              <button type="button" class="el-button el-button--text el-button--danger">
+                <i class="el-icon-delete"></i>
+                <span>删除</span>
+              </button>
             </span>
           </div>
         </div>
@@ -60,6 +69,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import 'mavon-editor/dist/css/index.css'
+
   export default {
     name: 'ArticleDetails',
     created: function() {
@@ -76,53 +86,95 @@
       },
       redirectToEditPage() {
         this.$router.push({ name: 'articleWriteIndex', params: { artId: this.$route.params.artId, isEdit: true }})
+      },
+      handleDeleteArticle() {
+        this.$confirm('此操作将删除该文章，是否继续？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then((res) => {
+          this.$store.dispatch('deleteArticle', this.$route.params.artId).then(res => {
+            if (res.msg === 'ok') {
+              this.$alert({
+                confirmButtonText: '确定',
+                callback: () => {
+                  // this.$router.push({name: ''})
+                }
+              })
+            }
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          })
+        })
       }
     }
   }
 </script>
 
 <style lang="scss">
-.article-details-content {
-  width: 100%;
-}
-.v-note-wrapper .v-note-panel .v-note-show {
-  width: 100%;
-}
-.article-details-content {
-  .v-note-wrapper {
-    background: none;
+  .article-details-content {
+    width: 100%;
   }
-.v-show-content {
-  background: none !important;
-}
-  .v-note-panel {
-    box-shadow: none !important;
+
+  .v-note-wrapper .v-note-panel .v-note-show {
+    width: 100%;
   }
-}
 
-.article-detail__title {
-  font-size: 28px;
-  color: #00b7e9;
-}
+  .article-details-content {
+    .v-note-wrapper {
+      background: none;
+    }
 
-.article-detail-infos {
-  margin: 0 25px 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #ddd;
-}
+    .v-show-content {
+      background: none !important;
+    }
 
-.c-article-detail {
-  font-size: 12px;
-  color: #ccc;
-}
-.article-infos__date {
-  line-height: 20px;
-}
+    .v-note-panel {
+      box-shadow: none !important;
+    }
+  }
+
+  .article-detail__title {
+    font-size: 28px;
+    color: #00b7e9;
+  }
+
+  .article-infos {
+    margin-right: 20px;
+  }
+
+  .article-detail-infos {
+    margin: 0 25px 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
+  }
+
+  .c-article-detail {
+    font-size: 12px;
+    color: #ccc;
+  }
+
+  .article-infos__date {
+    line-height: 20px;
+  }
+
   .o-tags__list {
     display: inline-block;
   }
 
   .tags--wrapper {
     line-height: 40px;
+  }
+
+  .el-button--danger {
+    color: #f56c6c;
+
+
+    &:hover {
+      color: #f78989;
+    }
   }
 </style>

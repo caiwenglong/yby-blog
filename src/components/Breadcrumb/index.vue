@@ -56,11 +56,7 @@ export default {
           path += '/' + item.redirect
         }
       }
-      if (path === this.curPath) {
-        return true
-      } else {
-        return false
-      }
+      return path === this.curPath
     }
   }
 }

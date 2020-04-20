@@ -1,6 +1,7 @@
 import {
   getArticleSummary,
-  getArticleDetails
+  getArticleDetails,
+  APIDeleteArticle
 } from '../../api/article'
 
 const entityArticle = {
@@ -25,6 +26,16 @@ const entityArticle = {
     getSingleArticle({ commit }, artId) {
       getArticleDetails(artId).then(articleDetails => {
         commit('SET_ENTITY_ARTICLE_DETAILS', articleDetails)
+      })
+    },
+    deleteArticle({ commit }, artId) {
+      return new Promise(function(resolve, reject) {
+        APIDeleteArticle(artId).then(res => {
+          resolve(res)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
       })
     }
   }

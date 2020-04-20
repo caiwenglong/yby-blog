@@ -25,18 +25,6 @@ export default {
       return !this.sidebar.opened
     }
   },
-
-  created() {
-    // 根据meta中的hidden属性裁剪动态路由列表，隐藏不需要用户可见的路由项
-    //    this.sidebarConfig = JSON.parse(JSON.stringify(this.permission_routers))
-    //    this.filter(this.sidebarConfig)
-  },
-  //  watch: {
-  //    'permission_routers': (val) => {
-  //      this.sidebarConfig = JSON.parse(JSON.stringify(val))
-  //      this.filter(this.sidebarConfig)
-  //    }
-  //  },
   methods: {
     sortByKey(array, key) {
       return array.sort(function(a, b) {
@@ -45,17 +33,6 @@ export default {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0))
       })
     }
-    //    filter: function(arr) {
-    //      for (let i = 0; i < arr.length; i++) {
-    //        if (arr[i].meta && arr[i].meta.hasOwnProperty('hidden') && arr[i].meta.hidden === true) {
-    //          arr.splice(i, 1)
-    //        } else {
-    //          if (arr[i].children && arr[i].children.length) {
-    //            this.filter(arr[i].children)
-    //          }
-    //        }
-    //      }
-    //    }
   }
 }
 </script>
@@ -63,5 +40,8 @@ export default {
 <style lang="scss">
   .sidebar-container {
     background: #304156;
+  }
+  .el-scrollbar__wrap {
+    overflow-x: auto;
   }
 </style>

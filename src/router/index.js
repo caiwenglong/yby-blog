@@ -122,7 +122,7 @@ export function generateAsyncRouters(menus) {
         meta: { title: menu.name, icon: 'article-list' },
         hidden: false,
         level: 2,
-        children: getChildrenRouters(menus, menu.categoryLevel)
+        children: getChildrenRouters(menus, menu.url, menu.categoryId)
       }
       generateRouters.push(route)
     }
@@ -130,26 +130,27 @@ export function generateAsyncRouters(menus) {
   return generateRouters
 }
 
-function getChildrenRouters(menus, parentId) {
+function getChildrenRouters(menus, parentUrl, parentCategoryId) {
   const childrenRoutes = []
   const childrens = _.filter(menus, function(item) {
-    if (item.parentLevel === parentId) {
+    if (item.parentId === parentCategoryId) {
       const route = {
-        path: '/articleList/:category',
+        path: `/${parentUrl}/:category`,
         name: item.name,
         url: item.url,
         category: item.category,
         component: () => import('@/views/articleList/index.vue'),
         hidden: false,
-        meta: { title: item.name, icon: '' }
+        meta: { title: item.name, icon: '' },
+        children: getChildrenRouters(menus, item.url, item.categoryId)
       }
       childrenRoutes.push(route)
     }
-    return item.parentLevel === parentId
+    return item.parentId === parentCategoryId
   })
   if (childrens.length) {
     _.forEach(childrens, item => {
-      getChildrenRouters(menus, item.categoryLevel)
+      getChildrenRouters(menus, item.url, item.categoryId)
     })
   }
   return childrenRoutes

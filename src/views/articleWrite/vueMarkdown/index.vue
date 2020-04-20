@@ -4,33 +4,25 @@
        element-loading-spinner="el-icon-loading"
        element-loading-background="rgba(0, 0, 0, 0.8)"
        class="markdown-edit-wrapper">
-    <div class="operation-button">
-      <el-button v-loading="loading" type="primary" size="medium" @click="publishArticle()">
-        Publish
-      </el-button>
-      <el-button v-loading="loading" type="primary" size="medium" @click="getTags()">
-        draft
-      </el-button>
-    </div>
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="post-main-container">
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item prop="title">
             <MdInput v-model="getPostForm.title" :maxlength="64" name="titleInputName" required>
               title
             </MdInput>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item  prop="artSummary">
             <MdInput v-model="getPostForm.artSummary" :maxlength="64" name="contentShortInputName" required>
               summary
             </MdInput>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item  prop="category">
-            <el-select v-model="getPostForm.category" placeholder="请选择">
+            <el-select v-model="getPostForm.category" placeholder="请选择分类">
               <el-option
                 v-for="item in articleCategoryList"
                 :key="item.category"
@@ -40,7 +32,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item  prop="artTags">
             <div class="tags-list">
               <el-select
@@ -63,6 +55,12 @@
       </div>
     </el-form>
     <div id="main">
+      <div class="operation-button">
+        <el-button size="small" @click="publishArticle()" v-loading="loading" type="primary">
+          <label>发布</label>
+          <i class="el-icon-upload el-icon--right"></i>
+        </el-button>
+      </div>
       <!-- 配置页面 https://github.com/hinesboy/mavonEditor -->
       <mavon-editor ref="mavonEditor" v-model="valueMarkdown" :codeStyle="'monokai'"/>
     </div>
@@ -123,7 +121,7 @@
           title: [{ validator: validateRequire }],
           artSummary: [{ validator: validateRequire }],
           artTags: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+            { type: 'array', required: true, message: '请至少选择一个标签', trigger: 'change' }
           ],
           category: [
             { required: true, message: '请选择分类', trigger: 'change' }

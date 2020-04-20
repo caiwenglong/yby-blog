@@ -74,3 +74,14 @@ export function getArticleDetails(artId) {
     })
   })
 }
+
+export function APIDeleteArticle(artId) {
+  return new Promise(function(resolve, reject) {
+    TableArticle.destroy(artId).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+      console.log(err)
+    })
+  })
+}
