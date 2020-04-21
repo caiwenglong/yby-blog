@@ -41,7 +41,4 @@ export default {
   .sidebar-container {
     background: #304156;
   }
-  .el-scrollbar__wrap {
-    overflow-x: auto;
-  }
 </style>

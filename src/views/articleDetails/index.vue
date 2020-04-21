@@ -95,18 +95,8 @@
         }).then((res) => {
           this.$store.dispatch('deleteArticle', this.$route.params.artId).then(res => {
             if (res.msg === 'ok') {
-              this.$alert({
-                confirmButtonText: '确定',
-                callback: () => {
-                  // this.$router.push({name: ''})
-                }
-              })
+              this.$router.go(-1)
             }
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            })
           })
         })
       }
