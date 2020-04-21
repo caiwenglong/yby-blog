@@ -8,21 +8,21 @@
       <div class="post-main-container">
         <el-col :span="6">
           <el-form-item prop="title">
-            <MdInput v-model="getPostForm.title" :maxlength="64" name="titleInputName" required>
+            <MdInput v-model="postForm.title" :maxlength="64" name="titleInputName" required>
               title
             </MdInput>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item  prop="artSummary">
-            <MdInput v-model="getPostForm.artSummary" :maxlength="64" name="contentShortInputName" required>
+            <MdInput v-model="postForm.artSummary" :maxlength="64" name="contentShortInputName" required>
               summary
             </MdInput>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item  prop="category">
-            <el-select v-model="getPostForm.category" placeholder="请选择分类">
+            <el-select v-model="postForm.category" placeholder="请选择分类">
               <el-option
                 v-for="item in articleCategoryList"
                 :key="item.category"
@@ -53,17 +53,21 @@
           </el-form-item>
         </el-col>
       </div>
-    </el-form>
-    <div id="main">
-      <div class="operation-button">
-        <el-button size="small" @click="publishArticle()" v-loading="loading" type="primary">
-          <label>发布</label>
-          <i class="el-icon-upload el-icon--right"></i>
-        </el-button>
+      <div id="main">
+        <div class="operation-button">
+          <el-button v-if="isEdit" type="success" size="small" icon="el-icon-edit-outline" @click="handleRedirectToArtWrite">新建文章</el-button>
+          <el-button v-if="isEdit" type="warning" size="small" icon="el-icon-warning-outline" @click="handleAddArticle">重置</el-button>
+          <el-button size="small" @click="publishArticle()" v-loading="loading" type="primary">
+            <i class="el-icon-upload"></i>
+            <label>发布</label>
+          </el-button>
+          <el-button size="small" icon="el-icon-arrow-left" @click="goBack">返回</el-button>
+
+        </div>
+        <!-- 配置页面 https://github.com/hinesboy/mavonEditor -->
+        <mavon-editor prop="artContent" v-model="postForm.artContent" :codeStyle="'monokai'"/>
       </div>
-      <!-- 配置页面 https://github.com/hinesboy/mavonEditor -->
-      <mavon-editor ref="mavonEditor" v-model="valueMarkdown" :codeStyle="'monokai'"/>
-    </div>
+    </el-form>
   </div>
 </template>
 
@@ -79,7 +83,7 @@
     artContent: '',
     artSummary: '',
     category: '',
-    tags: '',
+    artTags: [],
     source_uri: '',
     image_uri: '',
     importance: 0
@@ -109,12 +113,11 @@
         }
       }
       return {
-        valueMarkdown: '',
         titleInputName: 'titleInput',
         contentShortInputName: 'contentShortInput',
         postForm: Object.assign({}, defaultForm),
         loading: false,
-        tag: '',
+        isEdit: false,
         inputVisible: false,
         inputValue: '',
         rules: {
@@ -133,22 +136,26 @@
       ...mapGetters([
         'articleCategoryList',
         'entityArticleDetails'
-      ]),
-      getPostForm: function() {
+      ])
+    },
+    created: function() {
+      this.isEdit = this.$route.params.isEdit
+      this.getArticleCategoryData()
+      if (this.isEdit) {
+        this.getArticleDetails()
         if (this.entityArticleDetails) {
-          return Object.assign(this.postForm, this.entityArticleDetails)
-        } else {
-          return this.postForm
+          this.postForm = Object.assign(this.postForm, this.entityArticleDetails)
         }
       }
     },
-    created: function() {
-      this.getArticleCategoryData()
-      if (this.$route.params.isEdit) {
-        this.getArticleDetails()
-      }
-    },
     methods: {
+      /*
+      *   重置form
+      * */
+      handleResetForm() {
+        this.postForm = Object.assign({}, defaultForm)
+        this.$refs.postForm.resetFields()
+      },
       getArticleCategoryData() {
         const _this = this
         _this.loading = true
@@ -158,7 +165,7 @@
       },
       getArticleDetails() {
         this.$store.dispatch('getSingleArticle', this.$route.params.artId).then(item => {
-          this.valueMarkdown = this.entityArticleDetails.artContent
+          this.postForm.artContent = this.entityArticleDetails.artContent
         })
       },
       publishArticle(articleObj) {
@@ -174,7 +181,7 @@
               TableArticle.set('title', _this.postForm.title)
               TableArticle.set('artSummary', _this.postForm.artSummary)
               TableArticle.set('category', _this.postForm.category)
-              TableArticle.set('artContent', _this.valueMarkdown)
+              TableArticle.set('artContent', _this.postForm.artContent)
               TableArticle.set('artTags', _this.postForm.artTags)
               TableArticle.save().then(res => {
                 _this.$notify({
@@ -215,6 +222,39 @@
             return false
           }
         })
+      },
+      handleAddArticle() {
+        this.$confirm('将要清空当前文章的所有数据，是否继续？', 'tip',{
+          confirmButtonText: '重置',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(res => {
+          console.log('res' + res)
+          this.handleResetForm()
+          this.$message({
+            type: 'success',
+            message: '重置已完成'
+          })
+        }).catch(() => {
+          this.$message({
+            message: '取消重置'
+          })
+        })
+      },
+      handleRedirectToArtWrite() {
+        this.$confirm('您当前的修改如果没有发布，那将被不保存', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          window.location.reload()
+        }).catch(() => {
+          this.$message({
+            message: '您已取消操作'
+          })
+        })
+      },
+      goBack() {
+        this.$router.go(-1)
       }
     }
   }

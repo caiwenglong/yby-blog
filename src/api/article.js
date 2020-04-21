@@ -65,6 +65,7 @@ export function getArticleTotal() {
 export function getArticleDetails(artId) {
   return new Promise(function(resolve, reject) {
     TableArticle.get(artId).then(res => {
+      res.clicks = res.clicks ? res.clicks : 0
       res.set('clicks', res.clicks + 1)
       res.save()
       const singleArticleDetails = res

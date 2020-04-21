@@ -83,6 +83,7 @@ export default {
   .el-submenu {
     .el-menu-item {
       padding-left: 50px !important;
+      color: #bfcbd9 !important;
     }
   }
 }
