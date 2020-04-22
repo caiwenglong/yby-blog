@@ -55,7 +55,7 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password" v-if="!isCode">
-                  <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码">
+                  <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin('login')" v-model="loginForm.password" autoComplete="on" placeholder="密码">
                     <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
                   </el-input>
                   <!-- <img src="../../../static/img/lock.png" class="login-icon" /> -->
@@ -178,7 +178,12 @@ export default {
               this.$store.dispatch('Login', this.loginForm).then(() => {
                 this.loading = false
                 this.$router.push('/dashboard')
-              }).catch(() => {
+                // eslint-disable-next-line handle-callback-err
+              }).catch((err) => {
+                this.$message({
+                  type: 'error',
+                  message: '用户名或密码错误，请重新输入'
+                })
                 this.loading = false
               })
             } else {
@@ -229,7 +234,9 @@ export default {
         this.$store.dispatch('GetResetCode', this.reset.accountNo)
       } else {
         this.countDown()
-        this.$store.dispatch('GetAuthCode', this.loginForm.accountNo)
+        this.$store.dispatch('GetAuthCode', this.loginForm.accountNo).then(res => {
+          console.log(res)
+        })
       }
     },
     // 倒计时
