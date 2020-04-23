@@ -33,7 +33,7 @@
         </div>
       </el-row>
       <el-pagination
-        v-show="entityArticleList.length>0"
+        v-show="entityArticleList && entityArticleList.length>0"
         :total=entityArticleList.length
         :page-sizes="[4, 20, 50, 80, 100]"
         :current-page="currentPage"

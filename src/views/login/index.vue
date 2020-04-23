@@ -64,7 +64,7 @@
                   </span>
                 </el-form-item>
                 <el-form-item prop="phoneCode" v-else>
-                  <el-input clearable v-model="loginForm.phoneCode" class="verificationCode" placeholder="请输入验证码">
+                  <el-input clearable v-model.number="loginForm.phoneCode" class="verificationCode" placeholder="请输入验证码">
                     <svg-icon class="icon" slot="prefix" icon-class="code"></svg-icon>
                   </el-input>
                   <!-- <img src="../../../static/img/validateCode.png" class="login-icon" /> -->
@@ -119,7 +119,7 @@ export default {
       loginForm: {
         accountNo: '',
         password: '',
-        phoneCode: ''
+        phoneCode: 0
       },
       reset: {
         accountNo: '',
@@ -171,11 +171,11 @@ export default {
     handleLogin(type) {
       if (!this.isCode) {
         if (type === 'login') {
-          this.loginForm.phoneCode = ''
+          this.loginForm.phoneCode = 0
           this.$refs.loginForm.validate(valid => {
             if (valid) {
               this.loading = true
-              this.$store.dispatch('Login', this.loginForm).then(() => {
+              this.$store.dispatch('Login', this.loginForm).then((res) => {
                 this.loading = false
                 this.$router.push('/dashboard')
                 // eslint-disable-next-line handle-callback-err
@@ -208,11 +208,19 @@ export default {
         this.loginForm.password = ''
         this.$refs.loginForm.validate(valid => {
           if (valid) {
+            console.log(this.loginForm)
             this.loading = true
-            this.$store.dispatch('LoginByAuthCode', this.loginForm).then(() => {
+            this.$store.dispatch('LoginByAuthCode', this.loginForm).then((res) => {
               this.loading = false
+              console.log('验证码正确')
+              console.log(res)
               this.$router.push('/dashboard')
-            }).catch(() => {
+              // eslint-disable-next-line handle-callback-err
+            }).catch((err) => {
+              this.$message({
+                type: 'error',
+                message: '验证码错误，请重新输入'
+              })
               this.loading = false
             })
           } else {

@@ -40,7 +40,7 @@ export const constantRouterMap = [
   {
     path: '/dashboard',
     component: Layout,
-    name: '0',
+    name: 'dashboard',
     redirect: '/dashboard/page',
     children: [
       {

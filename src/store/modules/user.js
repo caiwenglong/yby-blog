@@ -2,7 +2,7 @@ import {
   login,
   getInfo,
   getSMSCode,
-  verifyUserSMSCode
+  loginBySMSCode
 } from '@/api/login'
 import {
   setToken,
@@ -42,7 +42,23 @@ const user = {
         login(loginForm)
           .then(response => {
             // 处理用户信息
-            this.handleUserData(response)
+            if (response) {
+              // 保存用户信息至sessionStorage
+              const userData = JSON.stringify(response)
+              // commit('SET_USER_DATA', userData)
+              if (response.token) {
+                commit('SET_TOKEN', response.token)
+                setToken(response.token)
+              }
+              setUserData(userData)
+              if (response.username) {
+                commit('SET_NAME', response.username)
+              }
+              if (response.roles) {
+                commit('SET_ROLES', response.roles)
+                setRoles(response.roles)
+              }
+            }
             resolve()
           })
           .catch(error => {
@@ -50,36 +66,34 @@ const user = {
           })
       })
     },
-
-    // c处理用户信息
-    handleUserData({ commit }, response) {
-      if (response) {
-        // 保存用户信息至sessionStorage
-        const userData = JSON.stringify(response)
-        // commit('SET_USER_DATA', userData)
-        if (response.token) {
-          commit('SET_TOKEN', response.token)
-          setToken(response.token)
-        }
-        setUserData(userData)
-        if (response.username) {
-          commit('SET_NAME', response.username)
-        }
-        if (response.roles) {
-          commit('SET_ROLES', response.roles)
-          setRoles(response.roles)
-        }
-      }
-    },
     // 通过验证码登录
     LoginByAuthCode({ commit, dispatch }, loginForm) {
       return new Promise((resolve, reject) => {
-        verifyUserSMSCode(loginForm).then(response => {
-          this.handleUserData(response)
-          console.log('验证码正确')
+        loginBySMSCode(loginForm).then(response => {
+          if (response) {
+            // 保存用户信息至sessionStorage
+            const userData = JSON.stringify(response)
+            setUserData(userData)
+            // commit('SET_USER_DATA', userData)
+
+            if (response.token) {
+              commit('SET_TOKEN', response.token)
+              setToken(response.token)
+            }
+            if (response.sessionToken) {
+              commit('SET_TOKEN', response.sessionToken)
+              setToken(response.sessionToken)
+            }
+            if (response.username) {
+              commit('SET_NAME', response.username)
+            }
+            if (response.roles) {
+              commit('SET_ROLES', response.roles)
+              setRoles(response.roles)
+            }
+          }
           resolve(response)
         }).catch(err => {
-          console.log('验证码不正确')
           reject(err)
         })
       })
@@ -146,9 +160,7 @@ const user = {
     GetAuthCode({ commit }, tel) {
       return new Promise((resolve, reject) => {
         getSMSCode(tel).then(res => {
-          console.log(res)
         }).catch(err => {
-          console.log(err)
         })
       })
     }
