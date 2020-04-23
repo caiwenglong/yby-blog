@@ -2,6 +2,7 @@ import request from '@/utils/request'
 import Bmob from 'hydrogen-js-sdk'
 Bmob.initialize('e4d31451776823a5', '666666')
 
+
 // 获取验证码
 export function getSMSCode(tel) {
   return new Promise((resolve, reject) => {
