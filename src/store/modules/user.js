@@ -161,6 +161,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getSMSCode(tel).then(res => {
         }).catch(err => {
+          reject(err)
         })
       })
     }

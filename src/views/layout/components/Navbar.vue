@@ -12,10 +12,10 @@
 
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
         <el-dropdown-item @click.native="changePassword">
-          <span style="display:block;">修改密码</span>
+          <div>修改密码</div>
         </el-dropdown-item>
         <el-dropdown-item @click.native="logout">
-          <span style="display:block;">退出登录</span>
+          <div>退出登录</div>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -144,13 +144,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          var actions
+          let actions
           if (this.isNew) {
             actions = 'InitPwd'
           } else {
             actions = 'UpdatePwd'
           }
           this.$store.dispatch(actions, this.resetForm).then((res) => {
+            debugger
             this.dialogFormVisibleShow = false
             if (res === 'ok') {
               this.$alert(this.isNew ? '密码已设置，请重新登录' : '密码已修改，请重新登录', '操作提示', {
