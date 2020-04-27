@@ -1,6 +1,39 @@
+import { getToken} from "../utils/auth";
 import request from '@/utils/request'
+import { getObjectId } from "../utils/auth";
 import Bmob from 'hydrogen-js-sdk'
 Bmob.initialize('e4d31451776823a5', '666666')
+// 重设密码
+export function resetPed(resetForm) {
+  return new Promise((resolve, reject) => {
+    let data = {
+      email: '836472117@qq.com'
+    }
+    Bmob.requestPasswordReset(data).then(res => {
+      console.log(res)
+      resolve(res)
+    }).catch(err => {
+      console.log(err)
+      reject(err)
+    })
+  })
+}
+
+// 修改密码
+export function UpdatePwd(resetForm) {
+  return new Promise((resolve, reject) => {
+    let objectId = getObjectId()
+    let data = {
+      oldPassword: resetForm.oldPassword,
+      newPassword: resetForm.newPassword
+    }
+    Bmob.updateUserPassword(objectId,data).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
 
 // 获取验证码
 export function getSMSCode(tel) {
@@ -72,8 +105,5 @@ export function getInfo(userId) {
 }
 
 export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
+  Bmob.User.logout()
 }

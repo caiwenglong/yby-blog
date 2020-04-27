@@ -224,7 +224,7 @@
         })
       },
       handleAddArticle() {
-        this.$confirm('将要清空当前文章的所有数据，是否继续？', 'tip',{
+        this.$confirm('将要清空当前文章的所有数据，是否继续？', 'tip', {
           confirmButtonText: '重置',
           cancelButtonText: '取消',
           type: 'warning'

@@ -148,12 +148,12 @@ export default {
           if (this.isNew) {
             actions = 'InitPwd'
           } else {
-            actions = 'UpdatePwd'
+            actions = 'UpdatePwdByOldPwd'
           }
           this.$store.dispatch(actions, this.resetForm).then((res) => {
-            debugger
             this.dialogFormVisibleShow = false
-            if (res === 'ok') {
+            debugger
+            if (res.msg === 'ok') {
               this.$alert(this.isNew ? '密码已设置，请重新登录' : '密码已修改，请重新登录', '操作提示', {
                 confirmButtonText: '确定',
                 callback: action => {

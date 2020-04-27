@@ -194,7 +194,8 @@ export default {
           this.$refs.reset.validate(valid => {
             if (valid) {
               this.loading = true
-              this.$store.dispatch('ResetPwd', this.reset).then(() => {
+              this.$store.dispatch('ResetPwdByEmail', this.reset).then((res) => {
+                console.log(res);
                 this.loading = false
               }).catch(() => {
                 this.loading = false

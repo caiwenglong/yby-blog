@@ -1,4 +1,3 @@
-import Vue from 'vue'
 /* 字段不能全为空白字符 */
 export function isNotBlankInput(str) {
   return str && str.trim().length > 0

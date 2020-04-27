@@ -1,9 +1,19 @@
 import Cookies from 'js-cookie'
 
 const TokenKey = 'Authorization'
+const ObjectIdKey = 'ObjectIdKey'
 const Name = 'name'
 const Roles = 'roles'
 const UserData = 'userData'
+
+
+export function setObjectId(objectId) {
+  return sessionStorage.setItem(ObjectIdKey, objectId)
+}
+
+export function getObjectId() {
+  return sessionStorage.getItem(ObjectIdKey)
+}
 
 export function getToken() {
   return sessionStorage.getItem(TokenKey)

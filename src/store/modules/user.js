@@ -2,9 +2,14 @@ import {
   login,
   getInfo,
   getSMSCode,
-  loginBySMSCode
+  loginBySMSCode,
+  UpdatePwd,
+  resetPed,
+  logout
 } from '@/api/login'
 import {
+  setObjectId,
+  getObjectId,
   setToken,
   getToken,
   removeToken,
@@ -17,6 +22,7 @@ import {
 } from '@/utils/auth'
 const user = {
   state: {
+    objectId: getObjectId(),
     token: getToken(),
     userData: getUserData(),
     name: '',
@@ -24,8 +30,12 @@ const user = {
   },
 
   mutations: {
+
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_OBJECT_ID: (state, objectId) => {
+      state.objectId = objectId
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -46,9 +56,13 @@ const user = {
               // 保存用户信息至sessionStorage
               const userData = JSON.stringify(response)
               // commit('SET_USER_DATA', userData)
-              if (response.token) {
-                commit('SET_TOKEN', response.token)
-                setToken(response.token)
+              if(response.objectId) {
+                commit('SET_OBJECT_ID', response.objectId)
+                setObjectId(response.objectId)
+              }
+              if (response.sessionToken) {
+                commit('SET_TOKEN', response.sessionToken)
+                setToken(response.sessionToken)
               }
               setUserData(userData)
               if (response.username) {
@@ -76,9 +90,9 @@ const user = {
             setUserData(userData)
             // commit('SET_USER_DATA', userData)
 
-            if (response.token) {
-              commit('SET_TOKEN', response.token)
-              setToken(response.token)
+            if (response.sessionToken) {
+              commit('SET_TOKEN', response.sessionToken)
+              setToken(response.sessionToken)
             }
             if (response.sessionToken) {
               commit('SET_TOKEN', response.sessionToken)
@@ -102,6 +116,8 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise(resolve => {
+        logout();
+        commit('SET_OBJECT_ID', '')
         commit('SET_TOKEN', '')
         commit('SET_NAME', '')
         commit('SET_ROUTERS', null)
@@ -157,11 +173,34 @@ const user = {
       commit('SET_TOKEN', token)
       setToken(token)
     },
+
+    // 获取验证码
     GetAuthCode({ commit }, tel) {
       return new Promise((resolve, reject) => {
         getSMSCode(tel).then(res => {
         }).catch(err => {
           reject(err)
+        })
+      })
+    },
+
+    UpdatePwdByOldPwd({ commit }, resetForm) {
+      return new Promise((resolve, reject) => {
+        UpdatePwd(resetForm).then(res => {
+          console.log(res);
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    ResetPwdByEmail({ commit }, resetForm) {
+      return new Promise((resolve, reject) => {
+        resetPed(resetForm).then(res =>{
+          resolve(res)
+        }).catch(error => {
+          reject(error)
         })
       })
     }
