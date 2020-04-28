@@ -199,7 +199,6 @@ export default {
     height: 50px;
     display: block;
     float: right;
-    margin-right: 40px;
     .avatar-wrapper {
       height: 100%;
       .user-avatar {
@@ -229,7 +228,7 @@ export default {
     color: #303133;
     font-weight: 700;
     text-decoration: none;
-    margin-right: 30px;
+    margin-right: 90px;
   }
 }
 .navbar::after {

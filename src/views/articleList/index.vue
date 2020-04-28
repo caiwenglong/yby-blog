@@ -5,7 +5,7 @@
        element-loading-background="rgba(0, 0, 0, 0.8)"
        class="article-list-wrapper app-main-wrapper">
       <el-row :gutter="12">
-        <template v-if="entityArticleList.length > 0">
+        <template v-if="entityArticleList && entityArticleList.length > 0">
           <el-col :span="12" v-for="articleItem in entityArticleList" :key="articleItem.objectId">
           <el-card shadow="hover">
             <h4 class="article-title">
@@ -32,15 +32,17 @@
           暂无数据
         </div>
       </el-row>
-      <el-pagination
-        v-show="entityArticleList && entityArticleList.length>0"
-        :total=entityArticleList.length
-        :page-sizes="[4, 20, 50, 80, 100]"
-        :current-page="currentPage"
-        layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      ></el-pagination>
+      <template v-if="entityArticleList">
+        <el-pagination
+          v-show="entityArticleList.length>0"
+          :total=entityArticleList.length
+          :page-sizes="[4, 20, 50, 80, 100]"
+          :current-page="currentPage"
+          layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
+      </template>
     </div>
 </template>
 

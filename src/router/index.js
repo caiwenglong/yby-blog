@@ -120,7 +120,7 @@ export function generateAsyncRouters(menus) {
         category: menu.category,
         name: menu.name,
         url: menu.url,
-        meta: { title: menu.name, icon: 'article-list' },
+        meta: { title: menu.name, icon: 'article-list', objectId: menu.objectId },
         hidden: false,
         level: 2,
         children: getChildrenRouters(menus, menu.url, menu.categoryId)
@@ -142,7 +142,7 @@ function getChildrenRouters(menus, parentUrl, parentCategoryId) {
         category: item.category,
         component: () => import('@/views/articleList/index.vue'),
         hidden: false,
-        meta: { title: item.name, icon: '' },
+        meta: { title: item.name, icon: '', objectId: item.objectId },
         children: getChildrenRouters(menus, item.url, item.categoryId)
       }
       childrenRoutes.push(route)
