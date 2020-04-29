@@ -48,13 +48,13 @@
 
     <el-dialog title="修改文集" :visible.sync="dialogFormVisible">
       <el-form ref="collectionForm" :rules="rules" :model="collectionForm">
-        <el-form-item label="文集名称">
+        <el-form-item label="文集名称"  prop="collectionName">
           <el-input v-model="collectionForm.collectionName" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="commitCollectionForm">确 定</el-button>
+        <el-button type="primary" @click="commitCollectionForm('collectionForm')">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -108,7 +108,7 @@ export default {
       },
       rules: {
         collectionName: [
-          { required: true, message: '请至少选择一个标签', trigger: 'change' }
+          { required: true, message: '请输入文集名称', trigger: 'change' }
         ],
       }
     }
@@ -130,6 +130,9 @@ export default {
     goToView(name, category) {
       this.$router.push({ name: name, params: { category: category }})
     },
+    /*
+    *   显示文集弹窗
+    * */
     handleCommand(command) {
       this.dialogFormVisible = true;
     },
@@ -137,22 +140,14 @@ export default {
     /*
     *   提交文集表单
     * */
-    commitCollectionForm() {
-      this.validateForm();
+    commitCollectionForm(formName) {
+      this.validateForm(formName);
     },
     // 验证表单
-    validateForm() {
-      this.$refs.collectionForm.validate(valid => {
+    validateForm(formName) {
+      this.$refs[formName].validate(valid => {
         if(valid) {
           return true;
-        } else {
-          this.$notify({
-            title: '错误',
-            message: '发布文章失败',
-            type: 'error',
-            duration: 2000
-          });
-          return false
         }
       })
     }
