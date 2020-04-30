@@ -111,9 +111,9 @@ export const route001 = [
 ]
 
 export function generateAsyncRouters(menus) {
-  const generateRouters = []
+  const generateRouters = [];
   _.forEach(menus, menu => {
-    if (menu.parentLevel === 0) {
+    if (menu.parentId === '0') {
       const route = {
         path: '/' + menu.url,
         component: Layout,
@@ -123,7 +123,7 @@ export function generateAsyncRouters(menus) {
         meta: { title: menu.name, icon: 'article-list', objectId: menu.objectId },
         hidden: false,
         level: 2,
-        children: getChildrenRouters(menus, menu.url, menu.categoryId)
+        children: getChildrenRouters(menus, menu.url, menu.objectId)
       }
       generateRouters.push(route)
     }
@@ -131,10 +131,10 @@ export function generateAsyncRouters(menus) {
   return generateRouters
 }
 
-function getChildrenRouters(menus, parentUrl, parentCategoryId) {
-  const childrenRoutes = []
+function getChildrenRouters(menus, parentUrl, parentObjectId) {
+  const childrenRoutes = [];
   const childrens = _.filter(menus, function(item) {
-    if (item.parentId === parentCategoryId) {
+    if (item.parentId === parentObjectId) {
       const route = {
         path: `/${parentUrl}/:category`,
         name: item.name,
@@ -143,12 +143,12 @@ function getChildrenRouters(menus, parentUrl, parentCategoryId) {
         component: () => import('@/views/articleList/index.vue'),
         hidden: false,
         meta: { title: item.name, icon: '', objectId: item.objectId },
-        children: getChildrenRouters(menus, item.url, item.categoryId)
-      }
+        children: getChildrenRouters(menus, item.url, item.objectId)
+      };
       childrenRoutes.push(route)
     }
-    return item.parentId === parentCategoryId
-  })
+    return item.parentId === parentObjectId
+  });
   if (childrens.length) {
     _.forEach(childrens, item => {
       getChildrenRouters(menus, item.url, item.categoryId)

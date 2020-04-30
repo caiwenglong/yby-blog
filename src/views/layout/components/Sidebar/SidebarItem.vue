@@ -16,12 +16,11 @@
       <template slot="title">
         <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
         <span v-if="item.meta && item.meta.title" slot="title">{{item.meta.title}}</span>
-        <el-dropdown @command="handleCommand">
+        <el-dropdown @command="handleCategoryOpe">
           <i class="el-icon-setting"></i>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command="item.meta.objectId">新增</el-dropdown-item>
-            <el-dropdown-item :command="item.meta.objectId">修改</el-dropdown-item>
-            <el-dropdown-item :command="item.meta.objectId">删除</el-dropdown-item>
+            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
+            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>修改</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </template>
@@ -35,11 +34,11 @@
           <span v-if="child.meta && child.meta.title" slot="title">
             <span class="submenu__title">{{child.meta.title}}</span>
           </span>
-          <el-dropdown @command="handleCommand">
+          <el-dropdown @command="handleCategoryOpe">
             <i class="el-icon-setting"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command="child.meta.objectId">编辑</el-dropdown-item>
-              <el-dropdown-item :command="child.meta.objectId">删除</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 3}'>删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-menu-item>
@@ -103,7 +102,9 @@ export default {
     return {
       onlyOneVisibleChild: null,
       dialogFormVisible: false,
+      opeCode: 0,
       collectionForm: {
+        objectId: '',
         collectionName: ''
       },
       rules: {
@@ -117,9 +118,9 @@ export default {
     hasOneShowingChildren(children) {
       const showingChildren = children.filter(item => {
         return !item.hidden
-      })
+      });
       if (showingChildren.length === 1) {
-        this.onlyOneVisibleChild = showingChildren[0]
+        this.onlyOneVisibleChild = showingChildren[0];
         return true
       }
       return false
@@ -130,25 +131,91 @@ export default {
     goToView(name, category) {
       this.$router.push({ name: name, params: { category: category }})
     },
+
     /*
-    *   显示文集弹窗
+    *  添加，修改， 删除操作
+    *  @param objectId: 分类ID
+    *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 删除
     * */
-    handleCommand(command) {
-      this.dialogFormVisible = true;
+    handleCategoryOpe(command) {
+      this.collectionForm.objectId = command.objectId;
+      this.opeCode = command.opeCode;
+      if(this.opeCode === 1 || this.opeCode === 2) {
+        this.dialogFormVisible = true; // 显示文集弹窗
+      }
+      if(this.opeCode === 3) {
+        this.loading = true;
+        this.$store.dispatch('deleteArticleCategory', this.collectionForm).then(res => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          });
+          this.loading = false;
+          this.reloadRouters();
+        })
+      }
     },
 
     /*
     *   提交文集表单
     * */
     commitCollectionForm(formName) {
-      this.validateForm(formName);
-    },
-    // 验证表单
-    validateForm(formName) {
       this.$refs[formName].validate(valid => {
         if(valid) {
-          return true;
+          this.loading = true;
+          let successMessage = '成功信息';
+          let errorMessage = '错误信息';
+          if(this.opeCode === 1) {
+            successMessage = '文集添加成功';
+            errorMessage = '文集添加成功';
+            this.dispatchAction('insertArticleCategory', successMessage, errorMessage);
+          } else if(this.opeCode === 2) {
+            successMessage = '文集修改成功';
+            errorMessage = '文集修改成功';
+            this.dispatchAction('updateArticleCategory', successMessage, errorMessage);
+          }
+        } else {
+          this.$notify({
+            title: '错误',
+            message: '请输入文集名称',
+            type: 'error',
+            duration: 2000
+          });
+          this.dialogFormVisible = false;
         }
+      });
+    },
+
+
+    dispatchAction(dispatchName, message) {
+      const _this = this;
+      this.$store.dispatch(dispatchName, this.collectionForm).then(res => {
+        _this.$notify({
+          title: '成功',
+          message: message,
+          type: 'success',
+          duration: 2000
+        });
+        _this.loading = false;
+        this.reloadRouters();
+      }).catch(err => {
+        _this.$notify({
+          title: '错误',
+          message: message,
+          type: 'error',
+          duration: 2000
+        });
+        this.dialogFormVisible = false;
+        _this.loading = false
+      });
+    },
+    reloadRouters() {
+      this.$store.dispatch('GenerateRoutes', this.$store.getters.roles).then((res) => {
+        console.log(res);
+      }).catch(err => {
+        console.log(err + 'error in generate routers');
       })
     }
   }

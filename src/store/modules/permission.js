@@ -1,5 +1,5 @@
 import { route001, constantRouterMap } from '@/router'
-import { getArticleCategory } from '../../api/articleCategory'
+import { apiGetArticleCategory } from '../../api/articleCategory'
 import { generateAsyncRouters } from '../../router'
 import * as _ from 'lodash'
 /**
@@ -56,7 +56,7 @@ const permission = {
     async GenerateRoutes({ commit }, roles) {
       return new Promise(resolve => {
         let routes = []
-        getArticleCategory().then(categoryList => {
+        apiGetArticleCategory().then(categoryList => {
           const menus = categoryList
           if (menus.length) {
             routes = generateAsyncRouters(menus)
