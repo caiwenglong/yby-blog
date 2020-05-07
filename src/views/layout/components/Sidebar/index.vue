@@ -1,6 +1,7 @@
 <template>
   <el-scrollbar wrapClass="scrollbar-wrapper">
     <el-menu mode="vertical" :show-timeout="200" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
+      <el-link type="primary"><i class="el-icon-plus"></i><span>添加文集</span></el-link>
       <sidebar-item v-for="route in permission_routers" :key="route.url" :item="route" :base-path="route.path"></sidebar-item>
     </el-menu>
   </el-scrollbar>
@@ -9,7 +10,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
-
 export default {
   components: { SidebarItem },
   create: function() {
@@ -42,6 +42,16 @@ export default {
 
 <style lang="scss">
   .sidebar-container {
-    background: #304156;
+    background: $menuBg;
+  }
+  .el-link.el-link--primary {
+    font-size: 16px;
+    padding-left: 20px;
+    height: 56px;
+    line-height: 56px;
+    color: $menuColor;
+    &:hover {
+      background: $menuHovBg;
+    }
   }
 </style>

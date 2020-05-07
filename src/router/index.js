@@ -56,23 +56,6 @@ export const constantRouterMap = [
 
 export const route001 = [
   {
-    path: '/entityManagement',
-    component: Layout,
-    name: 'entityManagement',
-    redirect: '/entityManagement/index',
-    meta: { title: '实体管理', icon: 'entity', roles: ['admin'] },
-    level: 1,
-    children: [
-      {
-        path: 'index',
-        name: 'entityManagementIndex',
-        component: () => import('@/views/entityManagement/index.vue'),
-        hidden: false,
-        meta: { title: '实体管理', icon: '' }
-      }
-    ]
-  },
-  {
     path: '/articleWrite',
     component: Layout,
     level: 3,
