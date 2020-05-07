@@ -22,12 +22,12 @@
         </el-col>
         <el-col :span="6">
           <el-form-item  prop="category">
-            <el-select v-model="postForm.category" placeholder="请选择分类">
+            <el-select v-model="postForm.name" placeholder="请选择分类">
               <el-option
                 v-for="item in articleCategoryList"
-                :key="item.category"
-                :label="item.category"
-                :value="item.category">
+                :key="item.name"
+                :label="item.name"
+                :value="item.name">
               </el-option>
             </el-select>
           </el-form-item>
@@ -82,7 +82,7 @@
     title: '',
     artContent: '',
     artSummary: '',
-    category: '',
+    name: '',
     artTags: [],
     source_uri: '',
     image_uri: '',

@@ -17,7 +17,7 @@
         <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
         <span v-if="item.meta && item.meta.title" slot="title">{{item.meta.title}}</span>
         <el-dropdown @command="handleCategoryOpe">
-          <i class="el-icon-setting"></i>
+          <i @click.stop="() => { return false }" class="el-icon-setting"></i>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
             <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>修改</el-dropdown-item>
@@ -35,7 +35,7 @@
             <span class="submenu__title">{{child.meta.title}}</span>
           </span>
           <el-dropdown @command="handleCategoryOpe">
-            <i class="el-icon-setting"></i>
+            <i @click.stop="() => { return false }" class="el-icon-setting"></i>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
               <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 3}'>删除</el-dropdown-item>
