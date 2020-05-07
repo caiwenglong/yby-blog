@@ -1,5 +1,5 @@
 import Bmob from 'hydrogen-js-sdk'
-import { uuid } from '../utils/tools/index'
+import { uuId } from '../utils/tools/tools-common'
 
 Bmob.initialize('e4d31451776823a5', '666666');
 
@@ -17,7 +17,7 @@ export function apiGetArticleCategory() {
 
 export function apiInsertArticleCategory(collectionForm) {
   return new Promise(function(resolve, reject) {
-    const uuid = uuid(8, 16);
+    const uuid = uuId(8, 16);
     TableArticleCategory.set('parentId', collectionForm.objectId);
     TableArticleCategory.set('name', collectionForm.collectionName);
     TableArticleCategory.set('url', uuid);

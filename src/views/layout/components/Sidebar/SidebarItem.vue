@@ -159,18 +159,18 @@
             messageType: 'success',
             cfmMsgInfo: '删除文集成功'
           };
-          this._messages.encConfirm(cnfObj).then(res => {
+          this._tools.eleEnc.encConfirm(cnfObj).then(res => {
             if (res === 'confirm') {
               _this._tools.eleEnc.eleLoading();
               this.handleDeleteArticleCategory().then(res => {
                 if (res.msg === 'ok') {
                   this.reloadRouters().then(res => {
-                    this._messages.closeEleLoading();
+                    this._tools.eleEnc.closeEleLoading();
                     const objMsg = {
                       type: 'success',
                       info: '删除成功'
                     };
-                    this._messages.ybyMessage(objMsg);
+                    this._tools.eleEnc.ybyMessage(objMsg);
                   });
                 }
               });
@@ -198,12 +198,12 @@
             let errorMessage = '错误信息';
             if (this.opeCode === 1) {
               successMessage = '文集添加成功';
-              errorMessage = '文集添加成功';
-              this.dispatchAction('insertArticleCategory', successMessage, errorMessage);
+              errorMessage = '文集添加失败';
+              this.showMessage('insertArticleCategory', successMessage, errorMessage);
             } else if (this.opeCode === 2) {
               successMessage = '文集修改成功';
-              errorMessage = '文集修改成功';
-              this.dispatchAction('updateArticleCategory', successMessage, errorMessage);
+              errorMessage = '文集修改失败';
+              this.showMessage('updateArticleCategory', successMessage, errorMessage);
             }
           } else {
             this.$notify({
@@ -218,12 +218,12 @@
       },
 
 
-      dispatchAction(dispatchName, message) {
+      showMessage(dispatchName, successMessage, errorMessage) {
         const _this = this;
         this.$store.dispatch(dispatchName, this.collectionForm).then(res => {
           _this.$notify({
             title: '成功',
-            message: message,
+            message: successMessage,
             type: 'success',
             duration: 2000
           });
@@ -232,10 +232,11 @@
         }).catch(err => {
           _this.$notify({
             title: '错误',
-            message: message,
+            message: errorMessage,
             type: 'error',
             duration: 2000
           });
+          console.log(err);
           this.dialogFormVisible = false;
           _this.loading = false
         });

@@ -13,7 +13,7 @@ uuid(8, 10) // "47473046"
 
 uuid(8, 16) // "098F4D35"
 * */
-export function uuid(len, radix) {
+export function uuId(len, radix) {
   let chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
   let uuid = [], i;
   radix = radix || chars.length;
