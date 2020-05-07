@@ -57,26 +57,26 @@ const permission = {
       return new Promise(resolve => {
         let routes = []
         apiGetArticleCategory().then(categoryList => {
-          const menus = categoryList
+          const menus = categoryList;
           if (menus.length) {
-            routes = generateAsyncRouters(menus)
-            routes = _.concat(routes, route001)
+            routes = generateAsyncRouters(menus);
+            routes = _.concat(routes, route001);
             routes = _.sortBy(routes, function(o) {
               return o.level
             })
           }
-          let accessedRoutes
+          let accessedRoutes;
           if (roles.includes('admin')) {
             accessedRoutes = routes || []
           } else {
             accessedRoutes = filterAsyncRouter(routes, roles)
           }
-          commit('SET_ROUTERS', accessedRoutes)
-          resolve()
+          commit('SET_ROUTERS', accessedRoutes);
+          resolve(accessedRoutes)
         })
       })
     }
   }
-}
+};
 
 export default permission

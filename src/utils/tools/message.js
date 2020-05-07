@@ -1,33 +1,62 @@
 import {
   MessageBox,
-  Message
+  Message,
+  Notification,
+  Loading,
 } from 'element-ui';
-export function encMessage(objMsg) {
-  const defaultMsg = {
-    cfmType: 'warning',
-    cfmInfo: '提示信息',
-    cfmTitle: '提示',
-    cfmButtonText: '确定',
-    cancelButtonText: '取消',
-    cfmMsgType: 'success',
-    cfmMsgInfo: '删除成功!',
-    cancelMsgType: 'info',
-    cancelMsgInfo: '已取消删除!'
-  };
+
+const defaultMsg = {
+  type: 'warning',
+  info: '提示信息',
+  title: '提示',
+  cfmButtonText: '确定',
+  cancelButtonText: '取消',
+  cfmMsgType: 'success',
+  cfmMsgInfo: '删除成功!',
+  cancelMsgType: 'info',
+  cancelMsgInfo: '已取消删除!',
+  duration: 2000
+};
+
+export function encConfirm(objMsg) {
   objMsg = Object.assign(defaultMsg, objMsg);
-  MessageBox.confirm(objMsg.cfmInfo, objMsg.cfmTitle, {
+  return MessageBox.confirm(objMsg.info, objMsg.title, {
     cfmButtonText: objMsg.cfmButtonText,
     cancelButtonText: objMsg.cfmButtonText,
-    type: objMsg.cfmType
-  }).then(() => {
-    Message({
-      type: objMsg.messageType,
-      message: objMsg.cfmMsgInfo
-    });
-  }).catch(() => {
-    Message({
-      type: objMsg.cancelMsgType,
-      message: objMsg.cancelMsgInfo
-    });
+    type: objMsg.type
+  }).then( (res) => {
+    return res;
+  }).catch((err) => {
+    return err;
   });
+}
+
+export function ybyNotify(objMsg) {
+  objMsg = Object.assign(defaultMsg, objMsg);
+  Notification({
+    title: objMsg.type,
+    message: objMsg.info,
+    type: objMsg.title
+  })
+}
+
+export function ybyMessage(objMsg) {
+  objMsg = Object.assign(defaultMsg, objMsg);
+  Message({
+    type: objMsg.type,
+    message: objMsg.info
+  });
+}
+
+let loading;
+export function eleLoading() {
+  loading = Loading.service({
+    lock: true,
+    text: 'Loading',
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.7)'
+  });
+}
+export function closeEleLoading() {
+  loading.close();
 }

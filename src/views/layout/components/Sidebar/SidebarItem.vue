@@ -140,22 +140,44 @@ export default {
     handleCategoryOpe(command) {
       this.collectionForm.objectId = command.objectId;
       this.opeCode = command.opeCode;
+      // this._messages.encConfirm();
       if(this.opeCode === 1 || this.opeCode === 2) {
         this.dialogFormVisible = true; // 显示文集弹窗
       }
       if(this.opeCode === 3) {
-        this.loading = true;
-        this.$store.dispatch('deleteArticleCategory', this.collectionForm).then(res => {
-          this.$notify({
-            title: '成功',
-            message: '删除成功',
-            type: 'success',
-            duration: 2000
-          });
-          this.loading = false;
-          this.reloadRouters();
-        })
+        const cnfObj = {
+          type: 'warning',
+          info: '即将删除文集',
+          title: '删除文集',
+          messageType: 'success',
+          cfmMsgInfo: '删除文集成功'
+        };
+        this._messages.encConfirm(cnfObj).then(res => {
+          if(res === 'confirm') {
+            this._messages.eleLoading();
+            this.handleDeleteArticleCategory().then(res => {
+              if(res.msg === 'ok') {
+                this.reloadRouters().then(res => {
+                  this._messages.closeEleLoading();
+                  const objMsg = {
+                    type: 'success',
+                    info: '删除成功'
+                  };
+                  this._messages.ybyMessage(objMsg);
+                });
+              }
+            });
+          } else {
+
+          }
+        });
       }
+    },
+
+    handleDeleteArticleCategory() {
+      return this.$store.dispatch('deleteArticleCategory', this.collectionForm).then((res) => {
+        return res
+      })
     },
 
     /*
@@ -183,8 +205,8 @@ export default {
             type: 'error',
             duration: 2000
           });
-          this.dialogFormVisible = false;
         }
+        this.dialogFormVisible = false;
       });
     },
 
@@ -212,10 +234,11 @@ export default {
       });
     },
     reloadRouters() {
-      this.$store.dispatch('GenerateRoutes', this.$store.getters.roles).then((res) => {
-        console.log(res);
+      return this.$store.dispatch('GenerateRoutes', this.$store.getters.roles).then((res) => {
+        return res;
       }).catch(err => {
         console.log(err + 'error in generate routers');
+        return err;
       })
     }
   }

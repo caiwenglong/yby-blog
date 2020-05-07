@@ -17,9 +17,11 @@ export function apiGetArticleCategory() {
 
 export function apiInsertArticleCategory(collectionForm) {
   return new Promise(function(resolve, reject) {
+    const uuid = uuid(8, 16);
     TableArticleCategory.set('parentId', collectionForm.objectId);
     TableArticleCategory.set('name', collectionForm.collectionName);
-    TableArticleCategory.set('url', uuid(8, 16));
+    TableArticleCategory.set('url', uuid);
+    TableArticleCategory.set('category', uuid);
     TableArticleCategory.save().then(res => {
       resolve(res);
     }).catch(err => {
