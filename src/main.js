@@ -16,6 +16,7 @@ import router from './router'
 import store from './store'
 import * as _ from 'lodash'
 import * as _message from './utils/tools/message'
+import { tools } from './utils/tools/index';
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -28,6 +29,7 @@ Vue.prototype.Bmob = Bmob;
 Vue.prototype.lodash = _;
 Bmob.initialize('e4d31451776823a5', '666666');
 Vue.prototype._messages = _message;
+Vue.prototype._tools = tools;
 
 Vue.use(mavonEditor);
 Vue.use(ElementUI);
