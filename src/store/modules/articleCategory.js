@@ -1,5 +1,6 @@
 import {
   apiGetArticleCategory,
+  apiInsertArticleCollection,
   apiInsertArticleCategory,
   apiUpdateArticleCategory,
   apiDeleteArticleCategory
@@ -20,27 +21,36 @@ const articleCategory = {
         commit('SET_ARTICLE_CATEGORY', categoryList)
       })
     },
-    insertArticleCategory({ commit }, collectionForm) {
+    insertArticleCollection({ commit }, form) {
       return new Promise((resolve, reject) => {
-        apiInsertArticleCategory(collectionForm).then(res => {
+        apiInsertArticleCollection(form).then(res => {
           resolve(res)
         }).catch(error => {
           reject(error)
         })
       })
     },
-    updateArticleCategory({ commit }, collectionForm) {
+    insertArticleCategory({ commit }, form) {
       return new Promise((resolve, reject) => {
-        apiUpdateArticleCategory(collectionForm).then(res => {
+        apiInsertArticleCategory(form).then(res => {
           resolve(res)
         }).catch(error => {
           reject(error)
         })
       })
     },
-    deleteArticleCategory({ commit }, collectionForm) {
+    updateArticleCategory({ commit }, form) {
       return new Promise((resolve, reject) => {
-        apiDeleteArticleCategory(collectionForm).then(res => {
+        apiUpdateArticleCategory(form).then(res => {
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    deleteArticleCategory({ commit }, form) {
+      return new Promise((resolve, reject) => {
+        apiDeleteArticleCategory(form).then(res => {
           resolve(res)
         }).catch(error => {
           reject(error)

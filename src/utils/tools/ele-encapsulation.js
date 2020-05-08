@@ -52,9 +52,9 @@ export function ybyMessage(objMsg) {
 /*
 *   加载数据标识
 * */
-let loading;
+let cusLoading;
 export function eleLoading() {
-  loading = Loading.service({
+  cusLoading = Loading.service({
     lock: true,
     text: 'Loading',
     spinner: 'el-icon-loading',
@@ -62,5 +62,5 @@ export function eleLoading() {
   });
 }
 export function closeEleLoading() {
-  loading.close();
+  cusLoading.close();
 }

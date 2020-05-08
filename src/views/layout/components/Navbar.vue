@@ -152,7 +152,6 @@ export default {
           }
           this.$store.dispatch(actions, this.resetForm).then((res) => {
             this.dialogFormVisibleShow = false
-            debugger
             if (res.msg === 'ok') {
               this.$alert(this.isNew ? '密码已设置，请重新登录' : '密码已修改，请重新登录', '操作提示', {
                 confirmButtonText: '确定',

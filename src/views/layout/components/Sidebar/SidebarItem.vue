@@ -50,17 +50,26 @@
       </template>
     </el-submenu>
 
-    <el-dialog title="修改文集" :visible.sync="dialogFormVisible">
-      <el-form ref="collectionForm" :rules="rules" :model="collectionForm">
-        <el-form-item label="文集名称" prop="collectionName">
-          <el-input v-model="collectionForm.collectionName" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="commitCollectionForm('collectionForm')">确 定</el-button>
-      </div>
-    </el-dialog>
+    <!--<el-dialog title="修改文集" :visible.sync="dialogFormVisible">-->
+      <!--<el-form ref="collectionForm" :rules="rules" :model="collectionForm">-->
+        <!--<el-form-item label="文集名称" prop="collectionName">-->
+          <!--<el-input v-model="collectionForm.collectionName" autocomplete="off"></el-input>-->
+        <!--</el-form-item>-->
+      <!--</el-form>-->
+      <!--<div slot="footer" class="dialog-footer">-->
+        <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
+        <!--<el-button type="primary" @click="commitCollectionForm('collectionForm')">确 定</el-button>-->
+      <!--</div>-->
+    <!--</el-dialog>-->
+    <yby-dialog
+      @toggleDialog="toggleDialog"
+      :title="dialogTitle"
+      :object-id="objectId"
+      :ope-code="opeCode"
+      :dialogFormVisible="dialogFormVisible"
+      :name-required="nameRequired"
+      :label="label">
+    </yby-dialog>
 
   </div>
 
@@ -69,9 +78,13 @@
 
 <script>
   import path from 'path'
+  import YbyDialog from '@/components/yby-dialog/index.vue'
 
   export default {
     name: 'SidebarItem',
+    components: {
+      YbyDialog
+    },
     props: {
       // route配置json
       item: {
@@ -109,16 +122,11 @@
       return {
         onlyOneVisibleChild: null,
         dialogFormVisible: false,
-        opeCode: 0,
-        collectionForm: {
-          objectId: '',
-          collectionName: ''
-        },
-        rules: {
-          collectionName: [
-            {required: true, message: '请输入文集名称', trigger: 'change'}
-          ],
-        }
+        opeCode: -1,
+        objectId: '',
+        nameRequired: true,
+        dialogTitle: '添加文集',
+        label: '文集名称',
       }
     },
     methods: {
@@ -145,11 +153,14 @@
       *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 删除
       * */
       handleCategoryOpe(command) {
-        this.collectionForm.objectId = command.objectId;
+        this.objectId = command.objectId;
         this.opeCode = command.opeCode;
         const _this = this;
         if (this.opeCode === 1 || this.opeCode === 2) {
           this.dialogFormVisible = true; // 显示文集弹窗
+        }
+        if (this.opeCode === 2) {
+          this.dialogTitle = '修改文集名称';
         }
         if (this.opeCode === 3) {
           const cnfObj = {
@@ -164,7 +175,7 @@
               _this._tools.eleEnc.eleLoading();
               this.handleDeleteArticleCategory().then(res => {
                 if (res.msg === 'ok') {
-                  this.reloadRouters().then(res => {
+                  this._tools.commonTools.reloadRouters().then(res => {
                     this._tools.eleEnc.closeEleLoading();
                     const objMsg = {
                       type: 'success',
@@ -182,72 +193,14 @@
       },
 
       handleDeleteArticleCategory() {
-        return this.$store.dispatch('deleteArticleCategory', this.collectionForm).then((res) => {
+        return this.$store.dispatch('deleteArticleCategory', this.objectId).then((res) => {
           return res
         })
       },
 
-      /*
-      *   提交文集表单
-      * */
-      commitCollectionForm(formName) {
-        this.$refs[formName].validate(valid => {
-          if (valid) {
-            this.loading = true;
-            let successMessage = '成功信息';
-            let errorMessage = '错误信息';
-            if (this.opeCode === 1) {
-              successMessage = '文集添加成功';
-              errorMessage = '文集添加失败';
-              this.showMessage('insertArticleCategory', successMessage, errorMessage);
-            } else if (this.opeCode === 2) {
-              successMessage = '文集修改成功';
-              errorMessage = '文集修改失败';
-              this.showMessage('updateArticleCategory', successMessage, errorMessage);
-            }
-          } else {
-            this.$notify({
-              title: '错误',
-              message: '请输入文集名称',
-              type: 'error',
-              duration: 2000
-            });
-          }
-          this.dialogFormVisible = false;
-        });
-      },
-
-
-      showMessage(dispatchName, successMessage, errorMessage) {
-        const _this = this;
-        this.$store.dispatch(dispatchName, this.collectionForm).then(res => {
-          _this.$notify({
-            title: '成功',
-            message: successMessage,
-            type: 'success',
-            duration: 2000
-          });
-          _this.loading = false;
-          this.reloadRouters();
-        }).catch(err => {
-          _this.$notify({
-            title: '错误',
-            message: errorMessage,
-            type: 'error',
-            duration: 2000
-          });
-          console.log(err);
-          this.dialogFormVisible = false;
-          _this.loading = false
-        });
-      },
-      reloadRouters() {
-        return this.$store.dispatch('GenerateRoutes', this.$store.getters.roles).then((res) => {
-          return res;
-        }).catch(err => {
-          console.log(err + 'error in generate routers');
-          return err;
-        })
+      toggleDialog(flag) {
+        console.log(flag);
+        this.dialogFormVisible = flag;
       }
     }
   }

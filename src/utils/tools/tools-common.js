@@ -1,3 +1,5 @@
+import store from '../../store'
+
 /*
 全局唯一标识符，简称GUID
 这个可以指定长度和基数
@@ -40,4 +42,13 @@ export function uuId(len, radix) {
   }
 
   return uuid.join('');
+}
+
+export function reloadRouters() {
+  return store.dispatch('GenerateRoutes', store.getters.roles).then((res) => {
+    return res;
+  }).catch(err => {
+    console.log(err + 'error in generate routers');
+    return err;
+  })
 }

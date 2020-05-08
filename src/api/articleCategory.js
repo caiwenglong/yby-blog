@@ -15,11 +15,26 @@ export function apiGetArticleCategory() {
   })
 }
 
-export function apiInsertArticleCategory(collectionForm) {
+export function apiInsertArticleCollection(form) {
   return new Promise(function(resolve, reject) {
     const uuid = uuId(8, 16);
-    TableArticleCategory.set('parentId', collectionForm.objectId);
-    TableArticleCategory.set('name', collectionForm.collectionName);
+    TableArticleCategory.set('parentId', '0');
+    TableArticleCategory.set('name', form.name);
+    TableArticleCategory.set('url', uuid);
+    TableArticleCategory.set('category', uuid);
+    TableArticleCategory.save().then(res => {
+      resolve(res);
+    }).catch(err => {
+      reject(err);
+      console.log(err);
+    })
+  })
+}
+export function apiInsertArticleCategory(form) {
+  return new Promise(function(resolve, reject) {
+    const uuid = uuId(8, 16);
+    TableArticleCategory.set('parentId', form.objectId);
+    TableArticleCategory.set('name', form.name);
     TableArticleCategory.set('url', uuid);
     TableArticleCategory.set('category', uuid);
     TableArticleCategory.save().then(res => {
@@ -31,10 +46,10 @@ export function apiInsertArticleCategory(collectionForm) {
   })
 }
 
-export function apiUpdateArticleCategory(collectionForm) {
+export function apiUpdateArticleCategory(form) {
   return new Promise(function(resolve, reject) {
-    TableArticleCategory.get(collectionForm.objectId).then(res => {
-      res.set('name', collectionForm.collectionName)
+    TableArticleCategory.get(form.objectId).then(res => {
+      res.set('name', form.name)
       res.save();
       resolve(res);
     }).catch(err => {
@@ -43,9 +58,9 @@ export function apiUpdateArticleCategory(collectionForm) {
   })
 }
 
-export function apiDeleteArticleCategory(collectionForm) {
+export function apiDeleteArticleCategory(objectId) {
   return new Promise(function(resolve, reject) {
-    TableArticleCategory.get(collectionForm.objectId).then(res => {
+    TableArticleCategory.get(objectId).then(res => {
       res.destroy().then(res => {
         resolve(res);
       }).catch(err => {
