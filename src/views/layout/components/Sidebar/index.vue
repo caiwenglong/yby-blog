@@ -65,7 +65,6 @@ export default {
       this.dialogFormVisible = true;
     },
     toggleDialog(flag) {
-      console.log(flag);
       this.dialogFormVisible = flag;
     }
   }

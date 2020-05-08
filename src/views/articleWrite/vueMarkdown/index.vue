@@ -21,13 +21,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item  prop="category">
-            <el-select v-model="postForm.name" placeholder="请选择分类">
+          <el-form-item  prop="name">
+            <el-select v-model="postForm.category" placeholder="请选择分类">
               <el-option
                 v-for="item in articleCategoryList"
-                :key="item.name"
+                :key="item.category"
                 :label="item.name"
-                :value="item.name">
+                :value="item.category">
               </el-option>
             </el-select>
           </el-form-item>
@@ -44,9 +44,9 @@
                 placeholder="请选择文章标签">
                 <el-option
                   v-for="item in articleCategoryList"
-                  :key="item.category"
-                  :label="item.category"
-                  :value="item.category">
+                  :key="item.name"
+                  :label="item.name"
+                  :value="item.name">
                 </el-option>
               </el-select>
             </div>
@@ -82,7 +82,7 @@
     title: '',
     artContent: '',
     artSummary: '',
-    name: '',
+    category: '',
     artTags: [],
     source_uri: '',
     image_uri: '',
@@ -126,7 +126,7 @@
           artTags: [
             { type: 'array', required: true, message: '请至少选择一个标签', trigger: 'change' }
           ],
-          category: [
+          name: [
             { required: true, message: '请选择分类', trigger: 'change' }
           ]
         }
@@ -180,6 +180,7 @@
               }
               TableArticle.set('title', _this.postForm.title)
               TableArticle.set('artSummary', _this.postForm.artSummary)
+              debugger
               TableArticle.set('category', _this.postForm.category)
               TableArticle.set('artContent', _this.postForm.artContent)
               TableArticle.set('artTags', _this.postForm.artTags)
