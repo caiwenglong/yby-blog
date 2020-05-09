@@ -3,7 +3,8 @@ import {
   apiInsertArticleCollection,
   apiInsertArticleCategory,
   apiUpdateArticleCategory,
-  apiDeleteArticleCategory
+  apiDeleteArticleCategory,
+  apiDeleteArticleCollection
 } from '../../api/articleCategory'
 
 const articleCategory = {
@@ -48,6 +49,9 @@ const articleCategory = {
         })
       })
     },
+    /*
+    *  删除文章分类
+    * */
     deleteArticleCategory({ commit }, form) {
       return new Promise((resolve, reject) => {
         apiDeleteArticleCategory(form).then(res => {
@@ -57,6 +61,20 @@ const articleCategory = {
         })
       })
     },
+
+    /*
+    *  删除文集
+    *  @param objectId: 文集的ID
+    * */
+    deleteArticleCollection({ commit }, objectId) {
+      return new Promise((resolve, reject) => {
+        apiDeleteArticleCollection(objectId).then(res => {
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    }
 
   }
 };

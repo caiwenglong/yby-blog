@@ -25,6 +25,7 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
             <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>修改</el-dropdown-item>
+            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 4}'>删除</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </template>
@@ -139,12 +140,11 @@
       /*
       *  添加，修改， 删除操作
       *  @param objectId: 分类ID
-      *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 删除
+      *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 二级删除， 4 - 一级菜单删除
       * */
       handleCategoryOpe(command) {
         this.objectId = command.objectId;
         this.opeCode = command.opeCode;
-        const _this = this;
         if (this.opeCode === 1 || this.opeCode === 2) {
           this.dialogFormVisible = true; // 显示文集弹窗
         }
@@ -152,39 +152,74 @@
           this.dialogTitle = '修改文集名称';
         }
         if (this.opeCode === 3) {
-          const cnfObj = {
-            type: 'warning',
-            info: '即将删除文集',
-            title: '删除文集',
-            messageType: 'success',
-            cfmMsgInfo: '删除文集成功'
-          };
-          this._tools.eleEnc.encConfirm(cnfObj).then(res => {
-            if (res === 'confirm') {
-              _this._tools.eleEnc.eleLoading();
-              this.handleDeleteArticleCategory().then(res => {
-                if (res.msg === 'ok') {
-                  this._tools.commonTools.reloadRouters().then(res => {
-                    this._tools.eleEnc.closeEleLoading();
-                    const objMsg = {
-                      type: 'success',
-                      info: '删除成功'
-                    };
-                    this._tools.eleEnc.ybyMessage(objMsg);
-                  });
-                }
-              });
-            } else {
-
-            }
-          });
+          this.handleDeleteArticleCategory();
+        }
+        if (this.opeCode === 4) {
+          this.handleDeleteArticleCollection();
         }
       },
 
+      /*
+      *  删除文章分类，也就是本菜单
+      * */
       handleDeleteArticleCategory() {
-        return this.$store.dispatch('deleteArticleCategory', this.objectId).then((res) => {
-          return res
+        const cnfObj = {
+          type: 'warning',
+          info: '即将删除分类',
+          title: '删除分类',
+          messageType: 'success',
+          cfmMsgInfo: '删除分类成功'
+        };
+        this._tools.eleEnc.encConfirm(cnfObj).then(res => {
+          if (res === 'confirm') {
+            this._tools.eleEnc.eleLoading();
+            this.dispatchDelArticleCategory();
+          }
+        });
+      },
+
+      /*
+      *  删除文集，也就是删除本菜单底下所有的二级菜单
+      * */
+      handleDeleteArticleCollection() {
+        const cnfObj = {
+          type: 'warning',
+          info: '即将删除文集，文集里面的文章分类也会被全部删除掉，是否继续？',
+          title: '删除文集',
+          messageType: 'success',
+          cfmMsgInfo: '删除文集成功'
+        };
+        this._tools.eleEnc.encConfirm(cnfObj).then(res => {
+          if (res === 'confirm') {
+            this._tools.eleEnc.eleLoading();
+            this.$store.dispatch('deleteArticleCollection', this.objectId).then(res => {
+              if (res[0] && res[0].success && res[0].success.msg === 'ok') {
+                this.dispatchDelArticleCategory();
+              } else {
+                this._tools.eleEnc.ybyMessage({
+                  type: 'error',
+                  info: '删除失败'
+                })
+              }
+            });
+          }
         })
+      },
+
+      // 执行删除本菜单操作
+      dispatchDelArticleCategory() {
+        this.$store.dispatch('deleteArticleCategory', this.objectId).then(res => {
+          if (res.msg === 'ok') {
+            this._tools.commonTools.reloadRouters().then(res => {
+              this._tools.eleEnc.closeEleLoading();
+              const objMsg = {
+                type: 'success',
+                info: '删除成功'
+              };
+              this._tools.eleEnc.ybyMessage(objMsg);
+            });
+          }
+        });
       },
 
       getDataFromSubCom(flag) {

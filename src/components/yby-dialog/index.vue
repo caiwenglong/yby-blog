@@ -74,12 +74,6 @@
         'articleCategoryList'
       ])
     },
-    watch: {
-      visible: function (newQuestion, oldQuestion) {
-        console.log(newQuestion);
-        console.log(oldQuestion);
-      }
-    },
     methods: {
       /*
       *  添加，修改， 删除操作
@@ -91,9 +85,7 @@
           if (valid) {
             // this.$store.dispatch('getArticleCategoryData').then(() => {
             // });
-            console.log(this.dialogForm.name);
             const isNameExits = this._lodash.filter(this.articleCategoryList, item => {
-              console.log(item.name);
               return item.name === this.dialogForm.name;
             });
             if(!isNameExits.length) {
