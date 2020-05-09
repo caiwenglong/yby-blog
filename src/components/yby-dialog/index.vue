@@ -83,8 +83,6 @@
       commitDialogForm(form) {
         this.$refs[form].validate(valid => {
           if (valid) {
-            // this.$store.dispatch('getArticleCategoryData').then(() => {
-            // });
             const isNameExits = this._lodash.filter(this.articleCategoryList, item => {
               return item.name === this.dialogForm.name;
             });
@@ -132,8 +130,9 @@
             type: 'success',
             duration: 2000
           });
-          _this._tools.eleEnc.closeEleLoading();
           _this._tools.commonTools.reloadRouters();
+          this.$refs['dialogForm'].resetFields();
+          _this._tools.eleEnc.closeEleLoading();
           this.emitToggleDialog(false);
         }).catch(err => {
           _this.$notify({
@@ -144,6 +143,7 @@
           });
           console.log(err);
           this.emitToggleDialog(false);
+          this.$refs['dialogForm'].resetFields();
           _this._tools.eleEnc.closeEleLoading();
         });
       },
