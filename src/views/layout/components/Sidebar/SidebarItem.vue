@@ -50,19 +50,8 @@
       </template>
     </el-submenu>
 
-    <!--<el-dialog title="修改文集" :visible.sync="dialogFormVisible">-->
-      <!--<el-form ref="collectionForm" :rules="rules" :model="collectionForm">-->
-        <!--<el-form-item label="文集名称" prop="collectionName">-->
-          <!--<el-input v-model="collectionForm.collectionName" autocomplete="off"></el-input>-->
-        <!--</el-form-item>-->
-      <!--</el-form>-->
-      <!--<div slot="footer" class="dialog-footer">-->
-        <!--<el-button @click="dialogFormVisible = false">取 消</el-button>-->
-        <!--<el-button type="primary" @click="commitCollectionForm('collectionForm')">确 定</el-button>-->
-      <!--</div>-->
-    <!--</el-dialog>-->
     <yby-dialog
-      @toggleDialog="toggleDialog"
+      @toggleDialog="getDataFromSubCom"
       :title="dialogTitle"
       :object-id="objectId"
       :ope-code="opeCode"
@@ -198,7 +187,7 @@
         })
       },
 
-      toggleDialog(flag) {
+      getDataFromSubCom(flag) {
         this.dialogFormVisible = flag;
       }
     }

@@ -25,7 +25,7 @@ import 'mavon-editor/dist/css/index.css'
 import Bmob from 'hydrogen-js-sdk'
 import GeminiScrollbar from 'vue-gemini-scrollbar'
 Vue.prototype.Bmob = Bmob;
-Vue.prototype.lodash = _;
+Vue.prototype._lodash = _;
 Bmob.initialize('e4d31451776823a5', '666666');
 Vue.prototype._tools = tools;
 

@@ -1,17 +1,17 @@
 <template>
   <div class="com-sidebar">
-    <el-scrollbar wrapClass="scrollbar-wrapper">
+    <GeminiScrollbar wrapClass="scrollbar-wrapper">
       <el-menu mode="vertical" :show-timeout="200" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
         <el-link @click="handleAddArticleCol" type="primary"><i class="el-icon-plus"></i><span>添加文集</span></el-link>
         <sidebar-item v-for="route in permission_routers" :key="route.url" :item="route" :base-path="route.path"></sidebar-item>
       </el-menu>
-    </el-scrollbar>
+    </GeminiScrollbar>
     <yby-dialog
-      @toggleDialog="toggleDialog"
+      @toggleDialog="getDataFromSubCom"
+      :dialogFormVisible="dialogFormVisible"
       :title="title"
       :object-id="objectId"
       :ope-code="opeCode"
-      :dialogFormVisible="dialogFormVisible"
       :name-required="nameRequired"
       :label="label">
     </yby-dialog>
@@ -39,19 +39,9 @@ export default {
       'permission_routers',
       'sidebar'
     ]),
-    // 菜单排序
-    sortstudents: function() {
-      return this.sortByKey(this.permission_routers, 'name')
-    },
     isCollapse() {
       return !this.sidebar.opened
     }
-  },
-  create() {
-    this.$on('toggleDialog',function(flag) {
-      debugger
-      console.log(flag);
-    })
   },
   methods: {
     sortByKey(array, key) {
@@ -64,7 +54,7 @@ export default {
     handleAddArticleCol() {
       this.dialogFormVisible = true;
     },
-    toggleDialog(flag) {
+    getDataFromSubCom(flag) {
       this.dialogFormVisible = flag;
     }
   }

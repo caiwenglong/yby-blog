@@ -11,6 +11,8 @@ export function apiGetArticleCategory() {
     TableArticleCategory.order('categoryLevel');
     TableArticleCategory.find().then((res) => {
       resolve(res)
+    }).catch(err => {
+      reject(err)
     })
   })
 }
