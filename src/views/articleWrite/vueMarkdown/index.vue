@@ -126,7 +126,7 @@
           artTags: [
             { type: 'array', required: true, message: '请至少选择一个标签', trigger: 'change' }
           ],
-          name: [
+          category: [
             { required: true, message: '请选择分类', trigger: 'change' }
           ]
         }
