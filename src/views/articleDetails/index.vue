@@ -82,7 +82,7 @@
     },
     methods: {
       getArticleDetails() {
-        this.$store.dispatch('getSingleArticle', this.$route.params.artId).then()
+        this.$store.dispatch('getSingleArticle', this.$route.params.artId);
       },
       redirectToEditPage() {
         this.$router.push({ name: 'articleWriteIndex', params: { artId: this.$route.params.artId, isEdit: true }})

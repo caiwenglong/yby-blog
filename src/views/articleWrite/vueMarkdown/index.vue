@@ -180,7 +180,6 @@
               }
               TableArticle.set('title', _this.postForm.title)
               TableArticle.set('artSummary', _this.postForm.artSummary)
-              debugger
               TableArticle.set('category', _this.postForm.category)
               TableArticle.set('artContent', _this.postForm.artContent)
               TableArticle.set('artTags', _this.postForm.artTags)

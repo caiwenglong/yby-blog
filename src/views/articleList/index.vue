@@ -1,15 +1,11 @@
 <template>
-  <div v-loading="loading"
-       element-loading-text="拼命加载中"
-       element-loading-spinner="el-icon-loading"
-       element-loading-background="rgba(0, 0, 0, 0.8)"
-       class="article-list-wrapper app-main-wrapper">
+  <div class="article-list-wrapper app-main-wrapper">
       <el-row :gutter="12">
         <template v-if="entityArticleList && entityArticleList.length > 0">
           <el-col :span="12" v-for="articleItem in entityArticleList" :key="articleItem.objectId">
           <el-card shadow="hover">
             <div slot="header">
-              <i class="el-icon-close"></i>
+              <i class="el-icon-close" @click="handleDeleteArticle(articleItem.objectId)"></i>
             </div>
             <h4 class="article-title">
               {{ articleItem.title }}
@@ -82,30 +78,46 @@
     },
     methods: {
       searchArtData(category) {
-        this.getDataList(category)
-        this.getArticleTotalNum()
-      },
-      getArticleTotalNum() {
-        getArticleTotal().then(res => {
-          this.total = res
-        })
+        this.getDataList(category);
       },
       getDataList(category) {
-        const _this = this
-        this.loading = true
+        this._tools.eleEnc.eleLoading();
         this.$store.dispatch('getArticleList', { category: category, currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
-          _this.loading = false
+          this._tools.eleEnc.closeEleLoading();
         })
+      },
+      handleDeleteArticle(objectId) {
+        const cfmObj = {
+          title:'删除文章',
+          info: '此操作将删除该文章，是否继续？'
+        };
+        this._tools.eleEnc.encConfirm(cfmObj).then(res => {
+          if (res === 'confirm') {
+            this._tools.eleEnc.eleLoading();
+            this.$store.dispatch('deleteArticle', objectId).then(res => {
+              if (res.msg === 'ok') {
+                this._tools.eleEnc.ybyMessage({
+                  type: 'success',
+                  info: '删除文章成功！'
+                });
+                this._tools.eleEnc.closeEleLoading();
+                this.searchArtData(this.category);
+              }
+            })
+          }
+        }).catch(err => {
+          console.log('删除文章错误' + err);
+        });
       },
       redirectToDetailsPage(artId) {
         this.$router.push({ name: 'articleDetailsIndex', params: { artId: artId }})
       },
       handleSizeChange(val) {
-        this.pageSize = val
+        this.pageSize = val;
         this.getDataList()
       },
       handleCurrentChange(val) {
-        this.currentPage = val
+        this.currentPage = val;
         this.getDataList()
       }
     },

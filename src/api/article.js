@@ -1,13 +1,13 @@
 import Bmob from 'hydrogen-js-sdk'
 import * as _ from 'lodash'
-Bmob.initialize('e4d31451776823a5', '666666')
+Bmob.initialize('e4d31451776823a5', '666666');
 
-const TABLE_NAME = 'Article'
-const TableArticle = Bmob.Query(TABLE_NAME)
+const TABLE_NAME = 'Article';
+const TableArticle = Bmob.Query(TABLE_NAME);
 
-export function getArticleSummary(categoryName, currentPage, pageSize) {
+export function apiGetArticleSummary(categoryName, currentPage, pageSize) {
   return new Promise(function(resolve, reject) {
-    let skipTotal
+    let skipTotal;
     if (currentPage > 0) {
       skipTotal = (currentPage - 1) * pageSize
     } else {
@@ -16,9 +16,9 @@ export function getArticleSummary(categoryName, currentPage, pageSize) {
     if (categoryName !== 'ALL') {
       TableArticle.equalTo('category', '==', categoryName)
     }
-    TableArticle.skip(skipTotal)
-    TableArticle.limit(pageSize)
-    TableArticle.order('-artLevel', '-updatedAt')
+    TableArticle.skip(skipTotal);
+    TableArticle.limit(pageSize);
+    TableArticle.order('-artLevel', '-updatedAt');
     TableArticle.find().then(res => {
       const articleList = []
       for (let i = 0; i < res.length; i++) {
@@ -31,30 +31,30 @@ export function getArticleSummary(categoryName, currentPage, pageSize) {
           objectId: String,
           createdAt: String,
           updatedAt: String
-        }
-        object.title = res[i].title
-        object.artSummary = res[i].artSummary
-        object.artContent = res[i].artContent
-        object.artTags = res[i].artTags
-        object.clicks = res[i].clicks ? res[i].clicks : 0
-        object.objectId = res[i].objectId
-        object.createdAt = res[i].createdAt
-        object.updatedAt = res[i].updatedAt
+        };
+        object.title = res[i].title;
+        object.artSummary = res[i].artSummary;
+        object.artContent = res[i].artContent;
+        object.artTags = res[i].artTags;
+        object.clicks = res[i].clicks ? res[i].clicks : 0;
+        object.objectId = res[i].objectId;
+        object.createdAt = res[i].createdAt;
+        object.updatedAt = res[i].updatedAt;
         articleList.push(object)
       }
-      _.reverse(articleList)
+      _.reverse(articleList);
       resolve(articleList.reverse())
     }).catch(err => {
-      console.log(err)
+      console.log(err);
       return []
     })
   })
 }
 
-export function getArticleTotal() {
+export function apiGetArticleTotal() {
   return new Promise(function(resolve, reject) {
     TableArticle.count().then(res => {
-      const total = res
+      const total = res;
       resolve(total)
     }).catch(err => {
       console.log(err)
@@ -62,13 +62,13 @@ export function getArticleTotal() {
   })
 }
 
-export function getArticleDetails(artId) {
+export function apiGetArticleDetails(artId) {
   return new Promise(function(resolve, reject) {
     TableArticle.get(artId).then(res => {
-      res.clicks = res.clicks ? res.clicks : 0
-      res.set('clicks', res.clicks + 1)
-      res.save()
-      const singleArticleDetails = res
+      res.clicks = res.clicks ? res.clicks : 0;
+      res.set('clicks', res.clicks + 1);
+      res.save();
+      const singleArticleDetails = res;
       resolve(singleArticleDetails)
     }).catch(err => {
       console.log(err)
@@ -76,13 +76,13 @@ export function getArticleDetails(artId) {
   })
 }
 
-export function APIDeleteArticle(artId) {
+export function apiDeleteArticle(artId) {
   return new Promise(function(resolve, reject) {
     TableArticle.destroy(artId).then(res => {
       resolve(res)
     }).catch(err => {
-      reject(err)
-      console.log(err)
+      reject(err);
+      console.log(err);
     })
   })
 }

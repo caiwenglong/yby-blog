@@ -1,7 +1,8 @@
 import {
-  getArticleSummary,
-  getArticleDetails,
-  APIDeleteArticle
+  apiGetArticleSummary,
+  apiGetArticleTotal,
+  apiGetArticleDetails,
+  apiDeleteArticle
 } from '../../api/article'
 
 const entityArticle = {
@@ -19,21 +20,21 @@ const entityArticle = {
   },
   actions: {
     getArticleList({ commit }, params) {
-      getArticleSummary(params.category, params.currentPage, params.pageSize).then((articleList) => {
+      apiGetArticleSummary(params.category, params.currentPage, params.pageSize).then((articleList) => {
         commit('SET_ENTITY_ARTICLE_LIST', articleList)
       })
     },
     getSingleArticle({ commit }, artId) {
-      getArticleDetails(artId).then(articleDetails => {
+      apiGetArticleDetails(artId).then(articleDetails => {
         commit('SET_ENTITY_ARTICLE_DETAILS', articleDetails)
       })
     },
     deleteArticle({ commit }, artId) {
       return new Promise(function(resolve, reject) {
-        APIDeleteArticle(artId).then(res => {
+        apiDeleteArticle(artId).then(res => {
           resolve(res)
         }).catch(err => {
-          console.log(err)
+          console.log(err);
           reject(err)
         })
       })
