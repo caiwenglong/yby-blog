@@ -263,4 +263,14 @@
     right: 40px;
     transform: translateY(-50%);
   }
+
+  .el-icon-plus {
+    width: 16px;
+    height: 16px;
+  }
+  .el-menu--collapse {
+    .el-tooltip {
+      padding: 10px !important;
+    }
+  }
 </style>
