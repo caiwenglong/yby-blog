@@ -1,56 +1,62 @@
 <template>
-  <div v-if="!item.hidden && item.children" class="menu-wrapper">
+  <div class="sidebar-item">
     <!--添加文集链接-->
-    <!-- 有且仅有一个可见子路由，且该子路由无孙路由，且该路由不显式要始终展示两级关系 -->
-    <!-- 展示当前路由 -->
-    <router-link
-      v-if="hasOneShowingChildren(item.children) && onlyOneVisibleChild && !onlyOneVisibleChild.children && !item.alwaysShow"
-      :to="resolvePath(onlyOneVisibleChild.path)">
-      <el-menu-item :index="resolvePath(onlyOneVisibleChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-        <!-- <svg-icon v-if="onlyOneVisibleChild && onlyOneVisibleChild.icon" :icon-class="onlyOneVisibleChild.icon"></svg-icon> -->
-        <svg-icon v-if="onlyOneVisibleChild.meta && onlyOneVisibleChild.meta.icon"
-                  :icon-class="onlyOneVisibleChild.meta.icon"></svg-icon>
-        <svg-icon v-else-if="item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-        <span v-if="onlyOneVisibleChild && onlyOneVisibleChild.meta.title" slot="title">{{onlyOneVisibleChild.meta.title}}</span>
+    <div  v-if="index === 0" class="menu-wrapper cus-menu-wrapper">
+      <el-menu-item index="8090" @click="handleCategoryOpe({objectId: '', opeCode: 0})">
+        <i class="el-icon-plus"></i>
+        <span slot="title">添加文集</span>
       </el-menu-item>
-    </router-link>
-
-    <el-submenu v-else :index="item.name||item.path">
+    </div>
+    <div v-if="!item.hidden && item.children" class="menu-wrapper">
+      <!-- 有且仅有一个可见子路由，且该子路由无孙路由，且该路由不显式要始终展示两级关系 -->
       <!-- 展示当前路由 -->
-      <template slot="title">
-        <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
-        <span v-if="item.meta && item.meta.title" slot="title">{{item.meta.title}}</span>
-        <el-dropdown @command="handleCategoryOpe">
-          <i @click.stop="() => { return false }" class="el-icon-setting"></i>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
-            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>修改</el-dropdown-item>
-            <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 4}'>删除</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </template>
+      <router-link
+        v-if="hasOneShowingChildren(item.children) && onlyOneVisibleChild && !onlyOneVisibleChild.children && !item.alwaysShow"
+        :to="resolvePath(onlyOneVisibleChild.path)">
+        <el-menu-item :index="resolvePath(onlyOneVisibleChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
+          <svg-icon v-if="onlyOneVisibleChild.meta && onlyOneVisibleChild.meta.icon"
+                    :icon-class="onlyOneVisibleChild.meta.icon"></svg-icon>
+          <svg-icon v-else-if="item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
+          <span v-if="onlyOneVisibleChild && onlyOneVisibleChild.meta.title" slot="title">{{onlyOneVisibleChild.meta.title}}</span>
+        </el-menu-item>
+      </router-link>
 
-      <template v-for="child in item.children" v-if="!child.hidden">
-        <!-- 存在孙路由 -->
-        <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
-                      :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
-        <!-- 仅有子路由 -->
-        <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
-          <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
-          <span v-if="child.meta && child.meta.title" slot="title">
-            <span class="submenu__title">{{child.meta.title}}</span>
-          </span>
+      <el-submenu v-else :index="item.name||item.path">
+        <!-- 展示当前路由 -->
+        <template slot="title">
+          <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
+          <span v-if="item.meta && item.meta.title" slot="title">{{item.meta.title}}</span>
           <el-dropdown @command="handleCategoryOpe">
             <i @click.stop="() => { return false }" class="el-icon-setting"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
-              <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 3}'>删除</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 4}'>删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </el-menu-item>
-      </template>
-    </el-submenu>
+        </template>
 
+        <template v-for="child in item.children" v-if="!child.hidden">
+          <!-- 存在孙路由 -->
+          <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
+                        :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
+          <!-- 仅有子路由 -->
+          <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
+            <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
+            <span v-if="child.meta && child.meta.title" slot="title">
+            <span class="submenu__title">{{child.meta.title}}</span>
+          </span>
+            <el-dropdown @command="handleCategoryOpe">
+              <i @click.stop="() => { return false }" class="el-icon-setting"></i>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
+                <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 3}'>删除</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-menu-item>
+        </template>
+      </el-submenu>
+    </div>
     <yby-dialog
       @toggleDialog="getDataFromSubCom"
       :title="dialogTitle"
@@ -60,8 +66,8 @@
       :name-required="nameRequired"
       :label="label">
     </yby-dialog>
-
   </div>
+
 
 
 </template>
@@ -88,7 +94,8 @@
       basePath: {
         type: String,
         default: ''
-      }
+      },
+      index: ''
     },
     data() {
       /*
@@ -145,11 +152,18 @@
       handleCategoryOpe(command) {
         this.objectId = command.objectId;
         this.opeCode = command.opeCode;
-        if (this.opeCode === 1 || this.opeCode === 2) {
+
+        if (this.opeCode === 0 || this.opeCode === 1 || this.opeCode === 2) {
           this.dialogFormVisible = true; // 显示文集弹窗
         }
+        if(this.opeCode === 0) {
+          this.dialogTitle = '添加文集';
+        }
+        if(this.opeCode === 1) {
+          this.dialogTitle = '添加分类';
+        }
         if (this.opeCode === 2) {
-          this.dialogTitle = '修改文集名称';
+          this.dialogTitle = '修改名称';
         }
         if (this.opeCode === 3) {
           this.handleDeleteArticleCategory();
@@ -193,7 +207,7 @@
           if (res === 'confirm') {
             this._tools.eleEnc.eleLoading();
             this.$store.dispatch('deleteArticleCollection', this.objectId).then(res => {
-              if (res[0] && res[0].success && res[0].success.msg === 'ok') {
+              if (res[0] && res[0].success && res[0].success.msg === 'ok' || !res.length) {
                 this.dispatchDelArticleCategory();
               } else {
                 this._tools.eleEnc.ybyMessage({
@@ -240,7 +254,7 @@
   }
 
   .el-menu-item.is-active .svg-icon {
-    color: #409eff;
+    color: $menuActive;
   }
 
   .el-dropdown {

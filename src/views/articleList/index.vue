@@ -8,6 +8,9 @@
         <template v-if="entityArticleList && entityArticleList.length > 0">
           <el-col :span="12" v-for="articleItem in entityArticleList" :key="articleItem.objectId">
           <el-card shadow="hover">
+            <div slot="header">
+              <i class="el-icon-close"></i>
+            </div>
             <h4 class="article-title">
               {{ articleItem.title }}
             </h4>
@@ -114,7 +117,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .el-col-12 {
     margin-top: 8px;
   }
@@ -136,5 +139,13 @@
 
   .operation-area {
     margin-top: 16px;
+  }
+
+  .el-icon-close {
+    &:hover {
+      color: $menuActive;
+      transform: rotate(180deg);
+    }
+    transition: all 1s;
   }
 </style>

@@ -308,7 +308,7 @@ export default {
 }
 .icon {
   font-size: 1.3rem;
-  color: #409eff;
+  color: $menuActive;
   margin-top: 10px;
 }
 .login-eye {
