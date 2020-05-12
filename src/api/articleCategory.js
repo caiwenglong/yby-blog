@@ -77,8 +77,6 @@ export function apiDeleteArticleCategory(objectId) {
 
 export function apiDeleteArticleCollection(objectId) {
   return new Promise((resolve, reject) => {
-    // this.apiDeleteArticleCategory(objectId);
-    debugger
     TableArticleCategory.find().then((res) => {
       remove(res, item => {
         return item.parentId !== objectId;
@@ -96,11 +94,5 @@ export function apiDeleteArticleCollection(objectId) {
       console.log('数据库查找数据错误！' + err);
       reject(err)
     })
-    /*const articleCategoryList = TableArticleCategory.equalTo('parentId', '==', objectId);
-    articleCategoryList.destroyAll().then(res => {
-      resolve(res);
-    }).catch(err =>{
-      reject(err);
-    })*/
   })
 }

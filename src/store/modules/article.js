@@ -2,7 +2,8 @@ import {
   apiGetArticleSummary,
   apiGetArticleTotal,
   apiGetArticleDetails,
-  apiDeleteArticle
+  apiDeleteArticle,
+  apiBatchesDeleteArticle
 } from '../../api/article'
 
 const entityArticle = {
@@ -36,6 +37,15 @@ const entityArticle = {
         }).catch(err => {
           console.log(err);
           reject(err)
+        })
+      })
+    },
+    batchesDeleteArticle({ commit }, catetoryArr) {
+      return new Promise((resolve, reject) => {
+        apiBatchesDeleteArticle(catetoryArr).then(res => {
+          resolve(res);
+        }).catch(err => {
+          reject(err);
         })
       })
     }

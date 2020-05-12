@@ -1,5 +1,5 @@
 import Bmob from 'hydrogen-js-sdk'
-import * as _ from 'lodash'
+import { reverse, remove, forEach } from 'lodash'
 Bmob.initialize('e4d31451776823a5', '666666');
 
 const TABLE_NAME = 'Article';
@@ -42,7 +42,7 @@ export function apiGetArticleSummary(categoryName, currentPage, pageSize) {
         object.updatedAt = res[i].updatedAt;
         articleList.push(object)
       }
-      _.reverse(articleList);
+      reverse(articleList);
       resolve(articleList.reverse())
     }).catch(err => {
       console.log(err);
@@ -83,6 +83,31 @@ export function apiDeleteArticle(artId) {
     }).catch(err => {
       reject(err);
       console.log(err);
+    })
+  })
+}
+
+export function apiBatchesDeleteArticle(categoryArr) {
+  return new Promise((resolve, reject) => {
+    TableArticle.find().then(res => {
+      if(!Array.isArray(categoryArr)) {
+        categoryArr = [categoryArr];
+      }
+      forEach(categoryArr, category => {
+        remove(res, article => {
+          return article.category !== category
+        });
+      });
+
+      if(res.length) {
+        res.destroyAll().then(destroyRes => {
+          resolve(destroyRes)
+        }).catch(err => {
+          console.log('数据库删除文章错误！' + err);
+        })
+      }
+    }).catch(err => {
+      reject(err);
     })
   })
 }

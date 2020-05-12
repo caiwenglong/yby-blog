@@ -29,9 +29,9 @@
           <el-dropdown @command="handleCategoryOpe">
             <i @click.stop="() => { return false }" class="el-icon-setting"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 1}'>新增</el-dropdown-item>
-              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
-              <el-dropdown-item :command='{objectId: item.meta.objectId, opeCode: 4}'>删除</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 1}'>新增</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 2}'>编辑</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 4}'>删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -49,8 +49,8 @@
             <el-dropdown @command="handleCategoryOpe">
               <i @click.stop="() => { return false }" class="el-icon-setting"></i>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 2}'>编辑</el-dropdown-item>
-                <el-dropdown-item :command='{objectId: child.meta.objectId, opeCode: 3}'>删除</el-dropdown-item>
+                <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 2}'>编辑</el-dropdown-item>
+                <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 3}'>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-menu-item>
@@ -121,6 +121,7 @@
         dialogFormVisible: false,
         opeCode: -1,
         objectId: '',
+        category: '',
         nameRequired: true,
         dialogTitle: '添加文集',
         label: '文集名称',
@@ -151,6 +152,7 @@
       * */
       handleCategoryOpe(command) {
         this.objectId = command.objectId;
+        this.category = command.category;
         this.opeCode = command.opeCode;
 
         if (this.opeCode === 0 || this.opeCode === 1 || this.opeCode === 2) {
@@ -224,14 +226,17 @@
       dispatchDelArticleCategory() {
         this.$store.dispatch('deleteArticleCategory', this.objectId).then(res => {
           if (res.msg === 'ok') {
-            this._tools.commonTools.reloadRouters().then(res => {
-              this._tools.eleEnc.closeEleLoading();
-              const objMsg = {
-                type: 'success',
-                info: '删除成功'
-              };
-              this._tools.eleEnc.ybyMessage(objMsg);
-            });
+            this.$store.dispatch('batchesDeleteArticle', this.category).then(() => {
+              this._tools.commonTools.reloadRouters().then(() => {
+                this._tools.eleEnc.closeEleLoading();
+                const objMsg = {
+                  type: 'success',
+                  info: '删除成功'
+                };
+                this._tools.eleEnc.ybyMessage(objMsg);
+                this.$router.push({name: 'page'});
+              });
+            })
           }
         });
       },
