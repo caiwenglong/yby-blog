@@ -40,9 +40,12 @@ const entityArticle = {
         })
       })
     },
-    batchesDeleteArticle({ commit }, catetoryArr) {
+    /*
+    *  通过分类菜单数组删除数组中所有
+    * */
+    batchesDeleteArticle({ commit }, categoryArr) {
       return new Promise((resolve, reject) => {
-        apiBatchesDeleteArticle(catetoryArr).then(res => {
+        apiBatchesDeleteArticle(categoryArr).then(res => {
           resolve(res);
         }).catch(err => {
           reject(err);

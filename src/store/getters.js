@@ -26,8 +26,10 @@ const getters = {
   entityArticleList: state => state.entityArticle.entityArticleList,
   entityArticleDetails: state => state.entityArticle.entityArticleDetails,
 
-  // 文章分类
-  articleCategoryList: state => state.articleCategory.articleCategoryList
-}
+  // 所有的文章分类
+  articleCategoryList: state => state.articleCategory.articleCategoryList,
+  // 所有的文章分类
+  collectionCategoryList: state => state.articleCategory.collectionCategoryList
+};
 
 export default getters

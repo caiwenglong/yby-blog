@@ -1,12 +1,31 @@
 import Bmob from 'hydrogen-js-sdk';
 import { uuId } from '../utils/tools/tools-common';
-import { remove, forEach } from 'lodash'
+import { remove } from 'lodash'
 
 Bmob.initialize('e4d31451776823a5', '666666');
 
 const TABLE_NAME = 'Article_Category';
 const TableArticleCategory = Bmob.Query(TABLE_NAME);
 
+/*
+*   得到指定一级菜单的底下的所有分类
+* */
+export function apiGetCollectionCategory(objectId) {
+  return new Promise((resolve, reject) => {
+    TableArticleCategory.find().then((res) => {
+      remove(res, category => {
+        return category.parentId !== objectId
+      });
+      resolve(res)
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
+/*
+*   得到所有的文章分类
+* */
 export function apiGetArticleCategory() {
   return new Promise(function(resolve, reject) {
     TableArticleCategory.order('categoryLevel');
@@ -74,6 +93,26 @@ export function apiDeleteArticleCategory(objectId) {
     });
   })
 }
+
+/*export function apiBatchesDeleteArticleCategory(objectId) {
+  return new Promise(function(resolve, reject) {
+    TableArticleCategory.find().then(res => {
+      debugger
+      remove(res, category => {
+        return category.parentId !== objectId
+      });
+      if(res.length) {
+        res.destroyAll().then(destroyRes => {
+          resolve(destroyRes)
+        }).catch(err => {
+          console.log('数据库批量删除分类错误！' + err);
+        })
+      }
+    }).catch(err => {
+      reject(err);
+    });
+  })
+}*/
 
 export function apiDeleteArticleCollection(objectId) {
   return new Promise((resolve, reject) => {

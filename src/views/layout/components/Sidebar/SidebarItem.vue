@@ -73,8 +73,9 @@
 </template>
 
 <script>
-  import path from 'path'
-  import YbyDialog from '@/components/yby-dialog/index.vue'
+  import path from 'path';
+  import YbyDialog from '@/components/yby-dialog/index.vue';
+  import { mapGetters } from 'vuex';
 
   export default {
     name: 'SidebarItem',
@@ -126,6 +127,11 @@
         dialogTitle: '添加文集',
         label: '文集名称',
       }
+    },
+    computed: {
+      ...mapGetters([
+        'collectionCategoryList'
+      ])
     },
     methods: {
       hasOneShowingChildren(children) {
@@ -189,15 +195,15 @@
         this._tools.eleEnc.encConfirm(cnfObj).then(res => {
           if (res === 'confirm') {
             this._tools.eleEnc.eleLoading();
-            this.dispatchDelArticleCategory();
+            this.handleDelArticleCategory(this.category);
           }
         });
       },
 
       /*
-      *  删除文集，也就是删除本菜单底下所有的二级菜单
+      *  删除文集，也就是删除本菜单以及本菜单底下所有的二级菜单
       * */
-      handleDeleteArticleCollection() {
+      async handleDeleteArticleCollection() {
         const cnfObj = {
           type: 'warning',
           info: '即将删除文集，文集里面的文章分类也会被全部删除掉，是否继续？',
@@ -205,27 +211,61 @@
           messageType: 'success',
           cfmMsgInfo: '删除文集成功'
         };
-        this._tools.eleEnc.encConfirm(cnfObj).then(res => {
+
+        this._tools.eleEnc.encConfirm(cnfObj).then(async res => {
           if (res === 'confirm') {
             this._tools.eleEnc.eleLoading();
-            this.$store.dispatch('deleteArticleCollection', this.objectId).then(res => {
+
+            // 得到要删除的所有分类菜单
+            const categoryRes = await this.handleGetCollectionCategory(this.objectId);
+            const categoryArr = this.handleGenerateCategoryArr(categoryRes);
+            debugger
+
+            // 通过分类菜单数组来删除分类菜单底下的文章
+            const bacthesDelArtRes = await this.$store.dispatch('')
+
+
+            /*this.$store.dispatch('deleteArticleCollection', this.objectId).then(res => {
               if (res[0] && res[0].success && res[0].success.msg === 'ok' || !res.length) {
-                this.dispatchDelArticleCategory();
+                this.handleBatchesDelArticleCategory(this.collectionCategoryList);
               } else {
                 this._tools.eleEnc.ybyMessage({
                   type: 'error',
                   info: '删除失败'
                 })
               }
-            });
+            });*/
           }
         })
       },
 
       // 执行删除本菜单操作
-      dispatchDelArticleCategory() {
+      handleDelArticleCategory(category) {
         this.$store.dispatch('deleteArticleCategory', this.objectId).then(res => {
           if (res.msg === 'ok') {
+            console.log(category);
+            debugger;
+            this.$store.dispatch('batchesDeleteArticle', category).then(() => {
+              this._tools.commonTools.reloadRouters().then(() => {
+                this._tools.eleEnc.closeEleLoading();
+                const objMsg = {
+                  type: 'success',
+                  info: '删除成功'
+                };
+                this._tools.eleEnc.ybyMessage(objMsg);
+                this.$router.push({name: 'page'});
+              });
+            })
+          }
+        });
+      },
+
+      // 执行删除本菜单底下所以的二级菜单操作
+      handleBatchesDelArticleCategory() {
+        this.$store.dispatch('batchesDeleteArticleCategory', this.objectId).then(res => {
+          if (res.msg === 'ok') {
+            console.log(this.collectionCategoryList);
+            debugger
             this.$store.dispatch('batchesDeleteArticle', this.category).then(() => {
               this._tools.commonTools.reloadRouters().then(() => {
                 this._tools.eleEnc.closeEleLoading();
@@ -241,8 +281,30 @@
         });
       },
 
+      /*
+      *  获得指定菜单底下的所有分类
+      * */
+      async handleGetCollectionCategory(objectId) {
+        return new Promise((resolve, reject) => {
+          this.$store.dispatch('getCollectionCategory', objectId).then((res) => {
+            resolve(res)
+          })
+        })
+      },
+
       getDataFromSubCom(flag) {
         this.dialogFormVisible = flag;
+      },
+
+      /*
+      *   将调用handleGetCollectionCategory返回的数据进行二次操作，拿出里面的category组成数组以备后续使用
+      * */
+      handleGenerateCategoryArr(categoryRes) {
+        const categoryArr = [];
+        this._lodash.forEach(categoryRes, item => {
+          categoryArr.push(item.category);
+        });
+        return categoryArr;
       }
     }
   }
