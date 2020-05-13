@@ -31,7 +31,7 @@
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 1}'>新增</el-dropdown-item>
               <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 2}'>编辑</el-dropdown-item>
-              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 4}'>删除</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 4, name: item.name}'>删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -50,7 +50,7 @@
               <i @click.stop="() => { return false }" class="el-icon-setting"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 2}'>编辑</el-dropdown-item>
-                <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 3}'>删除</el-dropdown-item>
+                <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 3, name: child.name}'>删除</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </el-menu-item>
@@ -123,6 +123,7 @@
         opeCode: -1,
         objectId: '',
         category: '',
+        name: '',
         nameRequired: true,
         dialogTitle: '添加文集',
         label: '文集名称',
@@ -160,6 +161,7 @@
         this.objectId = command.objectId;
         this.category = command.category;
         this.opeCode = command.opeCode;
+        this.name = command.name;
 
         if (this.opeCode === 0 || this.opeCode === 1 || this.opeCode === 2) {
           this.dialogFormVisible = true; // 显示文集弹窗
@@ -187,7 +189,7 @@
       handleDeleteArticleCategory() {
         const cnfObj = {
           type: 'warning',
-          info: '即将删除分类，该分类底下的所有文章也将都被删除，是否继续？',
+          info: `即将删除${this.name}分类，该分类底下的所有文章也将都被删除，是否继续？`,
           title: '删除分类',
           messageType: 'success',
           cfmMsgInfo: '删除分类成功'
@@ -206,7 +208,7 @@
       async handleDeleteArticleCollection() {
         const cnfObj = {
           type: 'warning',
-          info: '即将删除文集，文集里面的文章分类也会被全部删除掉，是否继续？',
+          info: `即将删除${this.name}文集，文集里面的文章分类也会被全部删除掉，是否继续？`,
           title: '删除文集',
           messageType: 'success',
           cfmMsgInfo: '删除文集成功'
@@ -252,7 +254,7 @@
                 this._tools.eleEnc.closeEleLoading();
                 const objMsg = {
                   type: 'success',
-                  info: '删除成功'
+                  info: `分类${this.name}删除成功`
                 };
                 this._tools.eleEnc.ybyMessage(objMsg);
                 this.$router.push({name: 'page'});

@@ -1,4 +1,4 @@
-import { route001, constantRouterMap } from '@/router'
+import { dynamicRoute, constantRouterMap } from '@/router'
 import { apiGetArticleCategory } from '../../api/articleCategory'
 import { generateAsyncRouters } from '../../router'
 import * as _ from 'lodash'
@@ -31,7 +31,7 @@ function filterAsyncRouter(asyncRouterMap, roles) {
       return true
     }
     return false
-  })
+  });
   return accessedRouters
 }
 
@@ -44,7 +44,7 @@ const permission = {
   mutations: {
     // 菜单权限控制-动态菜单
     SET_ROUTERS: (state, routers) => {
-      state.dynamicRouters = routers
+      state.dynamicRouters = routers;
       state.routers = constantRouterMap.concat(routers) // permission_routers
     },
     // 网页资源权限控制使用
@@ -60,7 +60,7 @@ const permission = {
           const menus = categoryList;
           if (menus.length) {
             routes = generateAsyncRouters(menus);
-            routes = _.concat(routes, route001);
+            routes = _.concat(routes, dynamicRoute);
             routes = _.sortBy(routes, function(o) {
               return o.level
             })

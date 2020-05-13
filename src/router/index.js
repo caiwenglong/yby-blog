@@ -54,7 +54,7 @@ export const constantRouterMap = [
   }
 ]
 
-export const route001 = [
+export const dynamicRoute = [
   {
     path: '/articleWrite',
     component: Layout,
