@@ -31,6 +31,10 @@
         type: String,
         required: true
       },
+      name: {
+        type: String,
+        default: ''
+      },
       cancelBtn: {
         type: String,
         default: '取消'
@@ -57,7 +61,7 @@
         visible: '',
         dialogForm: {
           objectId: '',
-          name: ''
+          name: this.name
         },
         rules: {
           name: [
@@ -68,6 +72,11 @@
     },
     created() {
       this.$store.dispatch('getArticleCategoryData').then(() => {});
+    },
+    watch: {
+      name: function(newValue) {
+        this.dialogForm.name =  newValue;
+      }
     },
     computed: {
       ...mapGetters([
