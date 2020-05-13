@@ -41,7 +41,7 @@
           <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
                         :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
           <!-- 仅有子路由 -->
-          <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
+          <el-menu-item @click="goToView(child.path, child.category)" :index="resolvePath(child.path)">
             <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
             <span v-if="child.meta && child.meta.title" slot="title">
             <span class="submenu__title">{{child.meta.title}}</span>
@@ -149,8 +149,8 @@
       resolvePath(...paths) {
         return path.resolve(this.basePath, ...paths)
       },
-      goToView(name, category) {
-        this.$router.push({name: name, params: {category: category}})
+      goToView(path, category) {
+        this.$router.push({path: path, query: {category: category}})
       },
 
       /*
@@ -162,7 +162,7 @@
         this.objectId = command.objectId;
         this.category = command.category;
         this.opeCode = command.opeCode;
-        this.name = command.name;
+        this.name = command.name || '';
 
         if (this.opeCode === 0 || this.opeCode === 1 || this.opeCode === 2) {
           this.dialogFormVisible = true; // 显示文集弹窗
@@ -172,6 +172,7 @@
         }
         if(this.opeCode === 1) {
           this.dialogTitle = '添加分类';
+          this.name = '';
         }
         if (this.opeCode === 2) {
           this.dialogTitle = '修改名称';
@@ -237,7 +238,6 @@
                       info: `文集${this.name}删除成功`
                     };
                     this._tools.eleEnc.ybyMessage(objMsg);
-                    this.$router.push({name: 'page'});
                   });
                 }
               }
@@ -258,7 +258,6 @@
                   info: `分类${this.name}删除成功`
                 };
                 this._tools.eleEnc.ybyMessage(objMsg);
-                this.$router.push({name: 'page'});
               });
             })
           }

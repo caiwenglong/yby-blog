@@ -75,6 +75,9 @@
     },
     watch: {
       name: function(newValue) {
+        if(this._lodash.isEmpty(newValue)) {
+          this.$refs['dialogForm'].resetFields();
+        }
         this.dialogForm.name =  newValue;
       }
     },

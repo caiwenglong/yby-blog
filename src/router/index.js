@@ -37,7 +37,6 @@ export const constantRouterMap = [
     meta: { title: '登录' },
     name: 'homepage'
   },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
   {
     path: '/dashboard',
     component: Layout,
@@ -51,8 +50,9 @@ export const constantRouterMap = [
         meta: { title: '首页', icon: 'home' }
       }
     ]
-  }
-]
+  },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
+];
 
 export const dynamicRoute = [
   {
