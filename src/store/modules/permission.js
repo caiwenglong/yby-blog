@@ -55,7 +55,7 @@ const permission = {
   actions: {
     async GenerateRoutes({ commit }, roles) {
       return new Promise(resolve => {
-        let routes = []
+        let routes = [];
         apiGetArticleCategory().then(categoryList => {
           const menus = categoryList;
           if (menus.length) {

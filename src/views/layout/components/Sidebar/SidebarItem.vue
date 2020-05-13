@@ -233,7 +233,7 @@
                     this._tools.eleEnc.closeEleLoading();
                     const objMsg = {
                       type: 'success',
-                      info: '删除成功'
+                      info: `文集${this.name}删除成功`
                     };
                     this._tools.eleEnc.ybyMessage(objMsg);
                     this.$router.push({name: 'page'});

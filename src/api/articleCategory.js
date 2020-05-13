@@ -28,7 +28,7 @@ export function apiGetCollectionCategory(objectId) {
 * */
 export function apiGetArticleCategory() {
   return new Promise(function(resolve, reject) {
-    TableArticleCategory.order('categoryLevel');
+    TableArticleCategory.order('-createdAt');
     TableArticleCategory.find().then((res) => {
       resolve(res)
     }).catch(err => {
