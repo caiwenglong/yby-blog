@@ -94,27 +94,7 @@ export function apiDeleteArticleCategory(objectId) {
   })
 }
 
-/*export function apiBatchesDeleteArticleCategory(objectId) {
-  return new Promise(function(resolve, reject) {
-    TableArticleCategory.find().then(res => {
-      debugger
-      remove(res, category => {
-        return category.parentId !== objectId
-      });
-      if(res.length) {
-        res.destroyAll().then(destroyRes => {
-          resolve(destroyRes)
-        }).catch(err => {
-          console.log('数据库批量删除分类错误！' + err);
-        })
-      }
-    }).catch(err => {
-      reject(err);
-    });
-  })
-}*/
-
-export function apiDeleteArticleCollection(objectId) {
+export function apiBatchesDeleteCategory(objectId) {
   return new Promise((resolve, reject) => {
     TableArticleCategory.find().then((res) => {
       remove(res, item => {
@@ -127,11 +107,11 @@ export function apiDeleteArticleCollection(objectId) {
           console.log('数据库删除数据错误！' + err);
         })
       } else {
-        resolve(res)
+        resolve({msg: 'ok', info: '没有可删除的文章'});
       }
     }).catch(err => {
       console.log('数据库查找数据错误！' + err);
-      reject(err)
+      reject(err);
     })
   })
 }

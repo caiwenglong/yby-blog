@@ -187,7 +187,7 @@
       handleDeleteArticleCategory() {
         const cnfObj = {
           type: 'warning',
-          info: '即将删除分类',
+          info: '即将删除分类，该分类底下的所有文章也将都被删除，是否继续？',
           title: '删除分类',
           messageType: 'success',
           cfmMsgInfo: '删除分类成功'
@@ -219,22 +219,26 @@
             // 得到要删除的所有分类菜单
             const categoryRes = await this.handleGetCollectionCategory(this.objectId);
             const categoryArr = this.handleGenerateCategoryArr(categoryRes);
-            debugger
 
             // 通过分类菜单数组来删除分类菜单底下的文章
-            const bacthesDelArtRes = await this.$store.dispatch('')
-
-
-            /*this.$store.dispatch('deleteArticleCollection', this.objectId).then(res => {
-              if (res[0] && res[0].success && res[0].success.msg === 'ok' || !res.length) {
-                this.handleBatchesDelArticleCategory(this.collectionCategoryList);
-              } else {
-                this._tools.eleEnc.ybyMessage({
-                  type: 'error',
-                  info: '删除失败'
-                })
+            const batchesDelArtRes = await this.$store.dispatch('batchesDeleteArticle', categoryArr);
+            if(this.isSuccess(batchesDelArtRes) || batchesDelArtRes.msg==='ok') {
+              const batchesDelCgyRes = await this.$store.dispatch('batchesDeleteCategory', this.objectId);
+              if(this.isSuccess(batchesDelCgyRes) || batchesDelCgyRes.msg==='ok') {
+                const deleteArticleMenuRes = await this.$store.dispatch('deleteArticleCategory', this.objectId);
+                if(deleteArticleMenuRes && deleteArticleMenuRes.msg === 'ok') {
+                  this._tools.commonTools.reloadRouters().then(() => {
+                    this._tools.eleEnc.closeEleLoading();
+                    const objMsg = {
+                      type: 'success',
+                      info: '删除成功'
+                    };
+                    this._tools.eleEnc.ybyMessage(objMsg);
+                    this.$router.push({name: 'page'});
+                  });
+                }
               }
-            });*/
+            }
           }
         })
       },
@@ -243,30 +247,7 @@
       handleDelArticleCategory(category) {
         this.$store.dispatch('deleteArticleCategory', this.objectId).then(res => {
           if (res.msg === 'ok') {
-            console.log(category);
-            debugger;
             this.$store.dispatch('batchesDeleteArticle', category).then(() => {
-              this._tools.commonTools.reloadRouters().then(() => {
-                this._tools.eleEnc.closeEleLoading();
-                const objMsg = {
-                  type: 'success',
-                  info: '删除成功'
-                };
-                this._tools.eleEnc.ybyMessage(objMsg);
-                this.$router.push({name: 'page'});
-              });
-            })
-          }
-        });
-      },
-
-      // 执行删除本菜单底下所以的二级菜单操作
-      handleBatchesDelArticleCategory() {
-        this.$store.dispatch('batchesDeleteArticleCategory', this.objectId).then(res => {
-          if (res.msg === 'ok') {
-            console.log(this.collectionCategoryList);
-            debugger
-            this.$store.dispatch('batchesDeleteArticle', this.category).then(() => {
               this._tools.commonTools.reloadRouters().then(() => {
                 this._tools.eleEnc.closeEleLoading();
                 const objMsg = {
@@ -305,6 +286,13 @@
           categoryArr.push(item.category);
         });
         return categoryArr;
+      },
+
+      /*
+      *  判断返回结果是否成功
+      * */
+      isSuccess(res) {
+        return res && res[0] && res[0].success === 'ok'
       }
     }
   }

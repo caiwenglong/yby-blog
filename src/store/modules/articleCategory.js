@@ -4,7 +4,7 @@ import {
   apiInsertArticleCategory,
   apiUpdateArticleCategory,
   apiDeleteArticleCategory,
-  apiDeleteArticleCollection,
+  apiBatchesDeleteCategory,
   apiGetCollectionCategory
 } from '../../api/articleCategory'
 
@@ -86,27 +86,12 @@ const articleCategory = {
     },
 
     /*
-    *  删除多个文章分类
-    * */
-    /*batchesDeleteArticleCategory({ commit }, form) {
-      return new Promise((resolve, reject) => {
-        apiBatchesDeleteArticleCategory(form).then(res => {
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-*/
-
-
-    /*
     *  删除一级菜单底下所有的分类
     *  @param objectId: 文集的ID
     * */
-    deleteArticleCollection({ commit }, objectId) {
+    batchesDeleteCategory({ commit }, objectId) {
       return new Promise((resolve, reject) => {
-        apiDeleteArticleCollection(objectId).then(res => {
+        apiBatchesDeleteCategory(objectId).then(res => {
           resolve(res)
         }).catch(error => {
           reject(error)

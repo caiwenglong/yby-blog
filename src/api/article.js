@@ -1,5 +1,5 @@
 import Bmob from 'hydrogen-js-sdk'
-import { reverse, remove, forEach } from 'lodash'
+import {reverse, clone, filter, remove, forEach, pullAllBy, flatten, indexOf, without} from 'lodash'
 Bmob.initialize('e4d31451776823a5', '666666');
 
 const TABLE_NAME = 'Article';
@@ -93,18 +93,30 @@ export function apiBatchesDeleteArticle(categoryArr) {
       if(!Array.isArray(categoryArr)) {
         categoryArr = [categoryArr];
       }
-      forEach(categoryArr, category => {
-        remove(res, article => {
-          return article.category !== category
-        });
+
+      /*
+      *  筛选出要删除的数据
+      * */
+      const resClone = clone(res);
+      forEach(resClone, article => {
+        if(indexOf(categoryArr, article.category) === -1) {
+          remove(res, item => {
+            return item.category === article.category
+          })
+        }
       });
 
+      /*
+      *  将筛选出来的数据删除
+      * */
       if(res.length) {
         res.destroyAll().then(destroyRes => {
           resolve(destroyRes)
         }).catch(err => {
-          console.log('数据库删除文章错误！' + err);
+          reject(err)
         })
+      } else {
+        resolve({msg: 'ok', info: '没有可删除的文章'})
       }
     }).catch(err => {
       reject(err);
