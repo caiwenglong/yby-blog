@@ -104,6 +104,7 @@ export function apiBatchesDeleteCategory(objectId) {
         res.destroyAll().then(destroyRes => {
           resolve(destroyRes)
         }).catch(err => {
+          reject(err);
           console.log('数据库删除数据错误！' + err);
         })
       } else {

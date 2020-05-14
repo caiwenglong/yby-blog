@@ -41,7 +41,7 @@
           <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
                         :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
           <!-- 仅有子路由 -->
-          <el-menu-item @click="goToView(child.path, child.category)" :index="resolvePath(child.path)">
+          <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
             <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
             <span v-if="child.meta && child.meta.title" slot="title">
             <span class="submenu__title">{{child.meta.title}}</span>
@@ -149,8 +149,8 @@
       resolvePath(...paths) {
         return path.resolve(this.basePath, ...paths)
       },
-      goToView(path, category) {
-        this.$router.push({path: path, query: {category: category}})
+      goToView(name, category) {
+        this.$router.push({name: name, params: {category: category}})
       },
 
       /*
@@ -294,7 +294,7 @@
       *  判断返回结果是否成功
       * */
       isSuccess(res) {
-        return res && res[0] && res[0].success === 'ok'
+        return res && res[0] && res[0].success && res[0].success.msg === 'ok'
       }
     }
   }

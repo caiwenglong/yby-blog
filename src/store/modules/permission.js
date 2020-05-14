@@ -62,7 +62,7 @@ const permission = {
             routes = generateAsyncRouters(menus);
             routes = _.concat(routes, dynamicRoute);
             routes = _.sortBy(routes, function(o) {
-              return o.level
+              return -o.createdAt
             })
           }
           let accessedRoutes;

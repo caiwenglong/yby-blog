@@ -1,5 +1,4 @@
 import store from '../../store'
-import router from '@/router'
 /*
 全局唯一标识符，简称GUID
 这个可以指定长度和基数
