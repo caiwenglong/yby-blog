@@ -73,7 +73,7 @@
 
 <script>
   import Bmob from 'hydrogen-js-sdk'
-  Bmob.initialize('e4d31451776823a5', '666666')
+  Bmob.initialize('e4d31451776823a5', '666666');
   import MdInput from '../../../components/MdInput/index'
   import { mapGetters } from 'vuex'
 
@@ -87,14 +87,14 @@
     source_uri: '',
     image_uri: '',
     importance: 0
-  }
+  };
 
   export default {
     name: 'MarkdownEdit',
     components: { MdInput },
     data() {
       const validateRequire = (rule, value, callback) => {
-        let message = ''
+        let message = '';
         if (rule.field === 'title') {
           message = '标题为必填项'
         } else if (rule.field === 'artSummary') {
@@ -106,12 +106,12 @@
           this.$message({
             message: message,
             type: 'error'
-          })
+          });
           callback(new Error(message))
         } else {
           callback()
         }
-      }
+      };
       return {
         titleInputName: 'titleInput',
         contentShortInputName: 'contentShortInput',
@@ -139,27 +139,40 @@
       ])
     },
     created: function() {
-      this.isEdit = this.$route.params.isEdit
-      this.getArticleCategoryData()
+      this.isEdit = this.$route.params.isEdit || '';
+      this.getArticleCategoryData();
       if (this.isEdit) {
-        this.getArticleDetails()
+        this.getArticleDetails();
         if (this.entityArticleDetails) {
           this.postForm = Object.assign(this.postForm, this.entityArticleDetails)
         }
       }
     },
+    watch: {
+      '$route':'initData',
+      deep: true
+    },
     methods: {
+      initData() {
+        const category = this.$route.query.category || '';
+        if(category) {
+          this.postForm.category = category;
+        }
+      },
       /*
       *   重置form
       * */
       handleResetForm() {
-        this.postForm = Object.assign({}, defaultForm)
+        this.postForm = Object.assign({}, defaultForm);
         this.$refs.postForm.resetFields()
       },
       getArticleCategoryData() {
-        const _this = this
-        _this.loading = true
+        const _this = this;
+        _this.loading = true;
         _this.$store.dispatch('getArticleCategoryData').then((res) => {
+          this._lodash.remove(this.articleCategoryList, item => {
+            return item.parentId === '0';
+          });
           _this.loading = false
         })
       },
@@ -169,28 +182,28 @@
         })
       },
       publishArticle(articleObj) {
-        const _this = this
+        const _this = this;
         this.$refs.postForm.validate((valid) => {
           if (valid) {
             return new Promise(function(resolve, reject) {
               _this.loading = true
-              const TableArticle = Bmob.Query('Article')
+              const TableArticle = Bmob.Query('Article');
               if (_this.$route.params.isEdit) {
                 TableArticle.set('id', _this.$route.params.artId)
               }
-              TableArticle.set('title', _this.postForm.title)
-              TableArticle.set('artSummary', _this.postForm.artSummary)
-              TableArticle.set('category', _this.postForm.category)
-              TableArticle.set('artContent', _this.postForm.artContent)
-              TableArticle.set('artTags', _this.postForm.artTags)
+              TableArticle.set('title', _this.postForm.title);
+              TableArticle.set('artSummary', _this.postForm.artSummary);
+              TableArticle.set('category', _this.postForm.category);
+              TableArticle.set('artContent', _this.postForm.artContent);
+              TableArticle.set('artTags', _this.postForm.artTags);
               TableArticle.save().then(res => {
                 _this.$notify({
                   title: '成功',
                   message: '发布文章成功',
                   type: 'success',
                   duration: 2000
-                })
-                _this.postForm.status = 'published'
+                });
+                _this.postForm.status = 'published';
                 _this.loading = false
               }).catch(err => {
                 _this.$notify({
@@ -198,12 +211,12 @@
                   message: '发布文章失败',
                   type: 'error',
                   duration: 2000
-                })
+                });
                 console.log(err)
               })
             })
           } else {
-            console.log('error submit!!')
+            console.log('error submit!!');
             return false
           }
         })
@@ -218,8 +231,8 @@
               message: '发布文章失败',
               type: 'error',
               duration: 2000
-            })
-            return false
+            });
+            return false;
           }
         })
       },
@@ -229,8 +242,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(res => {
-          console.log('res' + res)
-          this.handleResetForm()
+          console.log('res' + res);
+          this.handleResetForm();
           this.$message({
             type: 'success',
             message: '重置已完成'

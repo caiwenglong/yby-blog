@@ -49,6 +49,7 @@
             <el-dropdown @command="handleCategoryOpe">
               <i @click.stop="() => { return false }" class="el-icon-setting"></i>
               <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item :command='{category: child.category, opeCode: 5}'>添加文章</el-dropdown-item>
                 <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 2, name: child.name}'>编辑</el-dropdown-item>
                 <el-dropdown-item :command='{objectId: child.meta.objectId, category: child.category, opeCode: 3, name: child.name}'>删除</el-dropdown-item>
               </el-dropdown-menu>
@@ -161,11 +162,11 @@
       /*
       *  添加，修改， 删除操作
       *  @param objectId: 分类ID
-      *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 二级删除， 4 - 一级菜单删除
+      *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 二级删除， 4 - 一级菜单删除， 5 - 添加文章
       * */
       handleCategoryOpe(command) {
-        this.objectId = command.objectId;
-        this.category = command.category;
+        this.objectId = command.objectId || '';
+        this.category = command.category || '';
         this.opeCode = command.opeCode;
         this.name = command.name || '';
 
@@ -187,6 +188,9 @@
         }
         if (this.opeCode === 4) {
           this.handleDeleteArticleCollection();
+        }
+        if(this.opeCode === 5) {
+          this.handleAddArticle();
         }
       },
 
@@ -294,6 +298,13 @@
           categoryArr.push(item.category);
         });
         return categoryArr;
+      },
+      /*
+      * 添加文章到指定分类
+      *
+       */
+      handleAddArticle() {
+        this.$router.push({path: '/articleWrite', query: { category: this.category }});
       },
 
       /*

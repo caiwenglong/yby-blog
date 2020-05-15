@@ -13,9 +13,6 @@ const TableArticleCategory = Bmob.Query(TABLE_NAME);
 export function apiGetCollectionCategory(objectId) {
   return new Promise((resolve, reject) => {
     TableArticleCategory.find().then((res) => {
-      remove(res, category => {
-        return category.parentId !== objectId
-      });
       resolve(res)
     }).catch(err => {
       reject(err)
