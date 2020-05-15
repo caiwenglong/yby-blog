@@ -140,9 +140,20 @@ function getChildrenRouters(menus, parentUrl, parentObjectId) {
   return childrenRoutes
 }
 
-export default new Router({
+const router = new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
-})
+});
+
+/*
+*  在添加分类的时候，先清空现有的路由，然后在addRoutes新生成的路由，否则在生成路由时会报
+*  Duplicate named routes definition的警告
+* */
+router.selfAddRoutes = function (params){
+  router.matcher = new Router().matcher;
+  router.addRoutes(params)
+};
+
+export default router
 

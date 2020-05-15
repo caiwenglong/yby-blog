@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
     } else if (!store.getters.dynamicRouters) { // 判断用户是否已完成动态菜单处理
       store.dispatch('GetInfo').then(res => { // 拉取user_info
         store.dispatch('GenerateRoutes', store.getters.roles).then(() => {
-          router.addRoutes(store.getters.dynamicRouters) // 动态添加可访问路由表
+          // router.addRoutes(store.getters.dynamicRouters) // 动态添加可访问路由表
           next({ ...to, replace: true })
           // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           NProgress.done()

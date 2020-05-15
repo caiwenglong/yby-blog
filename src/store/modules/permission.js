@@ -1,4 +1,5 @@
-import { dynamicRoute, constantRouterMap } from '@/router'
+import { dynamicRoute, constantRouterMap, selfAddRoutes } from '@/router'
+import router from '@/router'
 import { apiGetArticleCategory } from '../../api/articleCategory'
 import { generateAsyncRouters } from '../../router'
 import * as _ from 'lodash'
@@ -46,6 +47,7 @@ const permission = {
     SET_ROUTERS: (state, routers) => {
       state.dynamicRouters = routers;
       state.routers = constantRouterMap.concat(routers) // permission_routers
+      router.selfAddRoutes(state.routers);
     },
     // 网页资源权限控制使用
     SET_WEB_RES_MAP: (state, webResMap) => {
