@@ -26,10 +26,12 @@
     "moment": "^2.24.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
+    "v-contextmenu": "^2.9.0",
     "vue": "2.5.10",
     "vue-gemini-scrollbar": "^2.0.1",
     "vue-markdown": "^2.2.4",
     "vue-router": "3.0.1",
+    "vue-runtime-helpers": "^1.1.2",
     "vuex": "3.0.1",
     "xlsx": "^0.14.2"
   },

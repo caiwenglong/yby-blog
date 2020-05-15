@@ -16,6 +16,8 @@ import router from './router'
 import store from './store'
 import * as _ from 'lodash'
 import { tools } from './utils/tools/index';
+import contentmenu from 'v-contextmenu';
+import 'v-contextmenu/dist/index.css';
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -32,6 +34,7 @@ Vue.prototype._tools = tools;
 Vue.use(mavonEditor);
 Vue.use(ElementUI);
 Vue.use(GeminiScrollbar);
+Vue.use(contentmenu);
 
 Vue.prototype.MaxSize = 500;
 Vue.config.productionTip = false;

@@ -41,11 +41,11 @@
           <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
                         :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
           <!-- 仅有子路由 -->
-          <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
+          <el-menu-item  v-contextmenu:contextmenu @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
             <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
             <span v-if="child.meta && child.meta.title" slot="title">
-            <span class="submenu__title">{{child.meta.title}}</span>
-          </span>
+              <span class="submenu__title">{{child.meta.title}}</span>
+            </span>
             <el-dropdown @command="handleCategoryOpe">
               <i @click.stop="() => { return false }" class="el-icon-setting"></i>
               <el-dropdown-menu slot="dropdown">
@@ -67,6 +67,11 @@
       :name-required="nameRequired"
       :label="label">
     </yby-dialog>
+    <v-contextmenu ref="contextmenu">
+      <v-contextmenu-item>菜单1</v-contextmenu-item>
+      <v-contextmenu-item>菜单2</v-contextmenu-item>
+      <v-contextmenu-item>菜单3</v-contextmenu-item>
+    </v-contextmenu>
   </div>
 
 
@@ -238,6 +243,7 @@
                       info: `文集${this.name}删除成功`
                     };
                     this._tools.eleEnc.ybyMessage(objMsg);
+                    this.$router.push('/')
                   });
                 }
               }
