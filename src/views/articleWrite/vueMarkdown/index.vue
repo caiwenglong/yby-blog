@@ -147,6 +147,7 @@
           this.postForm = Object.assign(this.postForm, this.entityArticleDetails)
         }
       }
+      this.initData();
     },
     watch: {
       '$route':'initData',
