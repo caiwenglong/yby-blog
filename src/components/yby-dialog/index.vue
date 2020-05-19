@@ -3,7 +3,7 @@
     <el-dialog :before-close="handleClose" :title="title" :visible="dialogFormVisible">
       <el-form ref="dialogForm" :rules="rules" :model="dialogForm">
         <el-form-item :label="label" prop="name">
-          <el-input v-model="dialogForm.name" autocomplete="off"></el-input>
+          <el-input @keyup.enter.native="commitDialogForm('dialogForm')" v-model="dialogForm.name" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

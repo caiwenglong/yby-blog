@@ -247,7 +247,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(res => {
-          console.log('res' + res);
           this.handleResetForm();
           this.$message({
             type: 'success',

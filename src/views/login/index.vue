@@ -19,7 +19,7 @@
                     <el-input clearable v-model="reset.code" class="verificationCode" placeholder="请输入验证码">
                       <svg-icon class="icon" slot="prefix" icon-class="code"></svg-icon>
                     </el-input>
-                    <el-button class="codebtn" type="text" @click="getCode('reset')">{{ResetcodeText}}</el-button>
+                    <el-button class="codebtn" type="text" @click="getCode('reset')">{{ResetCodeText}}</el-button>
                   </el-form-item>
                   <el-form-item prop="newPassword">
                     <el-input clearable name="newPassword" type="password" v-model="reset.newPassword" autoComplete="on" placeholder="请输新入密码">
@@ -122,18 +122,19 @@
 </template>
 
 <script>
+  const maxLengthTip = '长度在32个字符之内';
+  const minLengthTip = '长度在6个字符以上';
+  const triggerEvent = 'blur';
+  const accountTip = '请输入账号';
+  const pwdTip = '请输入密码';
+  const pwdConfirmTip = '请输入密码';
+  const pwdErrorTip = '两次输入密码不一致';
+  const codeTip = '请输入验证码';
+  const getCodeTip = '获取验证码';
+  const codeTimeTip = 's后重新获取';
 export default {
   name: 'login',
   data() {
-    const maxLengthTip = '长度在32个字符之内';
-    const minLengthTip = '长度在6个字符以上';
-    const triggerEvent = 'blur';
-    const accountTip = '请输入账号';
-    const pwdTip = '请输入密码';
-    const pwdConfirmTip = '请输入密码';
-    const pwdErrorTip = '两次输入密码不一致';
-    const codeTip = '请输入验证码';
-    const getCodeTip = '获取验证码';
     let validatePass = (rule, value, callback) => {
       if (value === '' || !value) {
         callback(new Error(pwdTip))
@@ -210,18 +211,18 @@ export default {
         ],
       },
       loading: false,
-      pwdType: pwdType,
+      pwdType: 'password',
       isGetCode: true,
       codeText: getCodeTip,
       codeTime: 60,
       isResetCode: true,
-      ResetcodeText: getCodeTip,
-      ResetcodeTime: 60
+      ResetCodeText: getCodeTip,
+      ResetCodeTime: 60
     }
   },
   methods: {
     showPwd() {
-      if (this.pwdType === this.pwdTypeText) {
+      if (this.pwdType === 'password') {
         this.pwdType = ''
       } else {
         this.pwdType = 'password'
@@ -319,22 +320,20 @@ export default {
     getCode(type) {
       if (type === 'reset') {
         this.resetCountDown();
-        this.$store.dispatch('GetResetCode', this.reset.accountNo)
+        this.$store.dispatch('GetResetCode', this.reset.accountNo).then();
       } else {
         this.countDown();
-        this.$store.dispatch('GetAuthCode', this.loginForm.accountNo).then(res => {
-          console.log(res)
-        })
+        this.$store.dispatch('GetAuthCode', this.loginForm.accountNo).then();
       }
     },
     // 倒计时
     countDown() {
       if (!this.isGetCode) return;
       this.isGetCode = false;
-      this.codeText = this.codeTime + 's后重新获取';
+      this.codeText = this.codeTime + codeTimeTip;
       let clock = window.setInterval(() => {
         this.codeTime--;
-        this.codeText = this.codeTime + 's后重新获取';
+        this.codeText = this.codeTime + codeTimeTip;
         if (this.codeTime <= 0) {
           window.clearInterval(clock);
           this.codeTime = 60;
@@ -346,14 +345,14 @@ export default {
     resetCountDown() {
       if (!this.isResetCode) return;
       this.isResetCode = false;
-      this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
+      this.ResetCodeText = this.ResetCodeTime + codeTimeTip;
       let reset = window.setInterval(() => {
-        this.ResetcodeTime--;
-        this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
-        if (this.ResetcodeTime <= 0) {
+        this.ResetCodeTime--;
+        this.ResetCodeText = this.ResetCodeTime + codeTimeTip;
+        if (this.ResetCodeTime <= 0) {
           window.clearInterval(reset);
-          this.ResetcodeTime = 60;
-          this.ResetcodeText = '重新获取';
+          this.ResetCodeTime = 60;
+          this.ResetCodeText = '重新获取';
           this.isResetCode = true // 这里重新开启
         }
       }, 1000)

@@ -29,7 +29,7 @@
           <el-dropdown @command="handleCategoryOpe">
             <i @click.stop="() => { return false }" class="el-icon-setting"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 1}'>新增</el-dropdown-item>
+              <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 1}'>添加分类</el-dropdown-item>
               <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 2, name: item.name}'>编辑</el-dropdown-item>
               <el-dropdown-item :command='{objectId: item.meta.objectId, category: item.category, opeCode: 4, name: item.name}'>删除</el-dropdown-item>
             </el-dropdown-menu>

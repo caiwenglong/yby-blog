@@ -23,15 +23,6 @@
 
   export default {
     components: {SidebarItem, YbyDialog},
-    create: function() {
-      console.log(this.permission_routers);
-    },
-    watch: {
-      permission_routers: function (a, b) {
-        console.log(a);
-        console.log(b);
-      }
-    },
     computed: {
       ...mapGetters([
         'permission_routers',
