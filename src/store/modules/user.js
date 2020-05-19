@@ -5,7 +5,8 @@ import {
   loginBySMSCode,
   UpdatePwd,
   resetPed,
-  logout
+  logout,
+  apiRegister
 } from '@/api/login'
 import {
   setObjectId,
@@ -46,6 +47,18 @@ const user = {
   },
 
   actions: {
+
+    // 注册
+    register({ commit }, registerForm) {
+      return new Promise((resolve, reject) => {
+        apiRegister(registerForm).then(res => {
+          resolve(res);
+        }).catch(err => {
+          reject(err);
+        })
+      })
+    },
+
     // 登录
     Login({ commit, dispatch }, loginForm) {
       return new Promise((resolve, reject) => {

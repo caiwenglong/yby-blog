@@ -6,47 +6,78 @@
         <div class="loginContainer">
           <div class="login-car-wrap">
             <div v-if="isReset">
-              <el-card class="loginContext" shadow="naver">
+              <el-card class="login-context" shadow="naver">
                 <el-form class="login-form" autoComplete="on" :model="reset" :rules="resetRules" ref="reset" label-position="right">
                   <h3 class="title">忘记密码</h3>
                   <el-form-item prop="accountNo">
                     <el-input clearable name="username" type="text" v-model="reset.accountNo" autoComplete="on" placeholder="请输入账号或手机号">
                       <svg-icon class="icon" slot="prefix" icon-class="account"></svg-icon>
                     </el-input>
-                    <!-- <img src="../../../static/img/login_user.png" class="login-icon" /> -->
 
                   </el-form-item>
                   <el-form-item prop="code">
                     <el-input clearable v-model="reset.code" class="verificationCode" placeholder="请输入验证码">
                       <svg-icon class="icon" slot="prefix" icon-class="code"></svg-icon>
                     </el-input>
-                    <!-- <img src="../../../static/img/validateCode.png" class="login-icon" /> -->
                     <el-button class="codebtn" type="text" @click="getCode('reset')">{{ResetcodeText}}</el-button>
                   </el-form-item>
                   <el-form-item prop="newPassword">
                     <el-input clearable name="newPassword" type="password" v-model="reset.newPassword" autoComplete="on" placeholder="请输新入密码">
                       <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
                     </el-input>
-                    <!-- <img src="../../../static/img/lock.png" class="login-icon" /> -->
                   </el-form-item>
                   <el-form-item prop="password">
                     <el-input clearable name="password" type="password" v-model="reset.password" autoComplete="on" placeholder="请确新认密码">
                       <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
                     </el-input>
-                    <!-- <img src="../../../static/img/lock.png" class="login-icon" /> -->
                   </el-form-item>
                   <el-form-item>
                     <el-button class="login-btn" size="small" type="primary" style="width:85%;" :loading="loading" @click.native.prevent="handleLogin('reset')">
                       立即找回
                     </el-button>
                   </el-form-item>
-                  <el-form-item class="loginButton" style="text-align:right;margin-bottom:0">
-                    <span @click="retrieve" style="color:#FFFFFF;margin-right:10%">返回登录>></span>
+                  <el-form-item class="loginButton">
+                    <span @click="retrieve">返回登录>></span>
                   </el-form-item>
                 </el-form>
               </el-card>
             </div>
-            <el-card class="loginContext" shadow="naver" v-else>
+            <div v-else-if="isRegister">
+              <el-card class="register-context">
+                <el-form class="register-form" autoComplete="on" :model="registerForm" :rules="registerRules" ref="registerForm">
+                  <h3 class="title">注册</h3>
+                  <el-form-item prop="accountNo">
+                    <el-input name="username" type="text" v-model="registerForm.accountNo" auto-complete="on" placeholder="请输入用户名">
+                      <svg-icon class="icon" slot="prefix" icon-class="account"></svg-icon>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item prop="accountNo">
+                    <el-input name="username" type="text" v-model="registerForm.email" auto-complete="on" placeholder="请输入邮箱">
+                      <svg-icon class="icon" slot="prefix" icon-class="mailbox"></svg-icon>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item prop="newPassword">
+                    <el-input clearable name="newPassword" type="password" v-model="registerForm.password" autoComplete="on" placeholder="请输新入密码">
+                      <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item prop="password">
+                    <el-input clearable name="password" type="password" v-model="registerForm.cmfPassword" autoComplete="on" placeholder="请确新认密码">
+                      <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
+                    </el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button class="back-login-btn" size="small" type="default" @click.native.prevent="switchToRegister">
+                      返回
+                    </el-button>
+                    <el-button class="register-btn" size="small" type="primary" :loading="loading" @click.native.prevent="handleRegister()">
+                      注册
+                    </el-button>
+                  </el-form-item>
+                </el-form>
+              </el-card>
+            </div>
+            <el-card class="login-context" shadow="naver" v-else>
               <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="right">
                 <h3 class="title">欢迎登陆</h3>
                 <el-form-item prop="accountNo">
@@ -72,16 +103,17 @@
                 </el-form-item>
                 <el-form-item>
                   <!-- <span class="forgetTips" @click="retrieve"></span> -->
-                  <el-button class="login-btn" size="small" type="primary" style="width:85%;" :loading="loading" @click.native.prevent="handleLogin('login')">
+                  <el-button class="login-btn" size="small" type="primary" :loading="loading" @click.native.prevent="handleLogin('login')">
                     登录
                   </el-button>
                 </el-form-item>
-                <el-form-item class="loginButton" style="text-align:right;margin-bottom:0" v-if="!isCode">
-                  <span @click="switchLogin" style="color:#FFFFFF;">短信快速登陆 /</span>
-                  <span @click="retrieve" style="color:#DD0101;margin-right:5%">找回密码？</span>
+                <el-form-item class="loginButton" v-if="!isCode">
+                  <span @click="switchToRegister">注册 /</span>
+                  <span @click="switchLogin">短信快速登陆 /</span>
+                  <span @click="retrieve" class="reset-password">找回密码？</span>
                 </el-form-item>
-                <el-form-item class="loginButton" style="text-align:right;margin-bottom:0" v-else>
-                  <span @click="switchLogin" style="color:#FFFFFF;margin-right:10%">普通密码登录>></span>
+                <el-form-item class="loginButton" v-else>
+                  <span @click="switchLogin">普通密码登录>></span>
                 </el-form-item>
               </el-form>
             </el-card>
@@ -98,14 +130,14 @@ export default {
   data() {
     let validatePass = (rule, value, callback) => {
       if (value === '' || !value) {
-        callback(new Error('请输入新密码'))
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }
     };
     let validatePass2 = (rule, value, callback) => {
       if (value === '' || !value) {
-        callback(new Error('请再次输入新密码'))
+        callback(new Error('请再次输入密码'))
       } else if (value !== this.reset.newPassword) {
         callback(new Error('两次输入密码不一致!'))
       } else {
@@ -116,10 +148,17 @@ export default {
       Steps: 1,
       isCode: false, // 是否用验证码登录
       isReset: false,
+      isRegister: false,
       loginForm: {
         accountNo: '',
         password: '',
         phoneCode: 0
+      },
+      registerForm: {
+        accountNo: '',
+        password: '',
+        cmfPassword: '',
+        email: '',
       },
       reset: {
         accountNo: '',
@@ -150,6 +189,20 @@ export default {
           { required: true, message: '请输入验证码', trigger: 'blur' }
         ]
       },
+      registerRules: {
+        accountNo: [
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { max: 32, message: '用户名长度在32个字符之内', trigger: 'blur'},
+        ],
+        password: [
+          { validator: validatePass, trigger: 'blur' },
+          { max: 32, message: '长度在32个字符之内', trigger: 'blur' },
+          { min: 6, message: '长度在6个字符以上', trigger: 'blur' },
+        ],
+        cmfPassword: [
+          { validator: validatePass2, trigger: 'blur' }
+        ],
+      },
       loading: false,
       pwdType: 'password',
       isGetCode: true,
@@ -168,6 +221,18 @@ export default {
         this.pwdType = 'password'
       }
     },
+    handleCommonLogin() {
+      this.$store.dispatch('Login', this.loginForm).then((res) => {
+        this.loading = false;
+        this.$router.push('/dashboard')
+      }).catch((err) => {
+        this.$message({
+          type: 'error',
+          message: '用户名或密码错误，请重新输入'
+        });
+        this.loading = false
+      })
+    },
     handleLogin(type) {
       if (!this.isCode) {
         if (type === 'login') {
@@ -175,17 +240,7 @@ export default {
           this.$refs.loginForm.validate(valid => {
             if (valid) {
               this.loading = true;
-              this.$store.dispatch('Login', this.loginForm).then((res) => {
-                this.loading = false;
-                this.$router.push('/dashboard')
-                // eslint-disable-next-line handle-callback-err
-              }).catch((err) => {
-                this.$message({
-                  type: 'error',
-                  message: '用户名或密码错误，请重新输入'
-                });
-                this.loading = false
-              })
+              this.handleCommonLogin();
             } else {
               return false
             }
@@ -209,7 +264,6 @@ export default {
         this.loginForm.password = '';
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            console.log(this.loginForm);
             this.loading = true;
             this.$store.dispatch('LoginByAuthCode', this.loginForm).then((res) => {
               this.loading = false;
@@ -230,6 +284,25 @@ export default {
         })
       }
     },
+
+    // 注册
+    handleRegister() {
+      this.$refs.registerForm.validate(valid => {
+        if(valid) {
+          this.loading = true;
+          this.$store.dispatch('register', this.registerForm).then(res => {
+            this.loading = false;
+            this.loginForm.accountNo = this.registerForm.accountNo;
+            this.loginForm.password = this.registerForm.password;
+            this.handleCommonLogin();
+          }).catch(err => {
+            this.loading = false;
+            console.log(err);
+          })
+        }
+      })
+    },
+
     // 找回密码
     retrieve() {
       this.Steps = 1;
@@ -283,6 +356,10 @@ export default {
     switchLogin() {
       this.isCode = !this.isCode
     },
+    // 切换登录
+    switchToRegister() {
+      this.isRegister = !this.isRegister
+    },
     next() {
       this.$refs.reset.validate(valid => {
         if (valid) {
@@ -324,6 +401,16 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+}
+.login-context,
+.register-context {
+  position: relative;
+  font-size: 18px;
+  height: 100%;
+  width: 40%;
+  border: none;
+  margin-left: 30%;
+  text-align: center;
 }
 .login-container {
   width: 100%;
@@ -398,15 +485,7 @@ export default {
           width: 100%;
           // height: 320px;
         }
-        .loginContext {
-          position: relative;
-          font-size: 18px;
-          height: 100%;
-          width: 40%;
-          border: none;
-          // box-shadow: -33px 2px 4px rgba(0, 0, 0, 0.1);
-          margin-left: 30%;
-          text-align: center;
+        .login-context {
           .login-form {
             margin: auto;
             // height: 270px;
@@ -440,10 +519,16 @@ export default {
         }
       }
       .loginButton {
-        // margin-top: 48px;
+        text-align:right;
+        margin-bottom:0;
+        color: $white;
         span {
           cursor: pointer;
         }
+        .reset-password {
+          color:#DD0101;
+          margin-right:5%;
+        };
         .el-form-item__content {
           line-height: 32px;
           .forgetTips {

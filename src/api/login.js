@@ -33,6 +33,23 @@ export function UpdatePwd(resetForm) {
   })
 }
 
+// 注册
+export function apiRegister(registerForm) {
+  return new Promise((resolve, reject) => {
+    const params = {
+      username: registerForm.accountNo,
+      password: registerForm.password,
+      email: registerForm.email,
+      roles: ['user']
+    };
+    Bmob.User.register(params).then(res => {
+      resolve(res)
+    }).catch(err => {
+      reject(err);
+    });
+  })
+}
+
 // 获取验证码
 export function getSMSCode(tel) {
   return new Promise((resolve, reject) => {
@@ -70,6 +87,9 @@ export function verifyUserSMSCode(userInfo) {
   })
 }
 
+/*
+*  通过手机验证码登录
+* */
 export function loginBySMSCode(userInfo) {
   return new Promise((resolve, reject) => {
     const phoneNo = Number(userInfo.accountNo);
