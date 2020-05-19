@@ -51,27 +51,27 @@ export const constantRouterMap = [
       }
     ]
   },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
-];
-
-export const dynamicRoute = [
   {
     path: '/articleWrite',
     component: Layout,
     level: 3,
     name: 'articleWrite',
     redirect: '/articleWrite/index',
+    hidden: true,
     meta: { title: '文章写作', icon: 'article-write' },
     children: [
       {
         path: 'index',
         name: 'articleWriteIndex',
         component: () => import('@/views/articleWrite/index.vue'),
-        hidden: false,
         meta: { title: '文章写作页', icon: '', fullScreen: true }
       }
     ]
   },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
+];
+
+export const dynamicRoute = [
   {
     path: '/articleDetails',
     component: Layout,
@@ -90,8 +90,7 @@ export const dynamicRoute = [
       }
     ]
   }
-  // { path: '*', redirect: '/404', hidden: true, level: 100 }
-]
+];
 
 export function generateAsyncRouters(menus) {
   const generateRouters = [];
@@ -107,10 +106,10 @@ export function generateAsyncRouters(menus) {
         hidden: false,
         level: 2,
         children: getChildrenRouters(menus, menu.url, menu.objectId)
-      }
+      };
       generateRouters.push(route)
     }
-  })
+  });
   return generateRouters
 }
 

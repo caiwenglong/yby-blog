@@ -187,7 +187,7 @@
         this.$refs.postForm.validate((valid) => {
           if (valid) {
             return new Promise(function(resolve, reject) {
-              _this.loading = true
+              _this.loading = true;
               const TableArticle = Bmob.Query('Article');
               if (_this.$route.params.isEdit) {
                 TableArticle.set('id', _this.$route.params.artId)
@@ -197,15 +197,19 @@
               TableArticle.set('category', _this.postForm.category);
               TableArticle.set('artContent', _this.postForm.artContent);
               TableArticle.set('artTags', _this.postForm.artTags);
+              TableArticle.set('author', _this.$store.getters.userObjectId);
               TableArticle.save().then(res => {
                 _this.$notify({
                   title: '成功',
-                  message: '发布文章成功',
+                  message: '发布文章成功, 即将跳转到该文章的详细页！',
                   type: 'success',
-                  duration: 2000
+                  duration: 2000,
+                  onClose: function() {
+                    _this.$router.push('/articleDetails/index/' + res.objectId); // 提示信息关闭时的回调函数
+                  }
                 });
                 _this.postForm.status = 'published';
-                _this.loading = false
+                _this.loading = false;
               }).catch(err => {
                 _this.$notify({
                   title: '错误',

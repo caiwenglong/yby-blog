@@ -1,6 +1,7 @@
 import Bmob from 'hydrogen-js-sdk';
 import { uuId } from '../utils/tools/tools-common';
-import { remove } from 'lodash'
+import { remove } from 'lodash';
+import store from '@/store'
 
 Bmob.initialize('e4d31451776823a5', '666666');
 
@@ -25,7 +26,10 @@ export function apiGetCollectionCategory(objectId) {
 * */
 export function apiGetArticleCategory() {
   return new Promise(function(resolve, reject) {
+    const userId = '"' + store.getters.userObjectId + '"';
+    const params = '{"user":' + userId + '}';
     TableArticleCategory.order('-createdAt');
+    TableArticleCategory.statTo("where", params);
     TableArticleCategory.find().then((res) => {
       resolve(res)
     }).catch(err => {
@@ -41,6 +45,7 @@ export function apiInsertArticleCollection(form) {
     TableArticleCategory.set('name', form.name);
     TableArticleCategory.set('url', uuid);
     TableArticleCategory.set('category', uuid);
+    TableArticleCategory.set('user', store.getters.userObjectId);
     TableArticleCategory.save().then(res => {
       resolve(res);
     }).catch(err => {
@@ -56,6 +61,7 @@ export function apiInsertArticleCategory(form) {
     TableArticleCategory.set('name', form.name);
     TableArticleCategory.set('url', uuid);
     TableArticleCategory.set('category', uuid);
+    TableArticleCategory.set('user', store.getters.userObjectId);
     TableArticleCategory.save().then(res => {
       resolve(res);
     }).catch(err => {

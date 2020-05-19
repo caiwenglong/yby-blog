@@ -123,3 +123,7 @@ export function apiBatchesDeleteArticle(categoryArr) {
     })
   })
 }
+
+export function apiAddArticle() {
+
+}

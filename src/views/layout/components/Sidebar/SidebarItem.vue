@@ -347,4 +347,11 @@
       padding: 10px !important;
     }
   }
+  .el-submenu__title > span, .submenu__title {
+    width: 106px;
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 </style>

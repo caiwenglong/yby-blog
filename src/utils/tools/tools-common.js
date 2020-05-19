@@ -44,7 +44,7 @@ export function uuId(len, radix) {
 }
 
 export function reloadRouters() {
-  return store.dispatch('GenerateRoutes', store.getters.roles).then((res) => {
+  return store.dispatch('GenerateRoutes', { roles:store.getters.roles, userId: store.getters.userObjectId }).then((res) => {
     return res;
   }).catch(err => {
     console.log(err + 'error in generate routers');

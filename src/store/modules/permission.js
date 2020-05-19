@@ -46,7 +46,7 @@ const permission = {
     // 菜单权限控制-动态菜单
     SET_ROUTERS: (state, routers) => {
       state.dynamicRouters = routers;
-      state.routers = constantRouterMap.concat(routers) // permission_routers
+      state.routers = constantRouterMap.concat(routers); // permission_routers
       router.selfAddRoutes(state.routers);
     },
     // 网页资源权限控制使用
@@ -55,10 +55,10 @@ const permission = {
     }
   },
   actions: {
-    async GenerateRoutes({ commit }, roles) {
+    async GenerateRoutes({ commit }, params) {
       return new Promise(resolve => {
         let routes = [];
-        apiGetArticleCategory().then(categoryList => {
+        apiGetArticleCategory(params.userId).then(categoryList => {
           const menus = categoryList;
           if (menus.length) {
             routes = generateAsyncRouters(menus);
@@ -68,10 +68,10 @@ const permission = {
             })
           }
           let accessedRoutes;
-          if (roles.includes('admin')) {
+          if (params.roles.includes('admin')) {
             accessedRoutes = routes || []
           } else {
-            accessedRoutes = filterAsyncRouter(routes, roles)
+            accessedRoutes = filterAsyncRouter(routes, params.roles)
           }
           commit('SET_ROUTERS', accessedRoutes);
           resolve(accessedRoutes)
