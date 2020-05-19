@@ -8,7 +8,7 @@ import { getToken } from '@/utils/auth'
 const service = axios.create({
   baseURL: process.env.BASE_API, // api的base_url
   timeout: 50000 // 请求超时时间
-})
+});
 
 // request拦截器
 service.interceptors.request.use(
@@ -17,22 +17,22 @@ service.interceptors.request.use(
       config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     }
     // config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=urf-8'
-    config.headers['If-Modified-Since'] = 0 // 解决IE GET请求缓存的问题
-    config.headers['X-Channel'] = 'WEB' // 用于上报访问渠道
+    config.headers['If-Modified-Since'] = 0; // 解决IE GET请求缓存的问题
+    config.headers['X-Channel'] = 'WEB';// 用于上报访问渠道
     config.headers['X-Agent'] = window.navigator && window.navigator.userAgent // 用于上报客户端设备信息
     return config
   },
   error => {
     // Do something with request error
-    console.log(error) // for debug
+    console.log(error); // for debug
     Promise.reject(error)
   }
-)
+);
 
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    const code = response.status
+    const code = response.status;
     // 拦截每个响应，取出token并更新本地
     if (code === 200) {
       if (response.headers && response.headers.authorization) {
@@ -57,8 +57,8 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    const code = error.response.status
+    console.log('err' + error); // for debug
+    const code = error.response.status;
     const errorMsg = error.response.data.msg || '服务器后台错误' // 错误信息
     // const errorCode = error.response.data.code  // 错误码
     // const errorDetail = error.response.data.detail // 错误详细信息
@@ -74,8 +74,8 @@ service.interceptors.response.use(
           type: 'warning'
         }
       ).then(() => {
-        store.dispatch('FedLogOut').then(() => {
-          location.reload() // 为了重新实例化vue-router对象 避免bug
+        store.dispatch('LogOut').then(() => {
+          location.reload(); // 为了重新实例化vue-router对象 避免bug
           // 重定向到登录页面
           route.push({ path: '/login' })
         })
@@ -85,10 +85,10 @@ service.interceptors.response.use(
         message: errorMsg,
         type: 'error',
         duration: 5 * 1000
-      })
+      });
       return Promise.reject(error.response)
     }
   }
-)
+);
 
 export default service

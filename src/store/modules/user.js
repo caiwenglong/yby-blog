@@ -54,22 +54,22 @@ const user = {
             // 处理用户信息
             if (response) {
               // 保存用户信息至sessionStorage
-              const userData = JSON.stringify(response)
+              const userData = JSON.stringify(response);
               // commit('SET_USER_DATA', userData)
               if(response.objectId) {
-                commit('SET_OBJECT_ID', response.objectId)
+                commit('SET_OBJECT_ID', response.objectId);
                 setObjectId(response.objectId)
               }
               if (response.sessionToken) {
-                commit('SET_TOKEN', response.sessionToken)
+                commit('SET_TOKEN', response.sessionToken);
                 setToken(response.sessionToken)
               }
-              setUserData(userData)
+              setUserData(userData);
               if (response.username) {
                 commit('SET_NAME', response.username)
               }
               if (response.roles) {
-                commit('SET_ROLES', response.roles)
+                commit('SET_ROLES', response.roles);
                 setRoles(response.roles)
               }
             }
@@ -86,24 +86,24 @@ const user = {
         loginBySMSCode(loginForm).then(response => {
           if (response) {
             // 保存用户信息至sessionStorage
-            const userData = JSON.stringify(response)
-            setUserData(userData)
+            const userData = JSON.stringify(response);
+            setUserData(userData);
             // commit('SET_USER_DATA', userData)
 
             if (response.sessionToken) {
-              commit('SET_TOKEN', response.sessionToken)
-              setToken(response.sessionToken)
+              commit('SET_TOKEN', response.sessionToken);
+              setToken(response.sessionToken);
             }
             if (response.sessionToken) {
-              commit('SET_TOKEN', response.sessionToken)
-              setToken(response.sessionToken)
+              commit('SET_TOKEN', response.sessionToken);
+              setToken(response.sessionToken);
             }
             if (response.username) {
               commit('SET_NAME', response.username)
             }
             if (response.roles) {
-              commit('SET_ROLES', response.roles)
-              setRoles(response.roles)
+              commit('SET_ROLES', response.roles);
+              setRoles(response.roles);
             }
           }
           resolve(response)
@@ -117,28 +117,13 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise(resolve => {
         logout();
-        commit('SET_OBJECT_ID', '')
-        commit('SET_TOKEN', '')
-        commit('SET_NAME', '')
-        commit('SET_ROUTERS', null)
-        commit('SET_ROLES', '')
-        removeUserData()
-        removeToken()
-        removeRoles()
-        resolve()
-      })
-    },
-
-    // 前端 登出
-    FedLogOut({ commit }) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        commit('SET_NAME', '')
-        commit('SET_ROUTERS', null)
-        commit('SET_ROLES', '')
-        removeUserData()
-        removeToken()
-        removeRoles()
+        commit('SET_OBJECT_ID', '');
+        commit('SET_TOKEN', '');
+        commit('SET_NAME', '');
+        commit('SET_ROLES', '');
+        removeUserData();
+        removeToken();
+        removeRoles();
         resolve()
       })
     },
@@ -146,16 +131,16 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        var rolesFromCookie = getRoles()
+        var rolesFromCookie = getRoles();
         if (rolesFromCookie && rolesFromCookie.length > 0) {
-          commit('SET_ROLES', rolesFromCookie)
+          commit('SET_ROLES', rolesFromCookie);
           resolve()
         } else {
           getInfo().then(response => {
-            const data = response.data || {}
-            commit('SET_NAME', data.userName)
+            const data = response.data || {};
+            commit('SET_NAME', data.userName);
             if (data && data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-              commit('SET_ROLES', data.roles)
+              commit('SET_ROLES', data.roles);
               setRoles(data.roles)
             } else {
               reject('getInfo: roles must be a non-null array !')
@@ -170,7 +155,7 @@ const user = {
 
     // 更新 Token 及 Cookies
     SetToken({ commit }, token) {
-      commit('SET_TOKEN', token)
+      commit('SET_TOKEN', token);
       setToken(token)
     },
 
@@ -205,6 +190,6 @@ const user = {
       })
     }
   }
-}
+};
 
 export default user

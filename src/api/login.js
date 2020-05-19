@@ -2,18 +2,16 @@ import { getToken} from "../utils/auth";
 import request from '@/utils/request'
 import { getObjectId } from "../utils/auth";
 import Bmob from 'hydrogen-js-sdk'
-Bmob.initialize('e4d31451776823a5', '666666')
+Bmob.initialize('e4d31451776823a5', '666666');
 // 重设密码
 export function resetPed(resetForm) {
   return new Promise((resolve, reject) => {
     let data = {
       email: '836472117@qq.com'
-    }
+    };
     Bmob.requestPasswordReset(data).then(res => {
-      console.log(res)
       resolve(res)
     }).catch(err => {
-      console.log(err)
       reject(err)
     })
   })
@@ -22,11 +20,11 @@ export function resetPed(resetForm) {
 // 修改密码
 export function UpdatePwd(resetForm) {
   return new Promise((resolve, reject) => {
-    let objectId = getObjectId()
+    let objectId = getObjectId();
     let data = {
       oldPassword: resetForm.oldPassword,
       newPassword: resetForm.newPassword
-    }
+    };
     Bmob.updateUserPassword(objectId,data).then(res => {
       resolve(res)
     }).catch(err => {
@@ -41,12 +39,12 @@ export function getSMSCode(tel) {
     const params = {
       mobilePhoneNumber: tel, // string
       template: 'sms-code'
-    }
+    };
     Bmob.requestSmsCode(params).then(function(response) {
-      alert('smsId:' + response.smsId)
+      alert('smsId:' + response.smsId);
       resolve(response)
     }).catch(function(error) {
-      console.log(error)
+      console.log(error);
       reject(error)
     })
   })
@@ -55,15 +53,15 @@ export function getSMSCode(tel) {
 // 验证用户输入的验证码是否正确
 export function verifyUserSMSCode(userInfo) {
   return new Promise((resolve, reject) => {
-    const smsCode = userInfo.phoneCode
+    const smsCode = userInfo.phoneCode;
     const data = {
       mobilePhoneNumber: userInfo.accountNo
-    }
+    };
     Bmob.verifySmsCode(smsCode, data).then(function(response) {
       resolve(response)
     }).catch(function(error) {
       reject(error)
-    })
+    });
     Bmob.User.signOrLoginByMobilePhone(userInfo.accountNo, userInfo.phoneCode).then(res => {
       console.log(res)
     }).catch(err => {
@@ -74,8 +72,8 @@ export function verifyUserSMSCode(userInfo) {
 
 export function loginBySMSCode(userInfo) {
   return new Promise((resolve, reject) => {
-    const phoneNo = Number(userInfo.accountNo)
-    const SMSCode = Number(userInfo.phoneCode)
+    const phoneNo = Number(userInfo.accountNo);
+    const SMSCode = Number(userInfo.phoneCode);
     Bmob.User.signOrLoginByMobilePhone(phoneNo, SMSCode).then(res => {
       resolve(res)
     }).catch(err => {

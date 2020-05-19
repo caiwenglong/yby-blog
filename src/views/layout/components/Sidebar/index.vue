@@ -2,13 +2,15 @@
   <div class="com-sidebar">
     <GeminiScrollbar wrapClass="scrollbar-wrapper">
       <el-menu mode="vertical" :show-timeout="200" :default-active="$route.path" :collapse="isCollapse" background-color="#304156" text-color="#bfcbd9" active-text-color="#409EFF">
-        <sidebar-item
-          v-for="(route, index) in permission_routers"
-          :index="index"
-          :key="route.url"
-          :item="route"
-          :base-path="route.path">
-        </sidebar-item>
+        <template v-if="permission_routers">
+          <sidebar-item
+            v-for="(route, index) in permission_routers"
+            :index="index"
+            :key="route.path"
+            :item="route"
+            :base-path="route.path">
+          </sidebar-item>
+        </template>
       </el-menu>
     </GeminiScrollbar>
   </div>
@@ -21,6 +23,15 @@
 
   export default {
     components: {SidebarItem, YbyDialog},
+    create: function() {
+      console.log(this.permission_routers);
+    },
+    watch: {
+      permission_routers: function (a, b) {
+        console.log(a);
+        console.log(b);
+      }
+    },
     computed: {
       ...mapGetters([
         'permission_routers',

@@ -96,14 +96,14 @@
 export default {
   name: 'login',
   data() {
-    var validatePass = (rule, value, callback) => {
+    let validatePass = (rule, value, callback) => {
       if (value === '' || !value) {
         callback(new Error('请输入新密码'))
       } else {
         callback()
       }
-    }
-    var validatePass2 = (rule, value, callback) => {
+    };
+    let validatePass2 = (rule, value, callback) => {
       if (value === '' || !value) {
         callback(new Error('请再次输入新密码'))
       } else if (value !== this.reset.newPassword) {
@@ -111,7 +111,7 @@ export default {
       } else {
         callback()
       }
-    }
+    };
     return {
       Steps: 1,
       isCode: false, // 是否用验证码登录
@@ -171,19 +171,19 @@ export default {
     handleLogin(type) {
       if (!this.isCode) {
         if (type === 'login') {
-          this.loginForm.phoneCode = 0
+          this.loginForm.phoneCode = 0;
           this.$refs.loginForm.validate(valid => {
             if (valid) {
-              this.loading = true
+              this.loading = true;
               this.$store.dispatch('Login', this.loginForm).then((res) => {
-                this.loading = false
+                this.loading = false;
                 this.$router.push('/dashboard')
                 // eslint-disable-next-line handle-callback-err
               }).catch((err) => {
                 this.$message({
                   type: 'error',
                   message: '用户名或密码错误，请重新输入'
-                })
+                });
                 this.loading = false
               })
             } else {
@@ -193,7 +193,7 @@ export default {
         } else {
           this.$refs.reset.validate(valid => {
             if (valid) {
-              this.loading = true
+              this.loading = true;
               this.$store.dispatch('ResetPwdByEmail', this.reset).then((res) => {
                 console.log(res);
                 this.loading = false
@@ -206,22 +206,22 @@ export default {
           })
         }
       } else {
-        this.loginForm.password = ''
+        this.loginForm.password = '';
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            console.log(this.loginForm)
-            this.loading = true
+            console.log(this.loginForm);
+            this.loading = true;
             this.$store.dispatch('LoginByAuthCode', this.loginForm).then((res) => {
-              this.loading = false
-              console.log('验证码正确')
-              console.log(res)
+              this.loading = false;
+              console.log('验证码正确');
+              console.log(res);
               this.$router.push('/dashboard')
               // eslint-disable-next-line handle-callback-err
             }).catch((err) => {
               this.$message({
                 type: 'error',
                 message: '验证码错误，请重新输入'
-              })
+              });
               this.loading = false
             })
           } else {
@@ -232,17 +232,17 @@ export default {
     },
     // 找回密码
     retrieve() {
-      this.Steps = 1
-      this.reset = {}
+      this.Steps = 1;
+      this.reset = {};
       this.isReset = !this.isReset
     },
     // 获取验证码
     getCode(type) {
       if (type === 'reset') {
-        this.resetcountDown()
+        this.resetcountDown();
         this.$store.dispatch('GetResetCode', this.reset.accountNo)
       } else {
-        this.countDown()
+        this.countDown();
         this.$store.dispatch('GetAuthCode', this.loginForm.accountNo).then(res => {
           console.log(res)
         })
@@ -250,31 +250,31 @@ export default {
     },
     // 倒计时
     countDown() {
-      if (!this.isGetCode) return
-      this.isGetCode = false
-      this.codeText = this.codeTime + 's后重新获取'
+      if (!this.isGetCode) return;
+      this.isGetCode = false;
+      this.codeText = this.codeTime + 's后重新获取';
       var clock = window.setInterval(() => {
-        this.codeTime--
-        this.codeText = this.codeTime + 's后重新获取'
+        this.codeTime--;
+        this.codeText = this.codeTime + 's后重新获取';
         if (this.codeTime <= 0) {
-          window.clearInterval(clock)
-          this.codeTime = 60
-          this.codeText = '重新获取'
+          window.clearInterval(clock);
+          this.codeTime = 60;
+          this.codeText = '重新获取';
           this.isGetCode = true // 这里重新开启
         }
       }, 1000)
     },
     resetcountDown() {
-      if (!this.isResetCode) return
-      this.isResetCode = false
-      this.ResetcodeText = this.ResetcodeTime + 's后重新获取'
+      if (!this.isResetCode) return;
+      this.isResetCode = false;
+      this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
       var reset = window.setInterval(() => {
-        this.ResetcodeTime--
-        this.ResetcodeText = this.ResetcodeTime + 's后重新获取'
+        this.ResetcodeTime--;
+        this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
         if (this.ResetcodeTime <= 0) {
-          window.clearInterval(reset)
-          this.ResetcodeTime = 60
-          this.ResetcodeText = '重新获取'
+          window.clearInterval(reset);
+          this.ResetcodeTime = 60;
+          this.ResetcodeText = '重新获取';
           this.isResetCode = true // 这里重新开启
         }
       }, 1000)
@@ -372,7 +372,7 @@ export default {
       width: 100%;
       // height: calc(100% - 128px);
       height: 100%;
-      padding: 0px;
+      padding: 0;
       // margin: 14px 0;
       // background: #f5f5f5;
       .loginContainer {
@@ -421,13 +421,8 @@ export default {
           .el-input {
             display: inline-block;
             height: 36px;
-            width: 85%;
-
             input {
               background: transparent;
-              border-top: 0px;
-              border-left: 0px;
-              border-right: 0px;
               -webkit-appearance: none;
               height: 36px;
               color: #ffffff;
