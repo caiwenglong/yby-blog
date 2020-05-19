@@ -89,7 +89,6 @@
                   <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin('login')" v-model="loginForm.password" autoComplete="on" placeholder="密码">
                     <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
                   </el-input>
-                  <!-- <img src="../../../static/img/lock.png" class="login-icon" /> -->
                   <span class="show-pwd" @click="showPwd">
                     <svg-icon icon-class="eye" class="login-eye" />
                   </span>
@@ -98,11 +97,9 @@
                   <el-input clearable v-model.number="loginForm.phoneCode" class="verificationCode" placeholder="请输入验证码">
                     <svg-icon class="icon" slot="prefix" icon-class="code"></svg-icon>
                   </el-input>
-                  <!-- <img src="../../../static/img/validateCode.png" class="login-icon" /> -->
                   <el-button class="codebtn" type="text" @click="getCode('login')">{{codeText}}</el-button>
                 </el-form-item>
                 <el-form-item>
-                  <!-- <span class="forgetTips" @click="retrieve"></span> -->
                   <el-button class="login-btn" size="small" type="primary" :loading="loading" @click.native.prevent="handleLogin('login')">
                     登录
                   </el-button>
@@ -128,18 +125,27 @@
 export default {
   name: 'login',
   data() {
+    const maxLengthTip = '长度在32个字符之内';
+    const minLengthTip = '长度在6个字符以上';
+    const triggerEvent = 'blur';
+    const accountTip = '请输入账号';
+    const pwdTip = '请输入密码';
+    const pwdConfirmTip = '请输入密码';
+    const pwdErrorTip = '两次输入密码不一致';
+    const codeTip = '请输入验证码';
+    const getCodeTip = '获取验证码';
     let validatePass = (rule, value, callback) => {
       if (value === '' || !value) {
-        callback(new Error('请输入密码'))
+        callback(new Error(pwdTip))
       } else {
         callback()
       }
     };
     let validatePass2 = (rule, value, callback) => {
       if (value === '' || !value) {
-        callback(new Error('请再次输入密码'))
+        callback(new Error(pwdConfirmTip))
       } else if (value !== this.reset.newPassword) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error(pwdErrorTip))
       } else {
         callback()
       }
@@ -168,54 +174,54 @@ export default {
       },
       resetRules: {
         accountNo: [
-          { required: true, message: '请输入账号或手机号', trigger: 'blur' },
-          { max: 32, message: '长度在32个字符之内', trigger: 'blur' }],
+          { required: true, message: accountTip, trigger: triggerEvent },
+          { max: 32, message: maxLengthTip, trigger: triggerEvent }],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' }
+          { required: true, message: codeTip, trigger: triggerEvent }
         ],
-        newPassword: [{ validator: validatePass, trigger: 'blur' }],
-        password: [{ validator: validatePass2, trigger: 'blur' }]
+        newPassword: [{ validator: validatePass, trigger: triggerEvent }],
+        password: [{ validator: validatePass2, trigger: triggerEvent }]
       },
       loginRules: {
         accountNo: [
-          { required: true, message: '请输入账号或手机号', trigger: 'blur' },
-          { max: 32, message: '长度在32个字符之内', trigger: 'blur' }],
+          { required: true, message: accountTip, trigger: triggerEvent },
+          { max: 32, message: maxLengthTip, trigger: triggerEvent }],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { max: 32, message: '长度在32个字符之内', trigger: 'blur' },
-          { min: 6, message: '长度在6个字符以上', trigger: 'blur' }
+          { required: true, message: pwdTip, trigger: triggerEvent },
+          { max: 32, message: maxLengthTip, trigger: triggerEvent },
+          { min: 6, message: minLengthTip, trigger: triggerEvent }
         ],
         phoneCode: [
-          { required: true, message: '请输入验证码', trigger: 'blur' }
+          { required: true, message: codeTip, trigger: triggerEvent }
         ]
       },
       registerRules: {
         accountNo: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { max: 32, message: '用户名长度在32个字符之内', trigger: 'blur'},
+          { required: true, message: accountTip, trigger: triggerEvent },
+          { max: 32, message: maxLengthTip, trigger: triggerEvent},
         ],
         password: [
-          { validator: validatePass, trigger: 'blur' },
-          { max: 32, message: '长度在32个字符之内', trigger: 'blur' },
-          { min: 6, message: '长度在6个字符以上', trigger: 'blur' },
+          { validator: validatePass, trigger: triggerEvent },
+          { max: 32, message: maxLengthTip, trigger: triggerEvent },
+          { min: 6, message: minLengthTip, trigger: triggerEvent },
         ],
         cmfPassword: [
-          { validator: validatePass2, trigger: 'blur' }
+          { validator: validatePass2, trigger: triggerEvent }
         ],
       },
       loading: false,
-      pwdType: 'password',
+      pwdType: pwdType,
       isGetCode: true,
-      codeText: '获取验证码',
+      codeText: getCodeTip,
       codeTime: 60,
       isResetCode: true,
-      ResetcodeText: '获取验证码',
+      ResetcodeText: getCodeTip,
       ResetcodeTime: 60
     }
   },
   methods: {
     showPwd() {
-      if (this.pwdType === 'password') {
+      if (this.pwdType === this.pwdTypeText) {
         this.pwdType = ''
       } else {
         this.pwdType = 'password'
@@ -312,7 +318,7 @@ export default {
     // 获取验证码
     getCode(type) {
       if (type === 'reset') {
-        this.resetcountDown();
+        this.resetCountDown();
         this.$store.dispatch('GetResetCode', this.reset.accountNo)
       } else {
         this.countDown();
@@ -326,7 +332,7 @@ export default {
       if (!this.isGetCode) return;
       this.isGetCode = false;
       this.codeText = this.codeTime + 's后重新获取';
-      var clock = window.setInterval(() => {
+      let clock = window.setInterval(() => {
         this.codeTime--;
         this.codeText = this.codeTime + 's后重新获取';
         if (this.codeTime <= 0) {
@@ -337,11 +343,11 @@ export default {
         }
       }, 1000)
     },
-    resetcountDown() {
+    resetCountDown() {
       if (!this.isResetCode) return;
       this.isResetCode = false;
       this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
-      var reset = window.setInterval(() => {
+      let reset = window.setInterval(() => {
         this.ResetcodeTime--;
         this.ResetcodeText = this.ResetcodeTime + 's后重新获取';
         if (this.ResetcodeTime <= 0) {
