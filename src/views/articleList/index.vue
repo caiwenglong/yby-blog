@@ -147,6 +147,10 @@
   .article-content {
     font-size: 14px;
     padding: 8px;
+    max-height: 106px;
+    overflow: hidden;
+    color: #64854c;
+    text-align: left;
   }
 
   .operation-area {
@@ -159,5 +163,8 @@
       transform: rotate(180deg);
     }
     transition: all 1s;
+  }
+  .article-title {
+    margin: 0;
   }
 </style>

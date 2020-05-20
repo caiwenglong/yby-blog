@@ -15,7 +15,7 @@
         </el-col>
         <el-col :span="6">
           <el-form-item  prop="artSummary">
-            <MdInput v-model="postForm.artSummary" :maxlength="64" name="contentShortInputName" required>
+            <MdInput v-model="postForm.artSummary" :maxlength="256" name="contentShortInputName" required>
               summary
             </MdInput>
           </el-form-item>
