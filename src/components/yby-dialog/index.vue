@@ -139,6 +139,9 @@
             type: 'success',
             duration: 2000
           });
+          if(dispatchName === 'updateArticleCategory') {
+            this.handleGetCategoryList();
+          }
           _this._tools.commonTools.reloadRouters();
           this.$refs['dialogForm'].resetFields();
           _this._tools.eleEnc.closeEleLoading();
@@ -150,7 +153,6 @@
             type: 'error',
             duration: 2000
           });
-          console.log(err);
           this.emitToggleDialog(false);
           this.$refs['dialogForm'].resetFields();
           _this._tools.eleEnc.closeEleLoading();
@@ -177,6 +179,13 @@
       * */
       handleClose() {
         this.emitToggleDialog(false);
+      },
+
+      /*
+      *   重新生成分类数组
+      * */
+      handleGetCategoryList() {
+        this.$store.dispatch('getCollectionCategory').then();
       }
     }
   }
