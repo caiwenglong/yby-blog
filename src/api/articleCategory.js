@@ -13,11 +13,12 @@ const TableArticleCategory = Bmob.Query(TABLE_NAME);
 * */
 export function apiGetCollectionCategory(objectId) {
   return new Promise((resolve, reject) => {
-    TableArticleCategory.find().then((res) => {
-      resolve(res)
+    TableArticleCategory.equalTo('parentId', '==',objectId);
+    TableArticleCategory.find().then(res => {
+      resolve(res);
     }).catch(err => {
-      reject(err)
-    })
+      reject(err);
+    });
   })
 }
 
