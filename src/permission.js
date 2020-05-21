@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
     /* has token*/
     if (to.path === '/login') {
       // 框架默认登录后首页为：dashboard，应用需要结合实际情况重构登录判断逻辑
-      next({ path: '/dashboard' });
+      next({ path: '/home' });
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else if (!store.getters.dynamicRouters) { // 判断用户是否已完成动态菜单处理
       store.dispatch('GetInfo').then(res => { // 拉取user_info

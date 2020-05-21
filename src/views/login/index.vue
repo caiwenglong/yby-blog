@@ -231,7 +231,7 @@ export default {
     handleCommonLogin() {
       this.$store.dispatch('Login', this.loginForm).then((res) => {
         this.loading = false;
-        this.$router.push('/dashboard')
+        this.$router.push('/home')
       }).catch((err) => {
         this.$message({
           type: 'error',
@@ -276,7 +276,7 @@ export default {
               this.loading = false;
               console.log('验证码正确');
               console.log(res);
-              this.$router.push('/dashboard')
+              this.$router.push('/home')
               // eslint-disable-next-line handle-callback-err
             }).catch((err) => {
               this.$message({

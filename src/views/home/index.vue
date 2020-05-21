@@ -1,12 +1,12 @@
 <template>
-  <div class="dashboard-container">
+  <div class="home-container">
     <img src="../../../static/img/index.png" style="width: 100%;" />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'dashboard',
+  name: 'home',
   components: {
   },
   data() {
@@ -24,7 +24,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.dashboard-container {
+.home-container {
   width: 100%;
   margin-top: -60px;
   margin-bottom: -23px;

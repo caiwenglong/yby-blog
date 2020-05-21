@@ -38,15 +38,15 @@ export const constantRouterMap = [
     name: 'homepage'
   },
   {
-    path: '/dashboard',
+    path: '/home',
     component: Layout,
-    name: 'dashboard',
-    redirect: '/dashboard/page',
+    name: 'home',
+    redirect: '/home/index',
     children: [
       {
-        path: 'page',
-        name: 'page',
-        component: () => import('@/views/dashboard'),
+        path: 'index',
+        name: 'index',
+        component: () => import('@/views/home'),
         meta: { title: '首页', icon: 'home' }
       }
     ]
@@ -68,7 +68,7 @@ export const constantRouterMap = [
       }
     ]
   },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  { path: '*', component: () => import('@/views/404'), hidden: true },
 ];
 
 export const dynamicRoute = [
