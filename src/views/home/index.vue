@@ -1,24 +1,15 @@
 <template>
   <div class="home-container">
-    <img src="../../../static/img/index.png" style="width: 100%;" />
+    <article-list></article-list>
   </div>
 </template>
 
 <script>
+  import ArticleList from '@/views/articleList'
 export default {
   name: 'home',
   components: {
-  },
-  data() {
-    return {
-    }
-  },
-  methods: {
-  },
-  created() {
-
-  },
-  computed: {
+    ArticleList
   }
 }
 </script>
@@ -26,8 +17,6 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .home-container {
   width: 100%;
-  margin-top: -60px;
-  margin-bottom: -23px;
   .title {
     width: 98%;
     margin: 0 auto;

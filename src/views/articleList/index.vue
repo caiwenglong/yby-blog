@@ -47,7 +47,6 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { getArticleTotal } from '../../api/article'
   export default {
     name: 'ArticleList',
     category: 'ALL',
@@ -100,9 +99,15 @@
                   type: 'success',
                   info: '删除文章成功！'
                 });
-                this._tools.eleEnc.closeEleLoading();
                 this.searchArtData(this.category);
               }
+            }).catch(err => {
+              this._tools.eleEnc.ybyMessage({
+                type: 'error',
+                info: '删除文章失败！'
+              });
+            }).finally(() => {
+              this._tools.eleEnc.closeEleLoading();
             })
           }
         }).catch(err => {
@@ -161,6 +166,7 @@
     &:hover {
       color: $menuActive;
       transform: rotate(180deg);
+      cursor: pointer;
     }
     transition: all 1s;
   }
