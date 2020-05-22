@@ -10,7 +10,7 @@
             <span class="article-infos article-infos__auth">
               <i class="el-icon-user"></i>
               <span>作者：</span>
-              <span>YBY</span>
+              <span>{{ userName }}</span>
             </span>
             <span class="article-infos article-infos__date">
               <i class="el-icon-date"></i>
@@ -72,8 +72,13 @@
 
   export default {
     name: 'ArticleDetails',
+    data() {
+      return {
+        userName: ''
+      }
+    },
     created: function() {
-      this.getArticleDetails()
+      this.getArticleDetails();
     },
     computed: {
       ...mapGetters([
@@ -81,8 +86,13 @@
       ])
     },
     methods: {
+      initData() {
+        this.userName = this.$store.getters.userName;
+      },
       getArticleDetails() {
-        this.$store.dispatch('getSingleArticle', this.$route.params.artId);
+        this.$store.dispatch('getSingleArticle', this.$route.params.artId).then(() => {
+          this.initData();
+        });
       },
       redirectToEditPage() {
         this.$router.push({ name: 'articleWriteIndex', params: { artId: this.$route.params.artId, isEdit: true }})
