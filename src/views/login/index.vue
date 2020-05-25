@@ -79,14 +79,14 @@
             </div>
             <el-card class="login-context" shadow="naver" v-else>
               <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="right">
-                <h3 class="title">欢迎登陆</h3>
+                <h3 class="title">{{$t('login.welcome')}}</h3>
                 <el-form-item prop="accountNo">
-                  <el-input name="username" type="text" v-model="loginForm.accountNo" autoComplete="on" placeholder="用户名/手机号">
+                  <el-input name="username" type="text" v-model="loginForm.accountNo" autoComplete="on" :placeholder="$t('login.username')">
                     <svg-icon class="icon" slot="prefix" icon-class="account"></svg-icon>
                   </el-input>
                 </el-form-item>
                 <el-form-item prop="password" v-if="!isCode">
-                  <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin('login')" v-model="loginForm.password" autoComplete="on" placeholder="密码">
+                  <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin('login')" v-model="loginForm.password" autoComplete="on" :placeholder="$t('login.password')">
                     <svg-icon class="icon" slot="prefix" icon-class="password"></svg-icon>
                   </el-input>
                   <span class="show-pwd" @click="showPwd">
@@ -101,13 +101,14 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button class="login-btn" size="small" type="primary" :loading="loading" @click.native.prevent="handleLogin('login')">
-                    登录
+                    {{$t('login.login')}}
                   </el-button>
                 </el-form-item>
                 <el-form-item class="loginButton" v-if="!isCode">
-                  <span @click="switchToRegister">注册 /</span>
-                  <span @click="switchLogin">短信快速登陆 /</span>
-                  <span @click="retrieve" class="reset-password">找回密码？</span>
+                  <span @click="switchLang">切换语言 /</span>
+                  <span @click="switchToRegister">{{$t('login.register')}} /</span>
+                  <span @click="switchLogin">{{$t('login.registerBySMS')}} /</span>
+                  <span @click="retrieve" class="reset-password">{{$t('login.retrievePwd')}}</span>
                 </el-form-item>
                 <el-form-item class="loginButton" v-else>
                   <span @click="switchLogin">普通密码登录>></span>
@@ -156,6 +157,7 @@ export default {
       isCode: false, // 是否用验证码登录
       isReset: false,
       isRegister: false,
+      lang: 'en',
       loginForm: {
         accountNo: '',
         password: '',
@@ -371,7 +373,11 @@ export default {
           this.Steps = 2
         }
       })
-    }
+    },
+    switchLang() {
+      this.lang === 'cn' ? this.lang = 'en' : this.lang = 'cn';
+      this.$i18n.locale = this.lang;
+    },
   }
 }
 </script>
@@ -412,7 +418,7 @@ export default {
   position: relative;
   font-size: 18px;
   height: 100%;
-  width: 40%;
+  width: 50%;
   border: none;
   margin-left: 30%;
   text-align: center;

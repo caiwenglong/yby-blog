@@ -2,7 +2,9 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <!--<div class="aboutMe">欢迎您！{{name}}</div>-->
+    <div class="aboutMe">
+      <p>{{$t('message.hello')}}</p>
+    </div>
 
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
@@ -50,21 +52,21 @@ import Hamburger from '@/components/Hamburger'
 import { getUserData } from '@/utils/auth'
 export default {
   data() {
-    var oldPass = (rule, value, callback) => {
+    let oldPass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入原密码'))
       } else {
         callback()
       }
-    }
-    var validatePass = (rule, value, callback) => {
+    };
+    let validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入新密码'))
       } else {
         callback()
       }
-    }
-    var validatePass2 = (rule, value, callback) => {
+    };
+    let validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入新密码'))
       } else if (value !== this.resetForm.newPassword) {
@@ -72,7 +74,7 @@ export default {
       } else {
         callback()
       }
-    }
+    };
     return {
       dialogTitle: '修改密码',
       dialogFormVisibleShow: false,
@@ -171,6 +173,12 @@ export default {
     changePassword() {
       this.dialogTitle = '修改密码'
       this.dialogFormVisibleShow = true
+    },
+    switchChinese(){
+      this.$i18n.locale = 'cn';
+    },
+    switchEnlish(){
+      this.$i18n.locale = 'en';
     }
   }
 }

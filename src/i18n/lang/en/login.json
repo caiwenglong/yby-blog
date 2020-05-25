@@ -1,0 +1,9 @@
+{
+  "login": "login",
+  "welcome": "welcome",
+  "username": "username",
+  "password": "password",
+  "register": "register",
+  "registerBySMS": "register by SMS",
+  "retrievePwd": "retrieve password"
+}

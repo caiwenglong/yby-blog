@@ -1,0 +1,9 @@
+{
+  "login": "登录",
+  "welcome": "欢迎登陆",
+  "username": "用户名",
+  "password": "密码",
+  "register": "注册",
+  "registerBySMS": "通过短信验证码登录",
+  "retrievePwd": "找回密码"
+}

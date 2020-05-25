@@ -26,6 +26,9 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import Bmob from 'hydrogen-js-sdk'
 import GeminiScrollbar from 'vue-gemini-scrollbar'
+
+import i18n from './i18n/i18n'
+
 Vue.prototype.Bmob = Bmob;
 Vue.prototype._lodash = _;
 Bmob.initialize('e4d31451776823a5', '666666');
@@ -47,9 +50,10 @@ Vue.directive('grant', {
     }
   }
 });
-new Vue({
+window.app = new Vue({
   el: '#app',
+  i18n,
   router,
   store,
   render: h => h(App)
-});
+}).$mount('#app');
