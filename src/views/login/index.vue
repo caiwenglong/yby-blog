@@ -377,6 +377,7 @@ export default {
     switchLang() {
       this.lang === 'cn' ? this.lang = 'en' : this.lang = 'cn';
       this.$i18n.locale = this.lang;
+      localStorage.setItem('lang', this.lang); // 将用户设置的语言存在起来，在刷新是不会重置语言设置
     },
   }
 }
