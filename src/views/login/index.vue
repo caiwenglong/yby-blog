@@ -105,7 +105,7 @@
                   </el-button>
                 </el-form-item>
                 <el-form-item class="loginButton" v-if="!isCode">
-                  <span @click="switchLang">切换语言 /</span>
+                  <span @click="switchLang">{{$t('login.switchLang')}} /</span>
                   <span @click="switchToRegister">{{$t('login.register')}} /</span>
                   <span @click="switchLogin">{{$t('login.registerBySMS')}} /</span>
                   <span @click="retrieve" class="reset-password">{{$t('login.retrievePwd')}}</span>

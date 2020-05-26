@@ -2,10 +2,6 @@
   <el-menu class="navbar" mode="horizontal">
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
     <breadcrumb></breadcrumb>
-    <div class="aboutMe">
-      <p>{{$t('message.hello')}}</p>
-    </div>
-
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" src="~@/../static/img/logged.png">
