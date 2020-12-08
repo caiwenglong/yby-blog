@@ -3,7 +3,18 @@
     <el-dialog :before-close="handleClose" :title="title" :visible="dialogFormVisible">
       <el-form ref="dialogForm" :rules="rules" :model="dialogForm">
         <el-form-item :label="label" prop="name">
-          <el-input @keyup.enter.native="commitDialogForm('dialogForm')" v-model="dialogForm.name" autocomplete="off"></el-input>
+          <el-input @keyup.enter.native="commitDialogForm('dialogForm')" v-model="dialogForm.name" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item prop="upload">
+          <el-upload
+            class="upload-demo"
+            ref="upload"
+            action=""
+            :on-change="handleOnChange"
+            :auto-upload="false">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -15,8 +26,8 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
-  export default {
+  import { mapGetters } from 'vuex'
+export default {
     name: 'YbyDialog',
     props: {
       title: {
@@ -61,21 +72,23 @@
         visible: '',
         dialogForm: {
           objectId: '',
-          name: this.name
+          name: this.name,
+          icon: ''
         },
         rules: {
           name: [
-            { required: this.nameRequired, message: '请输入名称', trigger: 'change'}
+            { required: this.nameRequired, message: '请输入名称', trigger: 'change' }
           ]
-        }
+        },
+        fileList: []
       }
     },
     created() {
-      this.$store.dispatch('getArticleCategoryData').then(() => {});
+      this.$store.dispatch('getArticleCategoryData').then(() => {})
     },
     watch: {
       name: function(newValue) {
-        this.dialogForm.name =  newValue;
+        this.dialogForm.name = newValue
       }
     },
     computed: {
@@ -93,24 +106,24 @@
         this.$refs[form].validate(valid => {
           if (valid) {
             const isNameExits = this._lodash.filter(this.articleCategoryList, item => {
-              return item.name === this.dialogForm.name;
-            });
-            if(!isNameExits.length) {
-              this.dialogForm.objectId = this.objectId;
-              let successMessage = '成功信息';
-              let errorMessage = '错误信息';
+              return item.name === this.dialogForm.name
+            })
+            if (!isNameExits.length) {
+              this.dialogForm.objectId = this.objectId
+              let successMessage = '成功信息'
+              let errorMessage = '错误信息'
               if (this.opeCode === 0) {
-                successMessage = '文集添加成功';
-                errorMessage = '文集添加失败';
-                this.showMessage('insertArticleCollection', successMessage, errorMessage);
+                successMessage = '文集添加成功'
+                errorMessage = '文集添加失败'
+                this.showMessage('insertArticleCollection', successMessage, errorMessage)
               } else if (this.opeCode === 1) {
-                successMessage = '分类添加成功';
-                errorMessage = '分类添加失败';
-                this.showMessage('insertArticleCategory', successMessage, errorMessage);
+                successMessage = '分类添加成功'
+                errorMessage = '分类添加失败'
+                this.showMessage('insertArticleCategory', successMessage, errorMessage)
               } else if (this.opeCode === 2) {
-                successMessage = '文集修改成功';
-                errorMessage = '文集修改失败';
-                this.showMessage('updateArticleCategory', successMessage, errorMessage);
+                successMessage = '文集修改成功'
+                errorMessage = '文集修改失败'
+                this.showMessage('updateArticleCategory', successMessage, errorMessage)
               }
             } else {
               this._tools.eleEnc.ybyMessage({
@@ -124,39 +137,42 @@
               message: '请输入文集名称',
               type: 'error',
               duration: 2000
-            });
+            })
           }
-          this.emitToggleDialog(false);
+          this.emitToggleDialog(false)
         })
       },
       showMessage(dispatchName, successMessage, errorMessage) {
-        const _this = this;
-        _this._tools.eleEnc.eleLoading();
+        const _this = this
+        _this._tools.eleEnc.eleLoading()
         this.$store.dispatch(dispatchName, this.dialogForm).then(res => {
           _this.$notify({
             title: '成功',
             message: successMessage,
             type: 'success',
             duration: 2000
-          });
-          if(dispatchName === 'updateArticleCategory') {
-            this.handleGetCategoryList();
+          })
+          if (dispatchName === 'insertArticleCollection') {
+            this.$refs.upload.submit()
           }
-          _this._tools.commonTools.reloadRouters();
-          this.$refs['dialogForm'].resetFields();
-          _this._tools.eleEnc.closeEleLoading();
-          this.emitToggleDialog(false);
+          if (dispatchName === 'updateArticleCategory') {
+            this.handleGetCategoryList()
+          }
+          _this._tools.commonTools.reloadRouters()
+          this.$refs['dialogForm'].resetFields()
+          _this._tools.eleEnc.closeEleLoading()
+          this.emitToggleDialog(false)
         }).catch(err => {
           _this.$notify({
             title: '错误',
             message: errorMessage,
             type: 'error',
             duration: 2000
-          });
-          this.emitToggleDialog(false);
-          this.$refs['dialogForm'].resetFields();
-          _this._tools.eleEnc.closeEleLoading();
-        });
+          })
+          this.emitToggleDialog(false)
+          this.$refs['dialogForm'].resetFields()
+          _this._tools.eleEnc.closeEleLoading()
+        })
       },
 
       /*
@@ -178,14 +194,18 @@
       *   因此在关闭事件中将需要改变的值emit出去给父组件
       * */
       handleClose() {
-        this.emitToggleDialog(false);
+        this.emitToggleDialog(false)
       },
 
       /*
       *   重新生成分类数组
       * */
       handleGetCategoryList() {
-        this.$store.dispatch('getCollectionCategory').then();
+        this.$store.dispatch('getCollectionCategory').then()
+      },
+
+      handleOnChange(file) {
+        this.dialogForm.icon = file
       }
     }
   }

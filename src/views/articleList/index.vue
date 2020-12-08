@@ -5,7 +5,9 @@
           <el-col :span="12" v-for="articleItem in entityArticleList" :key="articleItem.objectId">
           <el-card shadow="hover">
             <div slot="header">
-              <i class="el-icon-close" @click="handleDeleteArticle(articleItem.objectId)"></i>
+              <el-tooltip content="删除" placement="top">
+                <i class="el-icon-close" @click="handleDeleteArticle(articleItem.objectId)"></i>
+              </el-tooltip>
             </div>
             <h4 class="article-title">
               {{ articleItem.title }}
@@ -77,52 +79,52 @@
     },
     methods: {
       searchArtData(category) {
-        this.getDataList(category);
+        this.getDataList(category)
       },
       getDataList(category) {
-        this._tools.eleEnc.eleLoading();
+        this._tools.eleEnc.eleLoading()
         this.$store.dispatch('getArticleList', { category: category, currentPage: this.currentPage, pageSize: this.pageSize }).then(() => {
-          this._tools.eleEnc.closeEleLoading();
+          this._tools.eleEnc.closeEleLoading()
         })
       },
       handleDeleteArticle(objectId) {
         const cfmObj = {
-          title:'删除文章',
+          title: '删除文章',
           info: '此操作将删除该文章，是否继续？'
-        };
+        }
         this._tools.eleEnc.encConfirm(cfmObj).then(res => {
           if (res === 'confirm') {
-            this._tools.eleEnc.eleLoading();
+            this._tools.eleEnc.eleLoading()
             this.$store.dispatch('deleteArticle', objectId).then(res => {
               if (res.msg === 'ok') {
                 this._tools.eleEnc.ybyMessage({
                   type: 'success',
                   info: '删除文章成功！'
-                });
-                this.searchArtData(this.category);
+                })
+                this.searchArtData(this.category)
               }
             }).catch(err => {
               this._tools.eleEnc.ybyMessage({
                 type: 'error',
                 info: '删除文章失败！'
-              });
+              })
             }).finally(() => {
-              this._tools.eleEnc.closeEleLoading();
+              this._tools.eleEnc.closeEleLoading()
             })
           }
         }).catch(err => {
-          console.log('删除文章错误' + err);
-        });
+          console.log('删除文章错误' + err)
+        })
       },
       redirectToDetailsPage(artId) {
         this.$router.push({ name: 'articleDetailsIndex', params: { artId: artId }})
       },
       handleSizeChange(val) {
-        this.pageSize = val;
+        this.pageSize = val
         this.getDataList()
       },
       handleCurrentChange(val) {
-        this.currentPage = val;
+        this.currentPage = val
         this.getDataList()
       }
     },

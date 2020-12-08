@@ -41,7 +41,7 @@
           <sidebar-item :is-nest="true" class="nest-menu" v-if="child.children && child.children.length>0" :item="child"
                         :key="child.path" :base-path="resolvePath(child.path)"></sidebar-item>
           <!-- 仅有子路由 -->
-          <el-menu-item  v-contextmenu:contextmenu @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
+          <el-menu-item @click="goToView(child.name, child.category)" :index="resolvePath(child.path)">
             <svg-icon v-if="child.meta && child.meta.icon" :icon-class="child.meta.icon"></svg-icon>
             <span v-if="child.meta && child.meta.title" slot="title">
               <span class="submenu__title">{{child.meta.title}}</span>
@@ -68,11 +68,6 @@
       :name-required="nameRequired"
       :label="label">
     </yby-dialog>
-    <v-contextmenu ref="contextmenu">
-      <v-contextmenu-item>菜单1</v-contextmenu-item>
-      <v-contextmenu-item>菜单2</v-contextmenu-item>
-      <v-contextmenu-item>菜单3</v-contextmenu-item>
-    </v-contextmenu>
   </div>
 
 
@@ -80,11 +75,11 @@
 </template>
 
 <script>
-  import path from 'path';
-  import YbyDialog from '@/components/yby-dialog/index.vue';
-  import { mapGetters } from 'vuex';
+  import path from 'path'
+import YbyDialog from '@/components/yby-dialog/index.vue'
+import { mapGetters } from 'vuex'
 
-  export default {
+export default {
     name: 'SidebarItem',
     components: {
       YbyDialog
@@ -110,7 +105,7 @@
       * 定义验证规则
       * */
       const validateRequire = (rules, value, callbacks) => {
-        let message = '';
+        let message = ''
         if (rules.field === 'collectionName') {
           message = '请输入文集名称'
         }
@@ -118,12 +113,12 @@
           this.$message({
             message: message,
             type: 'error'
-          });
+          })
           callback(new Error(message))
         } else {
           callback()
         }
-      };
+      }
       return {
         onlyOneVisibleChild: null,
         dialogFormVisible: false,
@@ -133,7 +128,7 @@
         name: '',
         nameRequired: true,
         dialogTitle: '添加文集',
-        label: '文集名称',
+        label: '文集名称'
       }
     },
     computed: {
@@ -145,9 +140,9 @@
       hasOneShowingChildren(children) {
         const showingChildren = children.filter(item => {
           return !item.hidden
-        });
+        })
         if (showingChildren.length === 1) {
-          this.onlyOneVisibleChild = showingChildren[0];
+          this.onlyOneVisibleChild = showingChildren[0]
           return true
         }
         return false
@@ -156,7 +151,7 @@
         return path.resolve(this.basePath, ...paths)
       },
       goToView(name, category) {
-        this.$router.push({name: name, params: {category: category}})
+        this.$router.push({ name: name, params: { category: category }})
       },
 
       /*
@@ -165,32 +160,32 @@
       *  @param opeCOde: 操作类型，1 - 新增， 2 - 修改， 3 - 二级删除， 4 - 一级菜单删除， 5 - 添加文章
       * */
       handleCategoryOpe(command) {
-        this.objectId = command.objectId || '';
-        this.category = command.category || '';
-        this.opeCode = command.opeCode;
-        this.name = command.name || '';
+        this.objectId = command.objectId || ''
+        this.category = command.category || ''
+        this.opeCode = command.opeCode
+        this.name = command.name || ''
 
         if (this.opeCode === 0 || this.opeCode === 1 || this.opeCode === 2) {
-          this.dialogFormVisible = true; // 显示文集弹窗
+          this.dialogFormVisible = true // 显示文集弹窗
         }
-        if(this.opeCode === 0) {
-          this.dialogTitle = '添加文集';
+        if (this.opeCode === 0) {
+          this.dialogTitle = '添加文集'
         }
-        if(this.opeCode === 1) {
-          this.dialogTitle = '添加分类';
-          this.name = '';
+        if (this.opeCode === 1) {
+          this.dialogTitle = '添加分类'
+          this.name = ''
         }
         if (this.opeCode === 2) {
-          this.dialogTitle = '修改名称';
+          this.dialogTitle = '修改名称'
         }
         if (this.opeCode === 3) {
-          this.handleDeleteArticleCategory();
+          this.handleDeleteArticleCategory()
         }
         if (this.opeCode === 4) {
-          this.handleDeleteArticleCollection();
+          this.handleDeleteArticleCollection()
         }
-        if(this.opeCode === 5) {
-          this.handleAddArticle();
+        if (this.opeCode === 5) {
+          this.handleAddArticle()
         }
       },
 
@@ -204,13 +199,13 @@
           title: '删除分类',
           messageType: 'success',
           cfmMsgInfo: '删除分类成功'
-        };
+        }
         this._tools.eleEnc.encConfirm(cnfObj).then(res => {
           if (res === 'confirm') {
-            this._tools.eleEnc.eleLoading();
-            this.handleDelArticleCategory(this.category);
+            this._tools.eleEnc.eleLoading()
+            this.handleDelArticleCategory(this.category)
           }
-        });
+        })
       },
 
       /*
@@ -223,32 +218,32 @@
           title: '删除文集',
           messageType: 'success',
           cfmMsgInfo: '删除文集成功'
-        };
+        }
 
         this._tools.eleEnc.encConfirm(cnfObj).then(async res => {
           if (res === 'confirm') {
-            this._tools.eleEnc.eleLoading();
+            this._tools.eleEnc.eleLoading()
 
             // 得到要删除的所有分类菜单
-            const categoryRes = await this.handleGetCollectionCategory(this.objectId);
-            const categoryArr = this.handleGenerateCategoryArr(categoryRes);
+            const categoryRes = await this.handleGetCollectionCategory(this.objectId)
+            const categoryArr = this.handleGenerateCategoryArr(categoryRes)
 
             // 通过分类菜单数组来删除分类菜单底下的文章
-            const batchesDelArtRes = await this.$store.dispatch('batchesDeleteArticle', categoryArr);
-            if(this.isSuccess(batchesDelArtRes) || batchesDelArtRes.msg==='ok') {
-              const batchesDelCgyRes = await this.$store.dispatch('batchesDeleteCategory', this.objectId);
-              if(this.isSuccess(batchesDelCgyRes) || batchesDelCgyRes.msg==='ok') {
-                const deleteArticleMenuRes = await this.$store.dispatch('deleteArticleCategory', this.objectId);
-                if(deleteArticleMenuRes && deleteArticleMenuRes.msg === 'ok') {
+            const batchesDelArtRes = await this.$store.dispatch('batchesDeleteArticle', categoryArr)
+            if (this.isSuccess(batchesDelArtRes) || batchesDelArtRes.msg === 'ok') {
+              const batchesDelCgyRes = await this.$store.dispatch('batchesDeleteCategory', this.objectId)
+              if (this.isSuccess(batchesDelCgyRes) || batchesDelCgyRes.msg === 'ok') {
+                const deleteArticleMenuRes = await this.$store.dispatch('deleteArticleCategory', this.objectId)
+                if (deleteArticleMenuRes && deleteArticleMenuRes.msg === 'ok') {
                   this._tools.commonTools.reloadRouters().then(() => {
-                    this._tools.eleEnc.closeEleLoading();
+                    this._tools.eleEnc.closeEleLoading()
                     const objMsg = {
                       type: 'success',
                       info: `文集${this.name}删除成功`
-                    };
-                    this._tools.eleEnc.ybyMessage(objMsg);
+                    }
+                    this._tools.eleEnc.ybyMessage(objMsg)
                     this.$router.push('/')
-                  });
+                  })
                 }
               }
             }
@@ -262,16 +257,16 @@
           if (res.msg === 'ok') {
             this.$store.dispatch('batchesDeleteArticle', category).then(() => {
               this._tools.commonTools.reloadRouters().then(() => {
-                this._tools.eleEnc.closeEleLoading();
+                this._tools.eleEnc.closeEleLoading()
                 const objMsg = {
                   type: 'success',
                   info: `分类${this.name}删除成功`
-                };
-                this._tools.eleEnc.ybyMessage(objMsg);
-              });
+                }
+                this._tools.eleEnc.ybyMessage(objMsg)
+              })
             })
           }
-        });
+        })
       },
 
       /*
@@ -286,25 +281,25 @@
       },
 
       getDataFromSubCom(flag) {
-        this.dialogFormVisible = flag;
+        this.dialogFormVisible = flag
       },
 
       /*
       *   将调用handleGetCollectionCategory返回的数据进行二次操作，拿出里面的category组成数组以备后续使用
       * */
       handleGenerateCategoryArr(categoryRes) {
-        const categoryArr = [];
+        const categoryArr = []
         this._lodash.forEach(categoryRes, item => {
-          categoryArr.push(item.category);
-        });
-        return categoryArr;
+          categoryArr.push(item.category)
+        })
+        return categoryArr
       },
       /*
       * 添加文章到指定分类
       *
        */
       handleAddArticle() {
-        this.$router.push({path: '/articleWrite', query: { category: this.category }});
+        this.$router.push({ path: '/articleWrite', query: { category: this.category }})
       },
 
       /*
