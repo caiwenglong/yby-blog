@@ -87,3 +87,4 @@ share-template的技术栈基于 ES2015+、vue、vuex、vue-router 、axios 、e
 ---
 开发阶段的跨域问题，可以通过webpack-dev-server的proxyTable解决，配置文件为：config/index.js
 13250990867
+3359435528
