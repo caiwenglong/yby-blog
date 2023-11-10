@@ -16,7 +16,7 @@
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs"
   },
   "dependencies": {
-    "axios": "0.17.1",
+    "axios": "1.6.0",
     "babel-polyfill": "^6.26.0",
     "element-ui": "2.3.4",
     "es6-promise": "^4.2.6",
